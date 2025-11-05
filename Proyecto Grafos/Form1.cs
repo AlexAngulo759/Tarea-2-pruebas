@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Proyecto_Grafos.Services;
 using Proyecto_Grafos.Models;
+using Proyecto_Grafos.Validate;
 
 namespace Proyecto_Grafos
 {
@@ -108,30 +109,55 @@ namespace Proyecto_Grafos
         {
             bool success = false;
             string message = "";
+            ValidationResult validationResult = null;
 
             switch (_interactionService.CurrentAction)
             {
                 case InteractionService.NodeAction.AddRoot:
-                    success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
-                    message = success ? "Familiar inicial agregado" : "Error al agregar familiar inicial";
+                    validationResult = _graphService.ValidateAddRoot(form.PersonName);
+                    if (validationResult.IsValid)
+                    {
+                        success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
+                        message = success ? "Familiar inicial agregado" : "Error al agregar familiar inicial";
+                    }
+                    else
+                    {
+                        message = validationResult.Message;
+                    }
                     break;
 
                 case InteractionService.NodeAction.AddSuccessor:
-                    success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
-                    if (success)
+                    validationResult = _graphService.ValidateAddSuccessor(_interactionService.SelectedNode, form.PersonName);
+                    if (validationResult.IsValid)
                     {
-                        success = _graphService.AddRelationship(_interactionService.SelectedNode, form.PersonName);
+                        success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
+                        if (success)
+                        {
+                            success = _graphService.AddRelationship(_interactionService.SelectedNode, form.PersonName);
+                        }
+                        message = success ? "Sucesor agregado" : "Error al agregar sucesor";
                     }
-                    message = success ? "Sucesor agregado" : "Error al agregar sucesor";
+                    else
+                    {
+                        message = validationResult.Message;
+                    }
                     break;
 
                 case InteractionService.NodeAction.AddPredecessor:
-                    success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
-                    if (success)
+                    validationResult = _graphService.ValidateAddPredecessor(_interactionService.SelectedNode, form.PersonName);
+                    if (validationResult.IsValid)
                     {
-                        success = _graphService.AddRelationship(form.PersonName, _interactionService.SelectedNode);
+                        success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
+                        if (success)
+                        {
+                            success = _graphService.AddRelationship(form.PersonName, _interactionService.SelectedNode);
+                        }
+                        message = success ? "Predecesor agregado" : "Error al agregar predecesor";
                     }
-                    message = success ? "Predecesor agregado" : "Error al agregar predecesor";
+                    else
+                    {
+                        message = validationResult.Message;
+                    }
                     break;
             }
 
@@ -147,7 +173,6 @@ namespace Proyecto_Grafos
 
             _interactionService.ResetAction();
         }
-
         private VisualNode FindNodeAtPosition(Point position)
         {
             foreach (var node in _visualNodes)
@@ -158,17 +183,16 @@ namespace Proyecto_Grafos
             }
             return null;
         }
-
         private void UpdateVisualTree()
         {
             var allPeople = _graphService.GetAllPeople();
             _visualNodes = _layoutService.CalculateLayout(allPeople, _graphService);
             _treePanel.Invalidate();
         }
-
         private void TreePanel_Paint(object sender, PaintEventArgs e)
         {
             _drawingService.DrawTree(e.Graphics, _visualNodes, _graphService);
         }
+
     }
 }

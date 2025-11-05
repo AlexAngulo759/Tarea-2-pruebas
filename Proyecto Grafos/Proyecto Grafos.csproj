@@ -67,6 +67,8 @@
     <Compile Include="Services\GraphService.cs" />
     <Compile Include="Services\InteractionService.cs" />
     <Compile Include="Services\LayoutService.cs" />
+    <Compile Include="Validate\GraphValidator.cs" />
+    <Compile Include="Validate\ValidationResult.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

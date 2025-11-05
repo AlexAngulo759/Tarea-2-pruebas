@@ -9,7 +9,8 @@ namespace Proyecto_Grafos.Services
             None,
             AddRoot,
             AddSuccessor,
-            AddPredecessor
+            AddPredecessor,
+            AddSibling 
         }
 
         public NodeAction CurrentAction { get; private set; }
@@ -27,7 +28,7 @@ namespace Proyecto_Grafos.Services
         {
             CurrentAction = action;
             SelectedNode = nodeName;
-            ShouldShowForm = true; 
+            ShouldShowForm = true;
         }
 
         public void ResetAction()
@@ -56,6 +57,10 @@ namespace Proyecto_Grafos.Services
                 var addPredecessorItem = new ToolStripMenuItem("Agregar Predecesor");
                 addPredecessorItem.Click += (s, e) => SetAction(NodeAction.AddPredecessor, nodeName);
                 contextMenu.Items.Add(addPredecessorItem);
+
+                var addSiblingItem = new ToolStripMenuItem("Agregar Hermano");
+                addSiblingItem.Click += (s, e) => SetAction(NodeAction.AddSibling, nodeName);
+                contextMenu.Items.Add(addSiblingItem);
             }
 
             return contextMenu;
