@@ -1,0 +1,9 @@
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\bin\Debug\Proyecto Grafos.exe.config
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\bin\Debug\Proyecto Grafos.exe
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\bin\Debug\Proyecto Grafos.pdb
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.AssemblyReference.cache
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\obj\Debug\Proyecto_Grafos.Properties.Resources.resources
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.GenerateResource.cache
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.CoreCompileInputs.cache
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\obj\Debug\Proyecto Grafos.exe
+C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\Proyecto Grafos\obj\Debug\Proyecto Grafos.pdb
