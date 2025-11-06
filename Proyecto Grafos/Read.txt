@@ -1,0 +1,20 @@
+Grafo Familiar padre==predecesor hijo ==sucesor
+Reglas:
+	cada nodo puede tener como maximo dos padres, por tanto 4 abuelos 8 bisabuelos etc
+	cada nodo puede tener N hijos 
+	cada nodo puede tener N hermanos
+logica de posiciones:
+	cada generacion debe tener su propia capa, es decir a travez del nodo inicial, si tiene un padre1 el padre1 queda en capa 0 y el inicial en 1, si el inicial tiene otro padre (padre2)
+	este queda en capa 0 junto al padre1 y el inicial en capa 1, si se agrega un abuelo1 (padre de padre) al padre1, el abuelo1 queda en capa 0 los dos padres en capa 1 y el
+	nodo inicial a capa 2, siendo capa 0 la mas arriba y la capa n la mas abajo, si inicial tiene un sucesor el suceso quedaria en capa del inicial+1, si este sucesor se le agrega un padre
+	este padre de sucesor queda en la misma capa del inicial
+Hermanos:
+	los hermoanos tiene los mismos predecesores pero no asi los mismos sucesores, los hermanos tienen que estar ubicados en la misma capa 
+
+Cosas a arreglar:
+	existe un bug de doble click, para poder agregar un nodo inicial si tiene que hacer click derecho seleccionar agragar inicial, nada pasa, si se vuelve a repetir funciona
+	ademas tambien hay que dar a agregar sucesor o predecesor dos veces, y si agrego un predecesor y si paso a sucesor en el click me sale en la primera agregar predecesor
+
+	la mecanica de hermanos no existe
+
+	no esta funcionando del todo la mecanica de capas, cuando tengo dos padres pero solo un abuelo, un padre y el abuelo queda al mismo nivel y eso esta mal
