@@ -1,0 +1,40 @@
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\e_sqlite3.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\Proyecto Grafos.exe.config
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\Proyecto Grafos.exe
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\Proyecto Grafos.pdb
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\AjaxMin.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\EntityFramework.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\EntityFramework.SqlServer.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\GMap.NET.Core.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\GMap.NET.WindowsForms.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\Newtonsoft.Json.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\SQLitePCLRaw.batteries_v2.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\SQLitePCLRaw.core.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Buffers.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Data.SqlClient.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Data.SQLite.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Data.SQLite.EF6.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Data.SQLite.Linq.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Memory.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Numerics.Vectors.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Security.Principal.Windows.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\EntityFramework.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\EntityFramework.SqlServer.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\Newtonsoft.Json.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Buffers.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Data.SqlClient.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Memory.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Numerics.Vectors.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\x64\Debug\System.Security.Principal.Windows.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto Grafos.csproj.AssemblyReference.cache
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto_Grafos.MapForm.resources
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto_Grafos.Properties.Resources.resources
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto Grafos.csproj.GenerateResource.cache
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto Grafos.csproj.CoreCompileInputs.cache
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto.07A288EC.Up2Date
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto Grafos.exe
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto Grafos.pdb
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\x64\Debug\Proyecto Grafos.exe.config
