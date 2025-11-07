@@ -7,7 +7,8 @@ namespace Proyecto_Grafos.Services
     {
         private const int NODE_SPACING_X = 120;
         private const int NODE_SPACING_Y = 100;
-        private const int MARGIN = 50;
+        private const int MARGIN_X = 50;
+        private const int MARGIN_Y = 50;
 
         public List<Models.VisualNode> CalculateLayout(Models.LinkedList<string> people, GraphService graphService)
         {
@@ -15,130 +16,72 @@ namespace Proyecto_Grafos.Services
 
             var peopleList = new List<string>();
             for (int i = 0; i < people.Count; i++)
-            {
                 peopleList.Add(people.Get(i));
+
+            var roots = new List<string>();
+            foreach (var p in peopleList)
+            {
+                var parents = graphService.GetParents(p);
+                if (parents.Count == 0)
+                    roots.Add(p);
             }
 
-            var levels = CalculateLevels(peopleList, graphService);
-
-            int currentY = MARGIN;
-            int maxNodesInLevel = 0;
-
-            foreach (var level in levels.Values)
+            float currentX = MARGIN_X;
+            foreach (var root in roots)
             {
-                if (level.Count > maxNodesInLevel)
-                    maxNodesInLevel = level.Count;
-            }
-
-            int maxWidth = maxNodesInLevel * NODE_SPACING_X;
-
-            foreach (var kvp in levels)
-            {
-                int level = kvp.Key;
-                var levelNodes = kvp.Value;
-
-                int totalWidth = levelNodes.Count * NODE_SPACING_X;
-                int startX = (1000 - totalWidth) / 2;
-
-                foreach (var personName in levelNodes)
-                {
-                    int x = startX;
-                    var visualNode = new Models.VisualNode(personName, x, currentY);
-                    visualNodes.Add(visualNode);
-                    startX += NODE_SPACING_X;
-                }
-
-                currentY += NODE_SPACING_Y;
+                LayoutSubtree(graphService, root, currentX, MARGIN_Y, visualNodes);
+                currentX += GetSubtreeWidth(graphService, root) + NODE_SPACING_X;
             }
 
             return visualNodes;
         }
 
-        private Dictionary<int, List<string>> CalculateLevels(List<string> people, GraphService graphService)
+        private float LayoutSubtree(GraphService graphService, string person, float x, float y, List<Models.VisualNode> visualNodes)
         {
-            var depth = new Dictionary<string, int>();
-            var visited = new Dictionary<string, bool>();
+            if (visualNodes.Exists(v => v.Name == person))
+                return x;
 
-            foreach (var person in people)
-            {
-                depth[person] = -1;
-                visited[person] = false;
-            }
+            visualNodes.Add(new Models.VisualNode(person, (int)x, (int)y));
 
-            var roots = new List<string>();
-            foreach (var person in people)
+            var parents = graphService.GetParents(person);
+            var children = graphService.GetChildren(person);
+
+            if (parents.Count > 0)
             {
-                var parents = graphService.GetParents(person);
-                if (parents.Count == 0)
+                float parentX = x - ((parents.Count - 1) * NODE_SPACING_X) / 2f;
+                for (int i = 0; i < parents.Count; i++)
                 {
-                    depth[person] = 0;
-                    roots.Add(person);
-                    visited[person] = true;
+                    string parent = parents.Get(i);
+                    LayoutSubtree(graphService, parent, parentX, y - NODE_SPACING_Y, visualNodes);
+                    parentX += NODE_SPACING_X;
                 }
             }
 
-            var queue = new Queue<string>();
-            foreach (var root in roots)
+            if (children.Count > 0)
             {
-                queue.Enqueue(root);
-            }
-
-            while (queue.Count > 0)
-            {
-                var current = queue.Dequeue();
-                int currentLevel = depth[current];
-
-                var children = graphService.GetChildren(current);
+                float childX = x - ((children.Count - 1) * NODE_SPACING_X) / 2f;
                 for (int i = 0; i < children.Count; i++)
                 {
                     string child = children.Get(i);
-                    if (!visited[child])
-                    {
-                        depth[child] = currentLevel + 1;
-                        visited[child] = true;
-                        queue.Enqueue(child);
-                    }
+                    LayoutSubtree(graphService, child, childX, y + NODE_SPACING_Y, visualNodes);
+                    childX += NODE_SPACING_X;
                 }
             }
 
-            bool changed;
-            do
-            {
-                changed = false;
-                foreach (var person in people)
-                {
-                    var parents = graphService.GetParents(person);
-                    if (parents.Count > 0)
-                    {
-                        int maxParentLevel = -1;
-                        for (int i = 0; i < parents.Count; i++)
-                        {
-                            string parent = parents.Get(i);
-                            if (depth.ContainsKey(parent) && depth[parent] > maxParentLevel)
-                            {
-                                maxParentLevel = depth[parent];
-                            }
-                        }
+            return x;
+        }
 
-                        if (maxParentLevel >= 0 && depth[person] < maxParentLevel + 1)
-                        {
-                            depth[person] = maxParentLevel + 1;
-                            changed = true;
-                        }
-                    }
-                }
-            } while (changed);
+        private float GetSubtreeWidth(GraphService graphService, string person)
+        {
+            var children = graphService.GetChildren(person);
+            if (children.Count == 0)
+                return NODE_SPACING_X;
 
-            var levels = new Dictionary<int, List<string>>();
-            foreach (var person in people)
-            {
-                int lvl = depth[person];
-                if (!levels.ContainsKey(lvl))
-                    levels[lvl] = new List<string>();
-                levels[lvl].Add(person);
-            }
+            float total = 0;
+            for (int i = 0; i < children.Count; i++)
+                total += GetSubtreeWidth(graphService, children.Get(i));
 
-            return levels;
+            return total;
         }
     }
 }

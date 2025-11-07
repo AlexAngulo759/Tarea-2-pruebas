@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Proyecto_Grafos.Models
 {
-    public class LinkedList<T>
+    public class LinkedList<T> : IEnumerable<T>
     {
         private Node<T> _head;
         private int _count;
@@ -45,6 +47,7 @@ namespace Proyecto_Grafos.Models
             }
             return current.Data;
         }
+
         public void RemoveAt(int index)
         {
             if (index < 0 || index >= _count)
@@ -66,10 +69,8 @@ namespace Proyecto_Grafos.Models
             _count--;
         }
 
-        public int Count
-        {
-            get { return _count; }
-        }
+        public int Count => _count;
+
         public T[] ToArray()
         {
             T[] array = new T[_count];
@@ -84,18 +85,33 @@ namespace Proyecto_Grafos.Models
             }
             return array;
         }
+
         public bool Contains(T data)
         {
             Node<T> current = _head;
             while (current != null)
             {
                 if (current.Data.Equals(data))
-                {
                     return true;
-                }
+
                 current = current.Next;
             }
             return false;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            Node<T> current = _head;
+            while (current != null)
+            {
+                yield return current.Data;
+                current = current.Next;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

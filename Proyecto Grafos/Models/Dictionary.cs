@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Proyecto_Grafos.Models //tengo que cambiar a capacidad n
+namespace Proyecto_Grafos.Models 
 {
     public class Dictionary<K, V>
     {
