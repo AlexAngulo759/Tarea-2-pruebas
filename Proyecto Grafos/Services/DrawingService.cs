@@ -7,17 +7,23 @@ namespace Proyecto_Grafos.Services
 {
     public class DrawingService
     {
-        private const int BaseHorizontalSpacing = 80; // Espaciado base
+        private const int BaseHorizontalSpacing = 120;
         private const int VerticalSpacing = 120;
         private const int NodeWidth = 100;
         private const int NodeHeight = 100;
-        private const int MinimumSpacing = 50; // Separación mínima absoluta
+        private const int MinimumSpacing = 80;
+        private const int CoupleSpacing = 60;
+
+
+        private Dictionary<string, string> _coupleRelationships = new Dictionary<string, string>();
 
         public void DrawTree(Graphics g, List<Models.VisualNode> nodes, GraphService graphService)
         {
             if (nodes == null || nodes.Count == 0) return;
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            _coupleRelationships.Clear();
 
             var levels = CalculateLevels(nodes, graphService);
 
@@ -34,67 +40,27 @@ namespace Proyecto_Grafos.Services
                 return new Dictionary<int, List<Models.VisualNode>>();
 
             var depth = new Dictionary<string, int>();
+            var processed = new HashSet<string>();
 
             foreach (var n in nodes)
             {
                 depth[n.Name] = 0;
             }
 
-            bool changed;
-            do
+            var rootNodes = nodes.Where(n => graphService.GetParents(n.Name).Count == 0).ToList();
+
+            foreach (var root in rootNodes)
             {
-                changed = false;
+                AssignLevelsRecursively(root, nodes, graphService, depth, processed, 0);
+            }
 
-                foreach (var node in nodes)
-                {
-                    var parents = graphService.GetParents(node.Name);
-                    if (parents.Count > 0)
-                    {
-                        int maxParentLevel = -1;
-                        for (int i = 0; i < parents.Count; i++)
-                        {
-                            string parentName = parents.Get(i);
-                            if (depth.ContainsKey(parentName) && depth[parentName] > maxParentLevel)
-                            {
-                                maxParentLevel = depth[parentName];
-                            }
-                        }
-
-                        int requiredLevel = maxParentLevel + 1;
-                        if (depth[node.Name] < requiredLevel)
-                        {
-                            depth[node.Name] = requiredLevel;
-                            changed = true;
-                        }
-                    }
-                }
-
-            } while (changed);
-
-            do
+            foreach (var node in nodes.Where(n => !processed.Contains(n.Name)))
             {
-                changed = false;
-
-                foreach (var node in nodes)
+                if (graphService.GetParents(node.Name).Count > 0)
                 {
-                    var parents = graphService.GetParents(node.Name);
-                    if (parents.Count > 1)
-                    {
-                        int targetParentLevel = depth[node.Name] - 1;
-
-                        for (int i = 0; i < parents.Count; i++)
-                        {
-                            string parentName = parents.Get(i);
-                            if (depth.ContainsKey(parentName) && depth[parentName] != targetParentLevel)
-                            {
-                                depth[parentName] = targetParentLevel;
-                                changed = true;
-                            }
-                        }
-                    }
+                    depth[node.Name] = 1;
                 }
-
-            } while (changed);
+            }
 
             var levels = new Dictionary<int, List<Models.VisualNode>>();
             foreach (var n in nodes)
@@ -108,6 +74,38 @@ namespace Proyecto_Grafos.Services
             return levels;
         }
 
+        private void AssignLevelsRecursively(Models.VisualNode node, List<Models.VisualNode> nodes,
+                                           GraphService graphService, Dictionary<string, int> depth,
+                                           HashSet<string> processed, int currentLevel)
+        {
+            if (processed.Contains(node.Name)) return;
+
+            depth[node.Name] = currentLevel;
+            processed.Add(node.Name);
+
+            var children = graphService.GetChildren(node.Name);
+            for (int i = 0; i < children.Count; i++)
+            {
+                var childName = children.Get(i);
+                var child = nodes.FirstOrDefault(n => n.Name == childName);
+                if (child != null && !processed.Contains(childName))
+                {
+                    AssignLevelsRecursively(child, nodes, graphService, depth, processed, currentLevel + 1);
+                }
+            }
+
+            var parents = graphService.GetParents(node.Name);
+            for (int i = 0; i < parents.Count; i++)
+            {
+                var parentName = parents.Get(i);
+                var parent = nodes.FirstOrDefault(n => n.Name == parentName);
+                if (parent != null && !processed.Contains(parentName))
+                {
+                    AssignLevelsRecursively(parent, nodes, graphService, depth, processed, currentLevel - 1);
+                }
+            }
+        }
+
         private void CalculateNodePositions(List<Models.VisualNode> nodes, Dictionary<int, List<Models.VisualNode>> levels, GraphService graphService)
         {
             if (nodes == null || nodes.Count == 0) return;
@@ -119,177 +117,227 @@ namespace Proyecto_Grafos.Services
             int startX = 400;
             int startY = 50;
 
-            int maxNodesInLevel = 0;
-            foreach (var level in levels.Values)
+            var sortedLevels = levels.OrderBy(kvp => kvp.Key).ToList();
+
+            foreach (var kvp in sortedLevels)
             {
-                if (level.Count > maxNodesInLevel)
-                    maxNodesInLevel = level.Count;
+                DetectCouplesInLevel(kvp.Value, nodes, graphService);
             }
 
-            int maxWidth = maxNodesInLevel * (NodeWidth + dynamicHorizontalSpacing);
-
-            var mainPerson = FindMainPerson(nodes, levels);
-            if (mainPerson == null)
-            {
-                CalculateSimplePositions(nodes, levels, startX, startY, maxWidth, dynamicHorizontalSpacing);
-                return;
-            }
-
-            OrganizeTreeFromRoot(mainPerson, nodes, levels, graphService, startX, startY, dynamicHorizontalSpacing, treeDepth);
+            CalculateFinalPositions(nodes, levels, startX, startY, dynamicHorizontalSpacing);
         }
 
-        private int CalculateDynamicSpacing(int treeDepth)
+        private void DetectCouplesInLevel(List<Models.VisualNode> levelNodes, List<Models.VisualNode> allNodes, GraphService graphService)
         {
-            int baseSpacing = BaseHorizontalSpacing;
-            int depthMultiplier = (int)Math.Pow(1.5, treeDepth - 1); 
+            var processed = new HashSet<string>();
 
-            int dynamicSpacing = baseSpacing * depthMultiplier;
-
-            return Math.Max(dynamicSpacing, MinimumSpacing);
-        }
-
-        private Models.VisualNode FindMainPerson(List<Models.VisualNode> nodes, Dictionary<int, List<Models.VisualNode>> levels)
-        {
-            if (levels == null || levels.Count == 0) return null;
-
-            try
+            foreach (var node in levelNodes)
             {
-                int maxLevel = levels.Keys.Max();
-                if (levels.ContainsKey(maxLevel) && levels[maxLevel].Count > 0)
-                {
-                    return levels[maxLevel][0];
+                if (processed.Contains(node.Name)) continue;
+
+
+                var partner = FindPartner(node, levelNodes, allNodes, graphService);
+
+                if (partner != null && !processed.Contains(partner.Name))
+                {                    
+                    _coupleRelationships[node.Name] = partner.Name;
+                    _coupleRelationships[partner.Name] = node.Name;
+                    processed.Add(node.Name);
+                    processed.Add(partner.Name);
                 }
+                processed.Add(node.Name);
             }
-            catch (InvalidOperationException)
+        }
+
+        private Models.VisualNode FindPartner(Models.VisualNode node, List<Models.VisualNode> levelNodes,
+                                            List<Models.VisualNode> allNodes, GraphService graphService)
+        {
+            var children = graphService.GetChildren(node.Name);
+            if (children.Count == 0) return null;
+
+            foreach (var potentialPartner in levelNodes)
             {
-                return null;
+                if (potentialPartner.Name == node.Name) continue;
+
+                var partnerChildren = graphService.GetChildren(potentialPartner.Name);
+
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (partnerChildren.Contains(children.Get(i)))
+                    {
+                        return potentialPartner;
+                    }
+                }
             }
 
             return null;
         }
 
-        private void CalculateSimplePositions(List<Models.VisualNode> nodes, Dictionary<int, List<Models.VisualNode>> levels, int startX, int startY, int maxWidth, int horizontalSpacing)
+        private void CalculateFinalPositions(List<Models.VisualNode> nodes, Dictionary<int, List<Models.VisualNode>> levels,
+                                           int startX, int startY, int horizontalSpacing)
         {
-            foreach (var kvp in levels.OrderBy(k => k.Key))
+            var sortedLevels = levels.OrderBy(kvp => kvp.Key).ToList();
+
+            var levelWidths = new Dictionary<int, int>();
+            foreach (var kvp in sortedLevels)
             {
                 int level = kvp.Key;
-                List<Models.VisualNode> levelNodes = kvp.Value;
-                int y = startY + level * (NodeHeight + VerticalSpacing);
+                var levelNodes = kvp.Value;
 
-                int totalWidth = levelNodes.Count * (NodeWidth + horizontalSpacing) - horizontalSpacing;
-                int x = startX + (maxWidth - totalWidth) / 2;
+                int coupleCount = levelNodes.Count(n =>
+                    _coupleRelationships.ContainsKey(n.Name) &&
+                    string.Compare(n.Name, _coupleRelationships[n.Name]) < 0);
+                int individualCount = levelNodes.Count(n => !_coupleRelationships.ContainsKey(n.Name));
 
-                foreach (var node in levelNodes)
-                {
-                    node.X = x;
-                    node.Y = y;
-                    node.Size = new Size(NodeWidth, NodeHeight);
-                    x += NodeWidth + horizontalSpacing;
-                }
-            }
-        }
+                int totalWidth = (coupleCount * (NodeWidth * 2 + CoupleSpacing)) +
+                               (individualCount * (NodeWidth + horizontalSpacing));
 
-        private void OrganizeTreeFromRoot(Models.VisualNode root, List<Models.VisualNode> nodes, Dictionary<int, List<Models.VisualNode>> levels, GraphService graphService, int startX, int startY, int horizontalSpacing, int treeDepth)
-        {
-            foreach (var node in nodes)
-            {
-                node.X = 0;
-                node.Y = 0;
+                levelWidths[level] = totalWidth;
             }
 
-            foreach (var kvp in levels)
+            int maxLevelWidth = levelWidths.Values.Max();
+
+            foreach (var kvp in sortedLevels)
             {
                 int level = kvp.Key;
+                var levelNodes = kvp.Value;
                 int y = startY + level * (NodeHeight + VerticalSpacing);
-                foreach (var node in kvp.Value)
+
+                int levelWidth = levelWidths[level];
+                int startLevelX = startX + (maxLevelWidth - levelWidth) / 2;
+
+                OrganizeLevelPositions(levelNodes, startLevelX, y, horizontalSpacing);
+            }
+        }
+
+        private void OrganizeLevelPositions(List<Models.VisualNode> levelNodes, int startX, int y, int spacing)
+        {
+            int currentX = startX;
+            var processed = new HashSet<string>();
+
+            foreach (var node in levelNodes.Where(n => _coupleRelationships.ContainsKey(n.Name) && !processed.Contains(n.Name)))
+            {
+                var partnerName = _coupleRelationships[node.Name];
+                var partner = levelNodes.FirstOrDefault(n => n.Name == partnerName);
+
+                if (partner != null && !processed.Contains(partnerName))
                 {
+                    node.X = currentX;
                     node.Y = y;
                     node.Size = new Size(NodeWidth, NodeHeight);
+
+                    partner.X = currentX + NodeWidth + CoupleSpacing;
+                    partner.Y = y;
+                    partner.Size = new Size(NodeWidth, NodeHeight);
+
+                    currentX += NodeWidth * 2 + CoupleSpacing + spacing;
+                    processed.Add(node.Name);
+                    processed.Add(partner.Name);
                 }
             }
 
-            int dynamicBoundary = CalculateDynamicBoundary(treeDepth, horizontalSpacing);
-
-            root.X = startX;
-
-            OrganizeSubtree(root, nodes, graphService, levels, 0, startX - dynamicBoundary, startX + dynamicBoundary, horizontalSpacing);
+            foreach (var node in levelNodes.Where(n => !_coupleRelationships.ContainsKey(n.Name) && !processed.Contains(n.Name)))
+            {
+                node.X = currentX;
+                node.Y = y;
+                node.Size = new Size(NodeWidth, NodeHeight);
+                currentX += NodeWidth + spacing;
+                processed.Add(node.Name);
+            }
         }
 
-        private int CalculateDynamicBoundary(int treeDepth, int horizontalSpacing)
+        private int CalculateDynamicSpacing(int treeDepth)
         {
-            int baseBoundary = 300;
-            int depthMultiplier = (int)Math.Pow(2, treeDepth - 1);
+            int baseSpacing = BaseHorizontalSpacing;
+            int depthMultiplier = Math.Max(1, (int)Math.Log(treeDepth + 1, 2));
 
-            return baseBoundary * depthMultiplier + (horizontalSpacing * treeDepth);
-        }
-
-        private void OrganizeSubtree(Models.VisualNode node, List<Models.VisualNode> nodes, GraphService graphService, Dictionary<int, List<Models.VisualNode>> levels, int currentLevel, int leftBoundary, int rightBoundary, int horizontalSpacing)
-        {
-            var parents = graphService.GetParents(node.Name);
-            if (parents.Count == 0) return;
-
-            int levelSpacing = horizontalSpacing + (currentLevel * 20);
-
-            if (parents.Count == 1)
-            {
-                var parent = nodes.FirstOrDefault(n => n.Name == parents.Get(0));
-                if (parent != null)
-                {
-                    parent.X = node.X;
-                    OrganizeSubtree(parent, nodes, graphService, levels, currentLevel - 1, leftBoundary, rightBoundary, horizontalSpacing);
-                }
-            }
-            else if (parents.Count == 2)
-            {
-                var parent1 = nodes.FirstOrDefault(n => n.Name == parents.Get(0));
-                var parent2 = nodes.FirstOrDefault(n => n.Name == parents.Get(1));
-
-                if (parent1 != null && parent2 != null)
-                {
-                    int availableWidth = rightBoundary - leftBoundary;
-                    int centerX = node.X;
-
-                    int minParentSeparation = NodeWidth + levelSpacing;
-
-                    int leftCenter = Math.Max(leftBoundary + minParentSeparation, centerX - minParentSeparation);
-                    parent1.X = leftCenter;
-
-                    int rightCenter = Math.Min(rightBoundary - minParentSeparation, centerX + minParentSeparation);
-                    parent2.X = rightCenter;
-
-                    if (Math.Abs(parent1.X - parent2.X) < minParentSeparation)
-                    {
-                        parent1.X = centerX - minParentSeparation;
-                        parent2.X = centerX + minParentSeparation;
-                    }
-
-                    int newLeftBoundary = leftBoundary - levelSpacing;
-                    int newRightBoundary = rightBoundary + levelSpacing;
-
-                    OrganizeSubtree(parent1, nodes, graphService, levels, currentLevel - 1, newLeftBoundary, centerX, horizontalSpacing);
-                    OrganizeSubtree(parent2, nodes, graphService, levels, currentLevel - 1, centerX, newRightBoundary, horizontalSpacing);
-                }
-            }
+            int dynamicSpacing = baseSpacing * depthMultiplier;
+            return Math.Max(dynamicSpacing, MinimumSpacing);
         }
 
         private void DrawConnections(Graphics g, List<Models.VisualNode> nodes, GraphService graphService)
         {
             using (var pen = new Pen(Color.Black, 2))
+            using (var couplePen = new Pen(Color.DarkBlue, 2))
             {
-                foreach (var node in nodes)
+                DrawCoupleConnections(g, couplePen, nodes);
+
+                DrawParentChildConnections(g, pen, nodes, graphService);
+            }
+        }
+
+        private void DrawCoupleConnections(Graphics g, Pen pen, List<Models.VisualNode> nodes)
+        {
+            var drawnCouples = new HashSet<string>();
+
+            foreach (var node in nodes.Where(n => _coupleRelationships.ContainsKey(n.Name)))
+            {
+                var partnerName = _coupleRelationships[node.Name];
+                var partner = nodes.FirstOrDefault(n => n.Name == partnerName);
+
+                if (partner != null)
                 {
-                    var childrenList = graphService.GetChildren(node.Name);
-                    var childrenArray = childrenList.ToArray();
+                    var coupleKey = string.Compare(node.Name, partnerName) < 0
+                        ? $"{node.Name}-{partnerName}"
+                        : $"{partnerName}-{node.Name}";
 
-                    foreach (var childName in childrenArray)
+                    if (!drawnCouples.Contains(coupleKey))
                     {
+                        Point leftPoint = new Point(node.X + NodeWidth, node.Y + NodeHeight / 2);
+                        Point rightPoint = new Point(partner.X, partner.Y + NodeHeight / 2);
+
+                        g.DrawLine(pen, leftPoint, rightPoint);
+                        drawnCouples.Add(coupleKey);
+                    }
+                }
+            }
+        }
+
+        private void DrawParentChildConnections(Graphics g, Pen pen, List<Models.VisualNode> nodes, GraphService graphService)
+        {
+            foreach (var node in nodes)
+            {
+                var children = graphService.GetChildren(node.Name);
+
+                if (children.Count > 0)
+                {
+                    Point parentConnectionPoint;
+
+                    if (_coupleRelationships.ContainsKey(node.Name))
+                    {
+                        var partnerName = _coupleRelationships[node.Name];
+                        var partner = nodes.FirstOrDefault(n => n.Name == partnerName);
+                        if (partner != null)
+                        {
+                            int coupleCenterX = (node.X + partner.X + NodeWidth) / 2;
+                            parentConnectionPoint = new Point(coupleCenterX, node.Y + NodeHeight);
+                        }
+                        else
+                        {
+                            parentConnectionPoint = new Point(node.X + NodeWidth / 2, node.Y + NodeHeight);
+                        }
+                    }
+                    else
+                    {
+                        parentConnectionPoint = new Point(node.X + NodeWidth / 2, node.Y + NodeHeight);
+                    }
+
+                    for (int i = 0; i < children.Count; i++)
+                    {
+                        var childName = children.Get(i);
                         var child = nodes.FirstOrDefault(n => n.Name == childName);
-                        if (child == null) continue;
 
-                        Point parentBottom = new Point(node.X + NodeWidth / 2, node.Y + NodeHeight);
-                        Point childTop = new Point(child.X + NodeWidth / 2, child.Y);
+                        if (child != null)
+                        {
+                            Point childTop = new Point(child.X + NodeWidth / 2, child.Y);
 
-                        g.DrawLine(pen, parentBottom, childTop);
+                            Point verticalEnd = new Point(parentConnectionPoint.X, childTop.Y - 10);
+                            g.DrawLine(pen, parentConnectionPoint, verticalEnd);
+
+                            g.DrawLine(pen, verticalEnd, childTop);
+
+                            g.FillEllipse(Brushes.Red, verticalEnd.X - 3, verticalEnd.Y - 3, 6, 6);
+                        }
                     }
                 }
             }

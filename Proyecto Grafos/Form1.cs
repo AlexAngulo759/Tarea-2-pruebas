@@ -16,7 +16,15 @@ namespace Proyecto_Grafos
         private InteractionService _interactionService;
         private List<VisualNode> _visualNodes;
 
-        private Panel _treePanel;
+        private DoubleBufferedPanel _treePanel;
+
+        private Point _lastMousePosition;
+        private bool _isDragging = false;
+        private float _zoomFactor = 1.0f;
+        private PointF _translation = PointF.Empty;
+        private const float ZOOM_INCREMENT = 0.2f;
+        private const float MIN_ZOOM = 0.3f;
+        private const float MAX_ZOOM = 3.0f;
 
         public Form1()
         {
@@ -37,22 +45,39 @@ namespace Proyecto_Grafos
         {
             this.SuspendLayout();
 
-            _treePanel = new Panel();
+            _treePanel = new DoubleBufferedPanel();
             _treePanel.Dock = DockStyle.Fill;
             _treePanel.BackColor = Color.White;
             _treePanel.Paint += TreePanel_Paint;
             _treePanel.MouseDown += TreePanel_MouseDown;
+            _treePanel.MouseMove += TreePanel_MouseMove;
+            _treePanel.MouseUp += TreePanel_MouseUp;
+            _treePanel.MouseWheel += TreePanel_MouseWheel;
 
             this.Controls.Add(_treePanel);
 
-            this.Text = "Árbol Genealógico - Click derecho para agregar";
+            this.Text = "Árbol Genealógico - Click derecho para agregar | Arrastrar: Click izquierdo | Zoom: Rueda del mouse";
             this.Size = new Size(1000, 600);
             this.ResumeLayout();
         }
 
+        public class DoubleBufferedPanel : Panel
+        {
+            public DoubleBufferedPanel()
+            {
+                this.DoubleBuffered = true;
+            }
+        }
+
         private void TreePanel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Left)
+            {
+                _isDragging = true;
+                _lastMousePosition = e.Location;
+                _treePanel.Cursor = Cursors.SizeAll;
+            }
+            else if (e.Button == MouseButtons.Right)
             {
                 var clickedNode = FindNodeAtPosition(e.Location);
                 string nodeName = clickedNode?.Name ?? string.Empty;
@@ -65,6 +90,10 @@ namespace Proyecto_Grafos
                     var addRootItem = new ToolStripMenuItem("Agregar Familiar Inicial");
                     addRootItem.Click += (s, ev) => ShowInputForm(InteractionService.NodeAction.AddRoot, "");
                     contextMenu.Items.Add(addRootItem);
+
+                    var resetViewItem = new ToolStripMenuItem("Resetear Vista");
+                    resetViewItem.Click += (s, ev) => ResetView();
+                    contextMenu.Items.Add(resetViewItem);
                 }
                 else
                 {
@@ -83,6 +112,66 @@ namespace Proyecto_Grafos
 
                 contextMenu.Show(_treePanel, e.Location);
             }
+        }
+
+        private void TreePanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_isDragging && e.Button == MouseButtons.Left)
+            {
+                int deltaX = e.X - _lastMousePosition.X;
+                int deltaY = e.Y - _lastMousePosition.Y;
+
+                _translation.X += deltaX / _zoomFactor;
+                _translation.Y += deltaY / _zoomFactor;
+
+                _lastMousePosition = e.Location;
+                _treePanel.Invalidate();
+            }
+        }
+
+        private void TreePanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _isDragging = false;
+                _treePanel.Cursor = Cursors.Default;
+            }
+        }
+
+        private void TreePanel_MouseWheel(object sender, MouseEventArgs e)
+        {
+            float oldZoom = _zoomFactor;
+
+            if (e.Delta > 0)
+            {
+                _zoomFactor = Math.Min(_zoomFactor + ZOOM_INCREMENT, MAX_ZOOM);
+            }
+            else
+            {
+                _zoomFactor = Math.Max(_zoomFactor - ZOOM_INCREMENT, MIN_ZOOM);
+            }
+
+            if (oldZoom != _zoomFactor)
+            {
+                PointF mousePos = e.Location;
+
+                PointF worldMousePos = new PointF(
+                    (mousePos.X - _translation.X * oldZoom) / oldZoom,
+                    (mousePos.Y - _translation.Y * oldZoom) / oldZoom
+                );
+
+                _translation.X = (mousePos.X - worldMousePos.X * _zoomFactor) / _zoomFactor;
+                _translation.Y = (mousePos.Y - worldMousePos.Y * _zoomFactor) / _zoomFactor;
+
+                _treePanel.Invalidate();
+            }
+        }
+
+        private void ResetView()
+        {
+            _zoomFactor = 1.0f;
+            _translation = PointF.Empty;
+            _treePanel.Invalidate();
         }
 
         private void ShowInputForm(InteractionService.NodeAction action, string nodeName)
@@ -206,10 +295,15 @@ namespace Proyecto_Grafos
 
         private VisualNode FindNodeAtPosition(Point position)
         {
+            PointF worldPos = new PointF(
+                (position.X - _translation.X * _zoomFactor) / _zoomFactor,
+                (position.Y - _translation.Y * _zoomFactor) / _zoomFactor
+            );
+
             foreach (var node in _visualNodes)
             {
                 var bounds = node.GetBounds();
-                if (bounds.Contains(position))
+                if (bounds.Contains((int)worldPos.X, (int)worldPos.Y))
                     return node;
             }
             return null;
@@ -224,7 +318,28 @@ namespace Proyecto_Grafos
 
         private void TreePanel_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.TranslateTransform(_translation.X * _zoomFactor, _translation.Y * _zoomFactor);
+            e.Graphics.ScaleTransform(_zoomFactor, _zoomFactor);
+
             _drawingService.DrawTree(e.Graphics, _visualNodes, _graphService);
+
+            DrawZoomInfo(e.Graphics);
+        }
+
+        private void DrawZoomInfo(Graphics g)
+        {
+            var oldTransform = g.Transform;
+
+            g.ResetTransform();
+
+            string zoomText = $"Zoom: {(_zoomFactor * 100):F0}%";
+            using (var font = new Font("Arial", 10))
+            using (var brush = new SolidBrush(Color.DarkGray))
+            {
+                g.DrawString(zoomText, font, brush, 10, 10);
+            }
+
+            g.Transform = oldTransform;
         }
     }
 }
