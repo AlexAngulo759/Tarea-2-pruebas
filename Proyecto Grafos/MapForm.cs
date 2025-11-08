@@ -22,8 +22,10 @@ namespace Proyecto_Grafos
         DataTable dt;
 
         int selectedrow = 0;
-        double InicialLat = 9.859023203965602;
-        double InicialLng = -83.91360662945013;
+        double InitialLat = 9.859023203965602;
+        double InitialLng = -83.91360662945013;
+
+        private bool modeSelection = true;
 
         public MapForm()
         {
@@ -31,14 +33,132 @@ namespace Proyecto_Grafos
         }
         private void MapForm_Load(object sender, EventArgs e)
         {
+
+            this.WindowState = FormWindowState.Maximized;
+            this.MinimumSize = new System.Drawing.Size(1080, 800);
+
+            dt = new DataTable();
+            dt.Columns.Add(new DataColumn("Nombre", typeof(string)));
+            dt.Columns.Add(new DataColumn("Lat", typeof(double)));
+            dt.Columns.Add(new DataColumn("Long", typeof(double)));
+
+            dataGridView1.DataSource = dt;
+
+            dataGridView1.Columns[1].Visible = false;
+            dataGridView1.Columns[2].Visible = false;
+
             gMapControl1.DragButton = MouseButtons.Left;
             gMapControl1.CanDragMap = true;
             gMapControl1.MapProvider = GMapProviders.GoogleMap;
-            gMapControl1.Position = new PointLatLng(InicialLat, InicialLng);
+            gMapControl1.Position = new PointLatLng(InitialLat, InitialLng);
             gMapControl1.MinZoom = 0;
             gMapControl1.MaxZoom = 24;
             gMapControl1.Zoom = 9;
             gMapControl1.AutoScroll = true;
+
+            markersOverlay = new GMapOverlay("markers");
+            marker = new GMarkerGoogle(new PointLatLng(InitialLat, InitialLng), GMarkerGoogleType.red_dot);
+            markersOverlay.Markers.Add(marker);
+
+            marker.ToolTipMode = MarkerTooltipMode.Always;
+            marker.ToolTipText = string.Format("Ubicación: \n Latitud: {0} \n Longitud: {1}", InitialLat, InitialLng);
+
+            gMapControl1.Overlays.Add(markersOverlay);
+
+            LocationSelection();
+
+
+
+        }
+        private void LocationSelection()
+        {
+            modeSelection = true;
+            this.Text = "Seleccionar Ubicaicón";
+
+            Acceptbtn.Visible = true;
+            ChangeModebtn.Visible = true;
+
+            dataGridView1.Visible = false;
+            Addbtn.Visible = false;
+            Deletebtn.Visible = false;
+
+            ChangeModebtn.Text = "Cambiar Modo";
+        }
+
+        private void FamilyVisualization()
+        {
+            modeSelection = false;
+            this.Text = "Visualización Familires";
+
+            Acceptbtn.Visible = false;
+
+            dataGridView1.Visible = true;
+            Addbtn.Visible = true;
+            Deletebtn.Visible = true;
+            ChangeModebtn.Visible = true;
+
+            ChangeModebtn.Text = "Cambiar Modo";
+        }
+
+        private void SelectUbication(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.RowIndex >= dataGridView1.Rows.Count)
+                return; // Saltar invalidación
+            selectedrow = e.RowIndex;
+            Descriptiontext.Text = dataGridView1.Rows[selectedrow].Cells[0].Value.ToString();
+            Latitudtext.Text = dataGridView1.Rows[selectedrow].Cells[1].Value.ToString();
+            Longitudtext.Text = dataGridView1.Rows[selectedrow].Cells[2].Value.ToString();
+
+            marker.Position = new PointLatLng(Convert.ToDouble(Latitudtext.Text), Convert.ToDouble(Longitudtext.Text));
+            gMapControl1.Position = marker.Position;
+
+
+        }
+
+        private void gMapControl1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            double lat = gMapControl1.FromLocalToLatLng(e.X, e.Y).Lat;
+            double lng = gMapControl1.FromLocalToLatLng(e.X, e.Y).Lng;
+
+            Latitudtext.Text = lat.ToString();
+            Longitudtext.Text = lng.ToString();
+
+            marker.Position = new PointLatLng(lat, lng);
+
+            marker.ToolTipText = string.Format("Ubicación: \n Latitud: {0} \n Longitud: {1}", lat, lng);
+
+        }
+
+        private void Addbtn_Click(object sender, EventArgs e)
+        {
+            dt.Rows.Add(Descriptiontext.Text, Convert.ToDouble(Latitudtext.Text), Convert.ToDouble(Longitudtext.Text));
+
+        }
+
+        private void Deletebtn_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.RemoveAt(selectedrow);
+        }
+
+        private void ChangeModebtn_Click(object sender, EventArgs e)
+        {
+            if (modeSelection)
+            {
+                FamilyVisualization();
+            }
+            else
+            {
+                LocationSelection();
+            }
+        }
+
+        private void Acceptbtn_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void Acceptbtn_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }
