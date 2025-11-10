@@ -31,9 +31,9 @@ namespace Proyecto_Grafos
         {
             InitializeComponent();
         }
+
         private void MapForm_Load(object sender, EventArgs e)
         {
-
             this.WindowState = FormWindowState.Maximized;
             this.MinimumSize = new System.Drawing.Size(1080, 800);
 
@@ -57,6 +57,7 @@ namespace Proyecto_Grafos
             gMapControl1.AutoScroll = true;
 
             markersOverlay = new GMapOverlay("markers");
+
             marker = new GMarkerGoogle(new PointLatLng(InitialLat, InitialLng), GMarkerGoogleType.red_dot);
             markersOverlay.Markers.Add(marker);
 
@@ -66,14 +67,12 @@ namespace Proyecto_Grafos
             gMapControl1.Overlays.Add(markersOverlay);
 
             LocationSelection();
-
-
-
         }
+
         private void LocationSelection()
         {
             modeSelection = true;
-            this.Text = "Seleccionar Ubicaicón";
+            this.Text = "Seleccionar Ubicación";
 
             Acceptbtn.Visible = true;
             ChangeModebtn.Visible = true;
@@ -88,7 +87,7 @@ namespace Proyecto_Grafos
         private void FamilyVisualization()
         {
             modeSelection = false;
-            this.Text = "Visualización Familires";
+            this.Text = "Visualización Familiares";
 
             Acceptbtn.Visible = false;
 
@@ -100,10 +99,21 @@ namespace Proyecto_Grafos
             ChangeModebtn.Text = "Cambiar Modo";
         }
 
+        private void CreateFamilyMarker(string name, double lat, double lng)
+        {
+            GMarkerGoogle familyMarker = new GMarkerGoogle(new PointLatLng(lat, lng), GMarkerGoogleType.blue);
+
+            familyMarker.ToolTipMode = MarkerTooltipMode.Always;
+            familyMarker.ToolTipText = string.Format("{0}\nLat: {1}\nLng: {2}", name, lat, lng);
+
+            markersOverlay.Markers.Add(familyMarker);
+        }
+
         private void SelectUbication(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex < 0 || e.RowIndex >= dataGridView1.Rows.Count)
-                return; // Saltar invalidación
+                return;
+
             selectedrow = e.RowIndex;
             Descriptiontext.Text = dataGridView1.Rows[selectedrow].Cells[0].Value.ToString();
             Latitudtext.Text = dataGridView1.Rows[selectedrow].Cells[1].Value.ToString();
@@ -111,8 +121,6 @@ namespace Proyecto_Grafos
 
             marker.Position = new PointLatLng(Convert.ToDouble(Latitudtext.Text), Convert.ToDouble(Longitudtext.Text));
             gMapControl1.Position = marker.Position;
-
-
         }
 
         private void gMapControl1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -124,20 +132,36 @@ namespace Proyecto_Grafos
             Longitudtext.Text = lng.ToString();
 
             marker.Position = new PointLatLng(lat, lng);
-
             marker.ToolTipText = string.Format("Ubicación: \n Latitud: {0} \n Longitud: {1}", lat, lng);
-
         }
 
         private void Addbtn_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(Descriptiontext.Text))
+            {
+                MessageBox.Show("Por favor ingrese un nombre para el familiar");
+                return;
+            }
             dt.Rows.Add(Descriptiontext.Text, Convert.ToDouble(Latitudtext.Text), Convert.ToDouble(Longitudtext.Text));
 
+            CreateFamilyMarker(Descriptiontext.Text, Convert.ToDouble(Latitudtext.Text), Convert.ToDouble(Longitudtext.Text));
+
+            Descriptiontext.Text = "";
+            Latitudtext.Text = "";
+            Longitudtext.Text = "";
         }
 
         private void Deletebtn_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.RemoveAt(selectedrow);
+            if (selectedrow >= 0 && selectedrow < dataGridView1.Rows.Count)
+            {
+                dataGridView1.Rows.RemoveAt(selectedrow);
+
+                if (selectedrow + 1 < markersOverlay.Markers.Count)
+                {
+                    markersOverlay.Markers.RemoveAt(selectedrow + 1);
+                }
+            }
         }
 
         private void ChangeModebtn_Click(object sender, EventArgs e)
@@ -154,11 +178,7 @@ namespace Proyecto_Grafos
 
         private void Acceptbtn_Click(object sender, EventArgs e)
         {
-        }
-
-        private void Acceptbtn_Click_1(object sender, EventArgs e)
-        {
-
+           
         }
     }
 }
