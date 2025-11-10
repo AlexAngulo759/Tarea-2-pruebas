@@ -2,15 +2,8 @@
 {
     partial class MapForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.Addbtn = new System.Windows.Forms.Button();
@@ -40,6 +29,7 @@
             this.Acceptbtn = new System.Windows.Forms.Button();
             this.ChangeModebtn = new System.Windows.Forms.Button();
             this.gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -131,7 +121,7 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 82;
             this.dataGridView1.RowTemplate.Height = 33;
-            this.dataGridView1.Size = new System.Drawing.Size(350, 317);
+            this.dataGridView1.Size = new System.Drawing.Size(350, 14);
             this.dataGridView1.TabIndex = 9;
             this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.SelectUbication);
             // 
@@ -170,7 +160,7 @@
             this.gMapControl1.LevelsKeepInMemory = 5;
             this.gMapControl1.Location = new System.Drawing.Point(-1, 2);
             this.gMapControl1.MarkersEnabled = true;
-            this.gMapControl1.MaxZoom = 2;
+            this.gMapControl1.MaxZoom = 18;
             this.gMapControl1.MinZoom = 2;
             this.gMapControl1.MouseWheelZoomEnabled = true;
             this.gMapControl1.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
@@ -184,14 +174,24 @@
             this.gMapControl1.ShowTileGridLines = false;
             this.gMapControl1.Size = new System.Drawing.Size(750, 691);
             this.gMapControl1.TabIndex = 0;
-            this.gMapControl1.Zoom = 0D;
+            this.gMapControl1.Zoom = 5D;
             this.gMapControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gMapControl1_MouseDoubleClick);
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox1.Location = new System.Drawing.Point(790, 382);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(350, 297);
+            this.richTextBox1.TabIndex = 10;
+            this.richTextBox1.Text = "";
             // 
             // MapForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1150, 691);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.ChangeModebtn);
             this.Controls.Add(this.Acceptbtn);
             this.Controls.Add(this.dataGridView1);
@@ -228,5 +228,6 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button Acceptbtn;
         private System.Windows.Forms.Button ChangeModebtn;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
