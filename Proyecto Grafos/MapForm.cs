@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using GMap.NET;
@@ -19,6 +15,8 @@ namespace Proyecto_Grafos
     {
         GMarkerGoogle marker;
         GMapOverlay markersOverlay;
+        GMapOverlay routesOverlay;
+        GMapOverlay tempOverlay;
         DataTable dt;
 
         int selectedrow = 0;
@@ -35,15 +33,14 @@ namespace Proyecto_Grafos
         private void MapForm_Load(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Maximized;
-            this.MinimumSize = new System.Drawing.Size(1080, 800);
+            this.MinimumSize = new Size(1080, 800);
+            this.KeyPreview = true;
 
             dt = new DataTable();
             dt.Columns.Add(new DataColumn("Nombre", typeof(string)));
             dt.Columns.Add(new DataColumn("Lat", typeof(double)));
             dt.Columns.Add(new DataColumn("Long", typeof(double)));
-
             dataGridView1.DataSource = dt;
-
             dataGridView1.Columns[1].Visible = false;
             dataGridView1.Columns[2].Visible = false;
 
@@ -57,18 +54,23 @@ namespace Proyecto_Grafos
             gMapControl1.AutoScroll = true;
 
             markersOverlay = new GMapOverlay("markers");
+            routesOverlay = new GMapOverlay("routes");
+            tempOverlay = new GMapOverlay("temp");
 
             marker = new GMarkerGoogle(new PointLatLng(InitialLat, InitialLng), GMarkerGoogleType.red_dot);
-            markersOverlay.Markers.Add(marker);
-
             marker.ToolTipMode = MarkerTooltipMode.Always;
-            marker.ToolTipText = string.Format("Ubicación: \n Latitud: {0} \n Longitud: {1}", InitialLat, InitialLng);
+            marker.ToolTipText = $"Ubicación:\nLatitud: {InitialLat}\nLongitud: {InitialLng}";
 
             gMapControl1.Overlays.Add(markersOverlay);
+            gMapControl1.Overlays.Add(routesOverlay);
+            gMapControl1.Overlays.Add(tempOverlay);
+
+            gMapControl1.OnMarkerClick += new MarkerClick(FamilyMarker_Click);
+            gMapControl1.MouseClick += new MouseEventHandler(gMapControl1_MouseClick);
+            this.KeyDown += new KeyEventHandler(MapForm_KeyDown);
 
             LocationSelection();
         }
-
         private void LocationSelection()
         {
             modeSelection = true;
@@ -83,7 +85,6 @@ namespace Proyecto_Grafos
 
             ChangeModebtn.Text = "Cambiar Modo";
         }
-
         private void FamilyVisualization()
         {
             modeSelection = false;
@@ -99,14 +100,89 @@ namespace Proyecto_Grafos
             ChangeModebtn.Text = "Cambiar Modo";
         }
 
+        private void UpdateStatistics()
+        {
+            if (dt.Rows.Count < 2)
+            {
+                richTextBox1.Text =
+                    "ESTADÍSTICAS FAMILIARES\n" +
+                    "-----------------------\n" +
+                    "Se necesitan al menos 2 miembros\n" +
+                    "para calcular estadísticas.";
+                return;
+            }
+
+            var furthest = CalculateStatistics.FindFurthestPair(dt);
+            var closest = CalculateStatistics.FindClosestPair(dt);
+            double average = CalculateStatistics.CalculateAverageDistance(dt);
+
+            richTextBox1.Text =
+                $"ESTADÍSTICAS FAMILIARES\n" +
+                $"-----------------------\n" +
+                $"Miembros totales: {dt.Rows.Count}\n\n" +
+                $"PAR MÁS LEJANO:\n" +
+                $"├ {furthest.member1}\n" +
+                $"├ {furthest.member2}\n" +
+                $"└ Distancia: {furthest.distance:F2} km\n\n" +
+                $"PAR MÁS CERCANO:\n" +
+                $"├ {closest.member1}\n" +
+                $"├ {closest.member2}\n" +
+                $"└ Distancia: {closest.distance:F2} km\n\n" +
+                $"DISTANCIA PROMEDIO:\n" +
+                $"└ {average:F2} km";
+        }
+
         private void CreateFamilyMarker(string name, double lat, double lng)
         {
-            GMarkerGoogle familyMarker = new GMarkerGoogle(new PointLatLng(lat, lng), GMarkerGoogleType.blue);
-
-            familyMarker.ToolTipMode = MarkerTooltipMode.Always;
-            familyMarker.ToolTipText = string.Format("{0}\nLat: {1}\nLng: {2}", name, lat, lng);
+            var familyMarker = new GMarkerGoogle(new PointLatLng(lat, lng), GMarkerGoogleType.blue)
+            {
+                ToolTipMode = MarkerTooltipMode.Always,
+                ToolTipText = $"{name}\nLat: {lat}\nLng: {lng}"
+            };
 
             markersOverlay.Markers.Add(familyMarker);
+        }
+
+        private void FamilyMarker_Click(GMapMarker clickedMarker, MouseEventArgs e)
+        {
+            if (clickedMarker == marker)
+                return;
+
+            routesOverlay.Clear();
+
+            PointLatLng selectedPosition = clickedMarker.Position;
+
+            foreach (GMapMarker otherMarker in markersOverlay.Markers)
+            {
+                if (otherMarker != clickedMarker)
+                {
+                    PointLatLng otherPosition = otherMarker.Position;
+                    var route = new GMapRoute(new List<PointLatLng> { selectedPosition, otherPosition }, "connection")
+                    {
+                        Stroke = new Pen(Color.Red, 2)
+                    };
+                    routesOverlay.Routes.Add(route);
+                }
+            }
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                double rowLat = Convert.ToDouble(dt.Rows[i]["Lat"]);
+                double rowLng = Convert.ToDouble(dt.Rows[i]["Long"]);
+
+                if (rowLat == selectedPosition.Lat && rowLng == selectedPosition.Lng)
+                {
+                    dataGridView1.ClearSelection();
+                    dataGridView1.Rows[i].Selected = true;
+                    dataGridView1.FirstDisplayedScrollingRowIndex = i;
+
+                    selectedrow = i;
+                    Descriptiontext.Text = dt.Rows[i]["Nombre"].ToString();
+                    Latitudtext.Text = rowLat.ToString();
+                    Longitudtext.Text = rowLng.ToString();
+                    break;
+                }
+            }
         }
 
         private void SelectUbication(object sender, DataGridViewCellMouseEventArgs e)
@@ -119,10 +195,16 @@ namespace Proyecto_Grafos
             Latitudtext.Text = dataGridView1.Rows[selectedrow].Cells[1].Value.ToString();
             Longitudtext.Text = dataGridView1.Rows[selectedrow].Cells[2].Value.ToString();
 
-            marker.Position = new PointLatLng(Convert.ToDouble(Latitudtext.Text), Convert.ToDouble(Longitudtext.Text));
+            marker.Position = new PointLatLng(
+                Convert.ToDouble(Latitudtext.Text),
+                Convert.ToDouble(Longitudtext.Text));
             gMapControl1.Position = marker.Position;
-        }
 
+            if (!tempOverlay.Markers.Contains(marker))
+            {
+                tempOverlay.Markers.Add(marker);
+            }
+        }
         private void gMapControl1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             double lat = gMapControl1.FromLocalToLatLng(e.X, e.Y).Lat;
@@ -132,7 +214,33 @@ namespace Proyecto_Grafos
             Longitudtext.Text = lng.ToString();
 
             marker.Position = new PointLatLng(lat, lng);
-            marker.ToolTipText = string.Format("Ubicación: \n Latitud: {0} \n Longitud: {1}", lat, lng);
+            marker.ToolTipText = $"Ubicación:\nLatitud: {lat}\nLongitud: {lng}";
+
+            if (!tempOverlay.Markers.Contains(marker))
+            {
+                tempOverlay.Markers.Add(marker);
+            }
+
+            routesOverlay.Clear();
+            gMapControl1.Refresh();
+        }
+        private void MapForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                routesOverlay.Clear();
+                gMapControl1.Refresh();
+                e.Handled = true;
+            }
+        }
+
+        private void gMapControl1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                tempOverlay.Markers.Clear();
+                gMapControl1.Refresh();
+            }
         }
 
         private void Addbtn_Click(object sender, EventArgs e)
@@ -142,13 +250,39 @@ namespace Proyecto_Grafos
                 MessageBox.Show("Por favor ingrese un nombre para el familiar");
                 return;
             }
-            dt.Rows.Add(Descriptiontext.Text, Convert.ToDouble(Latitudtext.Text), Convert.ToDouble(Longitudtext.Text));
 
-            CreateFamilyMarker(Descriptiontext.Text, Convert.ToDouble(Latitudtext.Text), Convert.ToDouble(Longitudtext.Text));
+            if (!tempOverlay.Markers.Contains(marker))
+            {
+                MessageBox.Show("No hay marcador rojo en el mapa.\n\nHaga doble click en el mapa para colocar un marcador rojo primero.",
+                               "Marcador no encontrado",
+                               MessageBoxButtons.OK,
+                               MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Latitudtext.Text) || string.IsNullOrEmpty(Longitudtext.Text))
+            {
+                MessageBox.Show("No hay coordenadas para crear el familiar.\n\nHaga doble click en el mapa para establecer coordenadas.",
+                               "Coordenadas faltantes",
+                               MessageBoxButtons.OK,
+                               MessageBoxIcon.Warning);
+                return;
+            }
+
+            double lat = Convert.ToDouble(Latitudtext.Text);
+            double lng = Convert.ToDouble(Longitudtext.Text);
+            string name = Descriptiontext.Text;
+
+            dt.Rows.Add(name, lat, lng);
+            CreateFamilyMarker(name, lat, lng);
 
             Descriptiontext.Text = "";
             Latitudtext.Text = "";
             Longitudtext.Text = "";
+
+            tempOverlay.Markers.Clear();
+            UpdateStatistics();
+            gMapControl1.Refresh();
         }
 
         private void Deletebtn_Click(object sender, EventArgs e)
@@ -157,33 +291,23 @@ namespace Proyecto_Grafos
             {
                 dataGridView1.Rows.RemoveAt(selectedrow);
 
-                if (selectedrow + 1 < markersOverlay.Markers.Count)
+                if (selectedrow < markersOverlay.Markers.Count)
                 {
-                    markersOverlay.Markers.RemoveAt(selectedrow + 1);
+                    markersOverlay.Markers.RemoveAt(selectedrow);
                 }
+                routesOverlay.Clear();
+                UpdateStatistics();
             }
         }
 
         private void ChangeModebtn_Click(object sender, EventArgs e)
         {
             if (modeSelection)
-            {
                 FamilyVisualization();
-            }
             else
-            {
                 LocationSelection();
-            }
         }
 
-        private void Acceptbtn_Click(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+        private void Acceptbtn_Click(object sender, EventArgs e) { }
     }
 }
