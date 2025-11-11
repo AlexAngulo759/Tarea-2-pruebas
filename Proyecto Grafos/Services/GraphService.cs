@@ -14,7 +14,10 @@ namespace Proyecto_Grafos.Services
             _validator = new GraphValidator(this);
         }
 
-        public bool AddPerson(string name, double latitude = 0.0, double longitude = 0.0)
+        public bool AddPerson(string name, double latitude = 0.0, double longitude = 0.0,
+                            string cedula = "", DateTime? fechaNacimiento = null,
+                            bool estaVivo = true, DateTime? fechaFallecimiento = null,
+                            string photoPath = "")
         {
             if (string.IsNullOrEmpty(name))
                 return false;
@@ -25,7 +28,8 @@ namespace Proyecto_Grafos.Services
 
             try
             {
-                _familyTree.AddPerson(name, latitude, longitude);
+                _familyTree.AddPerson(name, latitude, longitude, cedula, fechaNacimiento,
+                                    estaVivo, fechaFallecimiento, photoPath);
                 return true;
             }
             catch (Exception)
@@ -33,7 +37,6 @@ namespace Proyecto_Grafos.Services
                 return false;
             }
         }
-
         public bool AddRelationship(string parent, string child)
         {
             try

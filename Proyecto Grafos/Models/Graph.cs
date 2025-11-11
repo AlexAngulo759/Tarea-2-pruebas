@@ -6,7 +6,8 @@ namespace Proyecto_Grafos.Models
     {
         private Dictionary<string, Person> _people;
         private Dictionary<string, LinkedList<string>> _adjacencyList;
-        private Dictionary<string, LinkedList<string>> _parentList; 
+        private Dictionary<string, LinkedList<string>> _parentList;
+
         public Graph()
         {
             _people = new Dictionary<string, Person>();
@@ -14,11 +15,22 @@ namespace Proyecto_Grafos.Models
             _parentList = new Dictionary<string, LinkedList<string>>();
         }
 
-        public void AddPerson(string name, double latitude = 0.0, double longitude = 0.0) 
+        public void AddPerson(string name, double latitude = 0.0, double longitude = 0.0,
+                           string cedula = "", DateTime? fechaNacimiento = null,
+                           bool estaVivo = true, DateTime? fechaFallecimiento = null,
+                           string photoPath = "")
         {
             if (!_people.ContainsKey(name))
             {
-                _people.Add(name, new Person(name, latitude, longitude));
+                var person = new Person(name, latitude, longitude)
+                {
+                    Cedula = cedula,
+                    FechaNacimiento = fechaNacimiento ?? DateTime.Now,
+                    EstaVivo = estaVivo,
+                    FechaFallecimiento = fechaFallecimiento,
+                    PhotoPath = photoPath
+                };
+                _people.Add(name, person);
             }
 
             if (!_adjacencyList.ContainsKey(name))
@@ -31,7 +43,7 @@ namespace Proyecto_Grafos.Models
                 _parentList.Add(name, new LinkedList<string>());
             }
         }
-
+       
         public void AddRelationship(string parent, string child, bool setRelationships = true)
         {
             AddPerson(parent);
@@ -41,7 +53,6 @@ namespace Proyecto_Grafos.Models
             {
                 _adjacencyList[parent].Add(child);
             }
-
             if (!_parentList[child].Contains(parent))
             {
                 _parentList[child].Add(parent);
@@ -71,6 +82,7 @@ namespace Proyecto_Grafos.Models
             }
             return new LinkedList<string>();
         }
+
         public string GetParent(string childName)
         {
             var person = GetPerson(childName);

@@ -88,7 +88,7 @@ namespace Proyecto_Grafos
                 if (!isOverNode)
                 {
                     var addRootItem = new ToolStripMenuItem("Agregar Familiar Inicial");
-                    addRootItem.Click += (s, ev) => ShowInputForm(InteractionService.NodeAction.AddRoot, "");
+                    addRootItem.Click += (s, ev) => ShowPersonDetailForm(InteractionService.NodeAction.AddRoot, "");
                     contextMenu.Items.Add(addRootItem);
 
                     var resetViewItem = new ToolStripMenuItem("Resetear Vista");
@@ -98,16 +98,20 @@ namespace Proyecto_Grafos
                 else
                 {
                     var addSuccessorItem = new ToolStripMenuItem("Agregar Sucesor");
-                    addSuccessorItem.Click += (s, ev) => ShowInputForm(InteractionService.NodeAction.AddSuccessor, nodeName);
+                    addSuccessorItem.Click += (s, ev) => ShowPersonDetailForm(InteractionService.NodeAction.AddSuccessor, nodeName);
                     contextMenu.Items.Add(addSuccessorItem);
 
                     var addPredecessorItem = new ToolStripMenuItem("Agregar Predecesor");
-                    addPredecessorItem.Click += (s, ev) => ShowInputForm(InteractionService.NodeAction.AddPredecessor, nodeName);
+                    addPredecessorItem.Click += (s, ev) => ShowPersonDetailForm(InteractionService.NodeAction.AddPredecessor, nodeName);
                     contextMenu.Items.Add(addPredecessorItem);
 
                     var addSiblingItem = new ToolStripMenuItem("Agregar Hermano");
-                    addSiblingItem.Click += (s, ev) => ShowInputForm(InteractionService.NodeAction.AddSibling, nodeName);
+                    addSiblingItem.Click += (s, ev) => ShowPersonDetailForm(InteractionService.NodeAction.AddSibling, nodeName);
                     contextMenu.Items.Add(addSiblingItem);
+
+                    var viewDetailsItem = new ToolStripMenuItem("Ver Detalles");
+                    viewDetailsItem.Click += (s, ev) => ShowPersonDetails(nodeName);
+                    contextMenu.Items.Add(viewDetailsItem);
                 }
 
                 contextMenu.Show(_treePanel, e.Location);
@@ -174,18 +178,20 @@ namespace Proyecto_Grafos
             _treePanel.Invalidate();
         }
 
-        private void ShowInputForm(InteractionService.NodeAction action, string nodeName)
+        private void ShowPersonDetailForm(InteractionService.NodeAction action, string nodeName)
         {
             _interactionService.CurrentAction = action;
             _interactionService.SelectedNode = nodeName;
 
             string formTitle = GetFormTitle();
 
-            using (var inputForm = new SimpleInputForm(formTitle))
+            using (var detailForm = new PersonDetailForm(""))
             {
-                if (inputForm.ShowDialog() == DialogResult.OK)
+                detailForm.Text = formTitle; 
+
+                if (detailForm.ShowDialog() == DialogResult.OK)
                 {
-                    ProcessFormResult(inputForm);
+                    ProcessPersonDetailFormResult(detailForm);
                 }
             }
 
@@ -209,19 +215,31 @@ namespace Proyecto_Grafos
             }
         }
 
-        private void ProcessFormResult(SimpleInputForm form)
+        private void ProcessPersonDetailFormResult(PersonDetailForm detailForm)
         {
             bool success = false;
             string message = "";
             ValidationResult validationResult = null;
 
+            var personData = new
+            {
+                Name = detailForm.PersonName,
+                Latitude = detailForm.Latitude,
+                Longitude = detailForm.Longitude,
+                Cedula = detailForm.Cedula,
+                FechaNacimiento = detailForm.FechaNacimiento,
+                EstaVivo = detailForm.EstaVivo,
+                FechaFallecimiento = detailForm.FechaFallecimiento,
+                PhotoPath = detailForm.PhotoPath
+            };
+
             switch (_interactionService.CurrentAction)
             {
                 case InteractionService.NodeAction.AddRoot:
-                    validationResult = _graphService.ValidateAddRoot(form.PersonName);
+                    validationResult = _graphService.ValidateAddRoot(personData.Name);
                     if (validationResult.IsValid)
                     {
-                        success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
+                        success = AddPersonWithData(personData);
                         message = success ? "Familiar inicial agregado" : "Error al agregar familiar inicial";
                     }
                     else
@@ -231,13 +249,13 @@ namespace Proyecto_Grafos
                     break;
 
                 case InteractionService.NodeAction.AddSuccessor:
-                    validationResult = _graphService.ValidateAddSuccessor(_interactionService.SelectedNode, form.PersonName);
+                    validationResult = _graphService.ValidateAddSuccessor(_interactionService.SelectedNode, personData.Name);
                     if (validationResult.IsValid)
                     {
-                        success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
+                        success = AddPersonWithData(personData);
                         if (success)
                         {
-                            success = _graphService.AddRelationship(_interactionService.SelectedNode, form.PersonName);
+                            success = _graphService.AddRelationship(_interactionService.SelectedNode, personData.Name);
                         }
                         message = success ? "Sucesor agregado" : "Error al agregar sucesor";
                     }
@@ -248,13 +266,13 @@ namespace Proyecto_Grafos
                     break;
 
                 case InteractionService.NodeAction.AddPredecessor:
-                    validationResult = _graphService.ValidateAddPredecessor(_interactionService.SelectedNode, form.PersonName);
+                    validationResult = _graphService.ValidateAddPredecessor(_interactionService.SelectedNode, personData.Name);
                     if (validationResult.IsValid)
                     {
-                        success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
+                        success = AddPersonWithData(personData);
                         if (success)
                         {
-                            success = _graphService.AddRelationship(form.PersonName, _interactionService.SelectedNode);
+                            success = _graphService.AddRelationship(personData.Name, _interactionService.SelectedNode);
                         }
                         message = success ? "Predecesor agregado" : "Error al agregar predecesor";
                     }
@@ -265,13 +283,13 @@ namespace Proyecto_Grafos
                     break;
 
                 case InteractionService.NodeAction.AddSibling:
-                    validationResult = _graphService.ValidateAddSibling(_interactionService.SelectedNode, form.PersonName);
+                    validationResult = _graphService.ValidateAddSibling(_interactionService.SelectedNode, personData.Name);
                     if (validationResult.IsValid)
                     {
-                        success = _graphService.AddPerson(form.PersonName, form.Latitude, form.Longitude);
+                        success = AddPersonWithData(personData);
                         if (success)
                         {
-                            success = _graphService.AddSibling(_interactionService.SelectedNode, form.PersonName);
+                            success = _graphService.AddSibling(_interactionService.SelectedNode, personData.Name);
                         }
                         message = success ? "Hermano agregado" : "Error al agregar hermano";
                     }
@@ -291,6 +309,54 @@ namespace Proyecto_Grafos
             {
                 MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private bool AddPersonWithData(dynamic personData)
+        {
+            return _graphService.AddPerson(
+                personData.Name,
+                personData.Latitude,
+                personData.Longitude,
+                personData.Cedula,
+                personData.FechaNacimiento,
+                personData.EstaVivo,
+                personData.FechaFallecimiento,
+                personData.PhotoPath
+            );
+        }
+
+        private void ShowPersonDetails(string nodeName)
+        {
+            var person = _graphService.GetPersonData(nodeName);
+            if (person != null)
+            {
+                using (var detailForm = new PersonDetailForm(person.Name))
+                {
+                    detailForm.Text = $"Detalles de {person.Name}"; 
+                    detailForm.SetExistingData(person);
+
+                    if (detailForm.ShowDialog() == DialogResult.OK)
+                    {
+                        ShowPersonInfo(person);
+                    }
+                }
+            }
+        }
+
+        private void ShowPersonInfo(Person person)
+        {
+            string estado = person.EstaVivo ? "Vivo" : "Fallecido";
+            string infoFallecimiento = person.EstaVivo ? "" : $"\nFecha de Fallecimiento: {person.FechaFallecimiento.Value.ToShortDateString()}";
+
+            string info = $@"Nombre: {person.Name}
+Cédula: {person.Cedula}
+Fecha de Nacimiento: {person.FechaNacimiento.ToShortDateString()}
+Edad: {person.Edad} años
+Estado: {estado}{infoFallecimiento}
+Coordenadas: ({person.Latitude}, {person.Longitude})
+{(string.IsNullOrEmpty(person.PhotoPath) ? "Sin fotografía" : "Con fotografía")}";
+
+            MessageBox.Show(info, "Información de Persona", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private VisualNode FindNodeAtPosition(Point position)
