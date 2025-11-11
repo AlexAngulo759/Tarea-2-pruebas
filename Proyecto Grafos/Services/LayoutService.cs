@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using Proyecto_Grafos.Core.Models;
 
 namespace Proyecto_Grafos.Services
 {
@@ -10,16 +11,12 @@ namespace Proyecto_Grafos.Services
         private const int MARGIN_X = 50;
         private const int MARGIN_Y = 50;
 
-        public List<Models.VisualNode> CalculateLayout(Models.LinkedList<string> people, GraphService graphService)
+        public List<VisualNode> CalculateLayout(List<string> people, GraphService graphService)
         {
-            var visualNodes = new List<Models.VisualNode>();
-
-            var peopleList = new List<string>();
-            for (int i = 0; i < people.Count; i++)
-                peopleList.Add(people.Get(i));
+            var visualNodes = new List<VisualNode>();
 
             var roots = new List<string>();
-            foreach (var p in peopleList)
+            foreach (var p in people)
             {
                 var parents = graphService.GetParents(p);
                 if (parents.Count == 0)
@@ -36,12 +33,12 @@ namespace Proyecto_Grafos.Services
             return visualNodes;
         }
 
-        private float LayoutSubtree(GraphService graphService, string person, float x, float y, List<Models.VisualNode> visualNodes)
+        private float LayoutSubtree(GraphService graphService, string person, float x, float y, List<VisualNode> visualNodes)
         {
             if (visualNodes.Exists(v => v.Name == person))
                 return x;
 
-            visualNodes.Add(new Models.VisualNode(person, (int)x, (int)y));
+            visualNodes.Add(new VisualNode(person, (int)x, (int)y));
 
             var parents = graphService.GetParents(person);
             var children = graphService.GetChildren(person);

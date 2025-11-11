@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Proyecto_Grafos.Services;
+using Proyecto_Grafos.Core.Interfaces;
+using Proyecto_Grafos.Core.Models;
 using Proyecto_Grafos.Models;
-using Proyecto_Grafos.Validate;
+using Proyecto_Grafos.Services;
+using Proyecto_Grafos.Services.Validation;
+using Proyecto_Grafos.UI.Controls;
 
-namespace Proyecto_Grafos
+namespace Proyecto_Grafos.UI.Forms
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form // ✅ Cambiado de "Form1" a "MainForm"
     {
-        private GraphService _graphService;
+        private GraphService _graphService; // ✅ Quitar readonly temporalmente
         private LayoutService _layoutService;
         private DrawingService _drawingService;
         private InteractionService _interactionService;
@@ -26,7 +29,7 @@ namespace Proyecto_Grafos
         private const float MIN_ZOOM = 0.3f;
         private const float MAX_ZOOM = 3.0f;
 
-        public Form1()
+        public MainForm() // ✅ Cambiado de "Form1" a "MainForm"
         {
             InitializeServices();
             InitializeCustomComponents();
@@ -34,7 +37,10 @@ namespace Proyecto_Grafos
 
         private void InitializeServices()
         {
-            _graphService = new GraphService();
+            IFamilyGraph familyGraph = new FamilyGraph();
+            IValidationService validator = new GraphValidator(familyGraph);
+
+            _graphService = new GraphService(familyGraph, validator);
             _layoutService = new LayoutService();
             _drawingService = new DrawingService();
             _interactionService = new InteractionService();
@@ -378,7 +384,14 @@ Coordenadas: ({person.Latitude}, {person.Longitude})
         private void UpdateVisualTree()
         {
             var allPeople = _graphService.GetAllPeople();
-            _visualNodes = _layoutService.CalculateLayout(allPeople, _graphService);
+
+            var peopleList = new List<string>();
+            for (int i = 0; i < allPeople.Count; i++)
+            {
+                peopleList.Add(allPeople.Get(i));
+            }
+
+            _visualNodes = _layoutService.CalculateLayout(peopleList, _graphService);
             _treePanel.Invalidate();
         }
 

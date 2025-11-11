@@ -1,25 +1,26 @@
-﻿using Proyecto_Grafos.Services;
-using System;
+﻿using Proyecto_Grafos.Core.Interfaces;
+using Proyecto_Grafos.Core.Models;
+using Proyecto_Grafos.Services.Validation;
 
-namespace Proyecto_Grafos.Validate
+namespace Proyecto_Grafos.Services.Validation
 {
-    public class GraphValidator
+    public class GraphValidator : IValidationService
     {
-        private readonly GraphService _graphService;
+        private readonly IFamilyGraph _familyGraph;
 
-        public GraphValidator(GraphService graphService)
+        public GraphValidator(IFamilyGraph familyGraph)
         {
-            _graphService = graphService;
+            _familyGraph = familyGraph;
         }
 
         public ValidationResult CanAddRoot(string personName)
         {
-            var allPeople = _graphService.GetAllPeople();
+            var allPeople = _familyGraph.GetAllPeople();
 
             int rootCount = 0;
             for (int i = 0; i < allPeople.Count; i++)
             {
-                var person = _graphService.GetPersonData(allPeople.Get(i));
+                var person = _familyGraph.GetPersonData(allPeople.Get(i));
                 if (person != null && string.IsNullOrEmpty(person.ChildOf))
                 {
                     rootCount++;
@@ -31,7 +32,7 @@ namespace Proyecto_Grafos.Validate
                 return ValidationResult.Invalid("Ya existe un familiar inicial. Solo se permite un nodo raíz.");
             }
 
-            if (_graphService.GetPersonData(personName) != null)
+            if (_familyGraph.GetPersonData(personName) != null)
             {
                 return ValidationResult.Invalid($"Ya existe una persona con el nombre '{personName}'.");
             }
@@ -41,12 +42,12 @@ namespace Proyecto_Grafos.Validate
 
         public ValidationResult CanAddSuccessor(string parentName, string successorName)
         {
-            if (_graphService.GetPersonData(successorName) != null)
+            if (_familyGraph.GetPersonData(successorName) != null)
             {
                 return ValidationResult.Invalid($"Ya existe una persona con el nombre '{successorName}'.");
             }
 
-            var parent = _graphService.GetPersonData(parentName);
+            var parent = _familyGraph.GetPersonData(parentName);
             if (parent == null)
             {
                 return ValidationResult.Invalid($"No se encontró la persona '{parentName}'.");
@@ -57,12 +58,12 @@ namespace Proyecto_Grafos.Validate
 
         public ValidationResult CanAddSibling(string siblingName, string newSiblingName)
         {
-            if (_graphService.GetPersonData(newSiblingName) != null)
+            if (_familyGraph.GetPersonData(newSiblingName) != null)
             {
                 return ValidationResult.Invalid($"Ya existe una persona con el nombre '{newSiblingName}'.");
             }
 
-            var sibling = _graphService.GetPersonData(siblingName);
+            var sibling = _familyGraph.GetPersonData(siblingName);
             if (sibling == null)
             {
                 return ValidationResult.Invalid($"No se encontró la persona '{siblingName}'.");
@@ -78,18 +79,18 @@ namespace Proyecto_Grafos.Validate
 
         public ValidationResult CanAddPredecessor(string childName, string predecessorName)
         {
-            if (_graphService.GetPersonData(predecessorName) != null)
+            if (_familyGraph.GetPersonData(predecessorName) != null)
             {
                 return ValidationResult.Invalid($"Ya existe una persona con el nombre '{predecessorName}'.");
             }
 
-            var child = _graphService.GetPersonData(childName);
+            var child = _familyGraph.GetPersonData(childName);
             if (child == null)
             {
                 return ValidationResult.Invalid($"No se encontró la persona '{childName}'.");
             }
 
-            var parents = _graphService.GetParents(childName);
+            var parents = _familyGraph.GetParents(childName);
             if (parents.Count >= 2)
             {
                 return ValidationResult.Invalid($"El nodo '{childName}' ya tiene 2 predecesores/padres. No se pueden agregar más.");
@@ -97,6 +98,7 @@ namespace Proyecto_Grafos.Validate
 
             return ValidationResult.Valid();
         }
+
         public ValidationResult ValidatePersonName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -111,9 +113,10 @@ namespace Proyecto_Grafos.Validate
 
             return ValidationResult.Valid();
         }
+
         public ValidationResult CanAddRelationship(string parentName, string childName)
         {
-            var children = _graphService.GetChildren(parentName);
+            var children = _familyGraph.GetChildren(parentName);
             for (int i = 0; i < children.Count; i++)
             {
                 if (children.Get(i) == childName)

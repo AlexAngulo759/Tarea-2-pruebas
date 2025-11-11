@@ -1,17 +1,19 @@
 ﻿using System;
-using Proyecto_Grafos.Validate;
+using Proyecto_Grafos.Core.Interfaces;
+using Proyecto_Grafos.Core.Models;
+using Proyecto_Grafos.Services.Validation;
 
 namespace Proyecto_Grafos.Services
 {
     public class GraphService
     {
-        private Models.Graph _familyTree;
-        private GraphValidator _validator;
+        private readonly IFamilyGraph _familyTree;
+        private readonly IValidationService _validator;
 
-        public GraphService()
+        public GraphService(IFamilyGraph familyTree, IValidationService validator)
         {
-            _familyTree = new Models.Graph();
-            _validator = new GraphValidator(this);
+            _familyTree = familyTree ?? throw new ArgumentNullException(nameof(familyTree));
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
         public bool AddPerson(string name, double latitude = 0.0, double longitude = 0.0,

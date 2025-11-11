@@ -1,6 +1,6 @@
-﻿namespace Proyecto_Grafos
+﻿namespace Proyecto_Grafos.UI.Forms
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Variable del diseñador necesaria.

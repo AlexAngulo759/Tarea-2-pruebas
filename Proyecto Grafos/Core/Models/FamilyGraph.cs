@@ -1,18 +1,28 @@
 ﻿using System;
+using Proyecto_Grafos.Core.Interfaces;
+using Proyecto_Grafos.Models;
 
-namespace Proyecto_Grafos.Models
+namespace Proyecto_Grafos.Core.Models
 {
-    public class Graph
+    public class FamilyGraph : IFamilyGraph
     {
         private Dictionary<string, Person> _people;
         private Dictionary<string, LinkedList<string>> _adjacencyList;
         private Dictionary<string, LinkedList<string>> _parentList;
 
-        public Graph()
+        public FamilyGraph()
         {
             _people = new Dictionary<string, Person>();
             _adjacencyList = new Dictionary<string, LinkedList<string>>();
             _parentList = new Dictionary<string, LinkedList<string>>();
+        }
+        public Person GetPersonData(string name)
+        {
+            return GetPerson(name); 
+        }
+        public LinkedList<string> GetAllPeople()
+        {
+            return GetPeople(); 
         }
 
         public void AddPerson(string name, double latitude = 0.0, double longitude = 0.0,
@@ -34,29 +44,22 @@ namespace Proyecto_Grafos.Models
             }
 
             if (!_adjacencyList.ContainsKey(name))
-            {
                 _adjacencyList.Add(name, new LinkedList<string>());
-            }
 
             if (!_parentList.ContainsKey(name))
-            {
                 _parentList.Add(name, new LinkedList<string>());
-            }
         }
-       
+
         public void AddRelationship(string parent, string child, bool setRelationships = true)
         {
             AddPerson(parent);
             AddPerson(child);
 
             if (!_adjacencyList[parent].Contains(child))
-            {
                 _adjacencyList[parent].Add(child);
-            }
+
             if (!_parentList[child].Contains(parent))
-            {
                 _parentList[child].Add(parent);
-            }
 
             if (setRelationships)
             {
@@ -67,20 +70,12 @@ namespace Proyecto_Grafos.Models
 
         public Person GetPerson(string name)
         {
-            if (_people.ContainsKey(name))
-            {
-                return _people[name];
-            }
-            return null;
+            return _people.ContainsKey(name) ? _people[name] : null;
         }
 
         public LinkedList<string> GetChildren(string person)
         {
-            if (_adjacencyList.ContainsKey(person))
-            {
-                return _adjacencyList[person];
-            }
-            return new LinkedList<string>();
+            return _adjacencyList.ContainsKey(person) ? _adjacencyList[person] : new LinkedList<string>();
         }
 
         public string GetParent(string childName)
@@ -91,11 +86,7 @@ namespace Proyecto_Grafos.Models
 
         public LinkedList<string> GetParents(string person)
         {
-            if (_parentList.ContainsKey(person))
-            {
-                return _parentList[person];
-            }
-            return new LinkedList<string>();
+            return _parentList.ContainsKey(person) ? _parentList[person] : new LinkedList<string>();
         }
 
         public LinkedList<string> GetPeople()

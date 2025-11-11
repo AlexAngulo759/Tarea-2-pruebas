@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using Proyecto_Grafos.Core.Models;
+using Proyecto_Grafos.Models;
 
 namespace Proyecto_Grafos.Services
 {
@@ -9,18 +12,19 @@ namespace Proyecto_Grafos.Services
     {
         private const int BaseHorizontalSpacing = 120;
         private const int VerticalSpacing = 120;
-        private const int NodeWidth = 100;
-        private const int NodeHeight = 100;
+        private const int NodeWidth = 120;
+        private const int NodeHeight = 140;
         private const int MinimumSpacing = 80;
         private const int CoupleSpacing = 60;
 
-        private Dictionary<string, string> _coupleRelationships = new Dictionary<string, string>();
-        private Dictionary<string, string> _familySide = new Dictionary<string, string>();
+        private System.Collections.Generic.Dictionary<string, string> _coupleRelationships = new System.Collections.Generic.Dictionary<string, string>();
+        private System.Collections.Generic.Dictionary<string, string> _familySide = new System.Collections.Generic.Dictionary<string, string>();
+        private System.Collections.Generic.Dictionary<string, Image> _imageCache = new System.Collections.Generic.Dictionary<string, Image>();
 
-        public void DrawTree(Graphics g, List<Models.VisualNode> nodes, GraphService graphService)
+        public void DrawTree(Graphics g, List<VisualNode> nodes, GraphService graphService)
         {
             if (nodes == null || nodes.Count == 0) return;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
             _coupleRelationships.Clear();
             _familySide.Clear();
             var levels = CalculateLevels(nodes, graphService);
@@ -28,30 +32,30 @@ namespace Proyecto_Grafos.Services
             DetectFamilySides(nodes, graphService);
             CalculateNodePositions(nodes, levels, graphService);
             DrawConnections(g, nodes, graphService);
-            DrawNodes(g, nodes);
+            DrawNodes(g, nodes, graphService);
         }
 
-        private Dictionary<int, List<Models.VisualNode>> CalculateLevels(List<Models.VisualNode> nodes, GraphService graphService)
+        private System.Collections.Generic.Dictionary<int, List<VisualNode>> CalculateLevels(List<VisualNode> nodes, GraphService graphService)
         {
-            var depth = new Dictionary<string, int>();
-            var processed = new HashSet<string>();
+            var depth = new System.Collections.Generic.Dictionary<string, int>();
+            var processed = new System.Collections.Generic.HashSet<string>();
             foreach (var n in nodes) depth[n.Name] = 0;
-            var roots = nodes.Where(n => graphService.GetParents(n.Name).Count == 0).ToList();
+            var roots = nodes.Where(n => graphService.GetParents(n.Name).Count() == 0).ToList();
             foreach (var r in roots) AssignLevelsRecursively(r, nodes, graphService, depth, processed, 0);
             foreach (var n in nodes.Where(n => !processed.Contains(n.Name)))
-                if (graphService.GetParents(n.Name).Count > 0) depth[n.Name] = 1;
-            var levels = new Dictionary<int, List<Models.VisualNode>>();
+                if (graphService.GetParents(n.Name).Count() > 0) depth[n.Name] = 1;
+            var levels = new System.Collections.Generic.Dictionary<int, List<VisualNode>>();
             foreach (var n in nodes)
             {
                 int lvl = depth[n.Name];
-                if (!levels.ContainsKey(lvl)) levels[lvl] = new List<Models.VisualNode>();
+                if (!levels.ContainsKey(lvl)) levels[lvl] = new List<VisualNode>();
                 levels[lvl].Add(n);
             }
             return levels;
         }
 
-        private void AssignLevelsRecursively(Models.VisualNode node, List<Models.VisualNode> nodes, GraphService graphService,
-            Dictionary<string, int> depth, HashSet<string> processed, int currentLevel)
+        private void AssignLevelsRecursively(VisualNode node, List<VisualNode> nodes, GraphService graphService,
+            System.Collections.Generic.Dictionary<string, int> depth, System.Collections.Generic.HashSet<string> processed, int currentLevel)
         {
             if (processed.Contains(node.Name)) return;
             depth[node.Name] = currentLevel;
@@ -72,7 +76,7 @@ namespace Proyecto_Grafos.Services
             }
         }
 
-        private void DetectFamilySides(List<Models.VisualNode> nodes, GraphService graphService)
+        private void DetectFamilySides(List<VisualNode> nodes, GraphService graphService)
         {
             foreach (var node in nodes)
             {
@@ -93,7 +97,7 @@ namespace Proyecto_Grafos.Services
             }
         }
 
-        private void CalculateNodePositions(List<Models.VisualNode> nodes, Dictionary<int, List<Models.VisualNode>> levels, GraphService graphService)
+        private void CalculateNodePositions(List<VisualNode> nodes, System.Collections.Generic.Dictionary<int, List<VisualNode>> levels, GraphService graphService)
         {
             int treeDepth = levels.Keys.Max() + 1;
             int spacing = CalculateDynamicSpacing(treeDepth);
@@ -104,9 +108,9 @@ namespace Proyecto_Grafos.Services
             CalculateFinalPositions(nodes, levels, startX, startY, spacing);
         }
 
-        private void DetectCouplesInLevel(List<Models.VisualNode> levelNodes, List<Models.VisualNode> allNodes, GraphService graphService)
+        private void DetectCouplesInLevel(List<VisualNode> levelNodes, List<VisualNode> allNodes, GraphService graphService)
         {
-            var processed = new HashSet<string>();
+            var processed = new System.Collections.Generic.HashSet<string>();
             foreach (var node in levelNodes)
             {
                 if (processed.Contains(node.Name)) continue;
@@ -122,7 +126,7 @@ namespace Proyecto_Grafos.Services
             }
         }
 
-        private Models.VisualNode FindPartner(Models.VisualNode node, List<Models.VisualNode> levelNodes, List<Models.VisualNode> allNodes, GraphService graphService)
+        private VisualNode FindPartner(VisualNode node, List<VisualNode> levelNodes, List<VisualNode> allNodes, GraphService graphService)
         {
             var children = graphService.GetChildren(node.Name).ToList();
             if (children.Count == 0) return null;
@@ -136,10 +140,10 @@ namespace Proyecto_Grafos.Services
             return null;
         }
 
-        private void CalculateFinalPositions(List<Models.VisualNode> nodes, Dictionary<int, List<Models.VisualNode>> levels, int startX, int startY, int spacing)
+        private void CalculateFinalPositions(List<VisualNode> nodes, System.Collections.Generic.Dictionary<int, List<VisualNode>> levels, int startX, int startY, int spacing)
         {
             var sorted = levels.OrderBy(kvp => kvp.Key).ToList();
-            var widths = new Dictionary<int, int>();
+            var widths = new System.Collections.Generic.Dictionary<int, int>();
             foreach (var kvp in sorted)
             {
                 int couples = kvp.Value.Count(n => _coupleRelationships.ContainsKey(n.Name) && string.Compare(n.Name, _coupleRelationships[n.Name]) < 0);
@@ -157,10 +161,10 @@ namespace Proyecto_Grafos.Services
             }
         }
 
-        private void OrganizeLevelPositions(List<Models.VisualNode> levelNodes, int startX, int y, int spacing, int level)
+        private void OrganizeLevelPositions(List<VisualNode> levelNodes, int startX, int y, int spacing, int level)
         {
             int currentX = startX;
-            var processed = new HashSet<string>();
+            var processed = new System.Collections.Generic.HashSet<string>();
             var couples = levelNodes.Where(n => _coupleRelationships.ContainsKey(n.Name) && !processed.Contains(n.Name)).ToList();
 
             couples = couples.OrderBy(n =>
@@ -213,7 +217,7 @@ namespace Proyecto_Grafos.Services
             return Math.Max(dynamic, MinimumSpacing);
         }
 
-        private void DrawConnections(Graphics g, List<Models.VisualNode> nodes, GraphService graphService)
+        private void DrawConnections(Graphics g, List<VisualNode> nodes, GraphService graphService)
         {
             using (var pen = new Pen(Color.Black, 2))
             using (var couplePen = new Pen(Color.DarkBlue, 2))
@@ -223,9 +227,9 @@ namespace Proyecto_Grafos.Services
             }
         }
 
-        private void DrawCoupleConnections(Graphics g, Pen pen, List<Models.VisualNode> nodes)
+        private void DrawCoupleConnections(Graphics g, Pen pen, List<VisualNode> nodes)
         {
-            var drawn = new HashSet<string>();
+            var drawn = new System.Collections.Generic.HashSet<string>();
             foreach (var n in nodes.Where(n => _coupleRelationships.ContainsKey(n.Name)))
             {
                 var pName = _coupleRelationships[n.Name];
@@ -240,7 +244,7 @@ namespace Proyecto_Grafos.Services
             }
         }
 
-        private void DrawParentChildConnections(Graphics g, Pen pen, List<Models.VisualNode> nodes, GraphService graphService)
+        private void DrawParentChildConnections(Graphics g, Pen pen, List<VisualNode> nodes, GraphService graphService)
         {
             foreach (var n in nodes)
             {
@@ -273,24 +277,155 @@ namespace Proyecto_Grafos.Services
             }
         }
 
-        private void DrawNodes(Graphics g, List<Models.VisualNode> nodes)
+        private void DrawNodes(Graphics g, List<VisualNode> nodes, GraphService graphService)
         {
             foreach (var n in nodes)
             {
-                var rect = new Rectangle(n.X, n.Y, n.Size.Width, n.Size.Height);
-                using (var brush = new SolidBrush(n.Color))
-                {
-                    g.FillEllipse(brush, rect);
-                    g.DrawEllipse(Pens.Black, rect);
-                }
-                using (var font = new Font("Segoe UI", 8, FontStyle.Bold))
-                {
-                    var size = g.MeasureString(n.Name, font);
-                    float tx = n.X + (NodeWidth - size.Width) / 2;
-                    float ty = n.Y + (NodeHeight - size.Height) / 2;
-                    g.DrawString(n.Name, font, Brushes.Black, tx, ty);
-                }
+                var person = graphService.GetPersonData(n.Name);
+                DrawNode(g, n, person);
             }
+        }
+
+        private void DrawNode(Graphics g, VisualNode node, Person person)
+        {
+            var rect = new Rectangle(node.X, node.Y, node.Size.Width, node.Size.Height);
+
+            using (var brush = new SolidBrush(node.Color))
+            {
+                g.FillEllipse(brush, rect);
+                g.DrawEllipse(Pens.Black, rect);
+            }
+
+            DrawCircularImage(g, node, person);
+            DrawNameBelowNode(g, node, person?.Name ?? node.Name);
+        }
+
+        private void DrawCircularImage(Graphics g, VisualNode node, Person person)
+        {
+            if (person == null || string.IsNullOrEmpty(person.PhotoPath))
+            {
+                DrawCircularPlaceholder(g, node);
+                return;
+            }
+
+            try
+            {
+                Image image = null;
+
+                if (_imageCache.ContainsKey(person.PhotoPath))
+                {
+                    image = _imageCache[person.PhotoPath];
+                }
+                else
+                {
+                    image = Image.FromFile(person.PhotoPath);
+                    _imageCache[person.PhotoPath] = image;
+                }
+
+                var circleDiameter = Math.Min(node.Size.Width - 10, node.Size.Height - 30);
+                var circleRect = new Rectangle(
+                    node.X + (node.Size.Width - circleDiameter) / 2,
+                    node.Y + 5,
+                    circleDiameter,
+                    circleDiameter
+                );
+
+                using (var path = new GraphicsPath())
+                {
+                    path.AddEllipse(circleRect);
+                    g.SetClip(path);
+
+                    var imageSize = CalculateImageSize(image.Size, circleRect.Size);
+                    var imageX = circleRect.X + (circleRect.Width - imageSize.Width) / 2;
+                    var imageY = circleRect.Y + (circleRect.Height - imageSize.Height) / 2;
+
+                    g.DrawImage(image, imageX, imageY, imageSize.Width, imageSize.Height);
+                    g.ResetClip();
+                }
+
+                g.DrawEllipse(Pens.DarkGray, circleRect);
+            }
+            catch (Exception ex)
+            {
+                DrawCircularPlaceholder(g, node);
+                System.Diagnostics.Debug.WriteLine($"Error loading image: {ex.Message}");
+
+                if (_imageCache.ContainsKey(person.PhotoPath))
+                    _imageCache.Remove(person.PhotoPath);
+            }
+        }
+
+        private void DrawCircularPlaceholder(Graphics g, VisualNode node)
+        {
+            var circleDiameter = Math.Min(node.Size.Width - 10, node.Size.Height - 30);
+            var circleRect = new Rectangle(
+                node.X + (node.Size.Width - circleDiameter) / 2,
+                node.Y + 5,
+                circleDiameter,
+                circleDiameter
+            );
+
+            using (var brush = new SolidBrush(Color.LightGray))
+            {
+                g.FillEllipse(brush, circleRect);
+            }
+            g.DrawEllipse(Pens.DarkGray, circleRect);
+
+            using (var font = new Font("Arial", circleDiameter / 3, FontStyle.Bold))
+            using (var brush = new SolidBrush(Color.DarkGray))
+            {
+                var personIcon = "👤";
+                var size = g.MeasureString(personIcon, font);
+                var x = circleRect.X + (circleRect.Width - size.Width) / 2;
+                var y = circleRect.Y + (circleRect.Height - size.Height) / 2;
+                g.DrawString(personIcon, font, brush, x, y);
+            }
+        }
+
+        private Size CalculateImageSize(Size originalSize, Size maxSize)
+        {
+            double ratioX = (double)maxSize.Width / originalSize.Width;
+            double ratioY = (double)maxSize.Height / originalSize.Height;
+            double ratio = Math.Max(ratioX, ratioY);
+
+            return new Size(
+                (int)(originalSize.Width * ratio),
+                (int)(originalSize.Height * ratio)
+            );
+        }
+
+        private void DrawNameBelowNode(Graphics g, VisualNode node, string name)
+        {
+            using (var font = new Font("Segoe UI", 8, FontStyle.Bold))
+            using (var brush = new SolidBrush(Color.Black))
+            using (var backgroundBrush = new SolidBrush(Color.FromArgb(200, Color.White)))
+            {
+                var nameSize = g.MeasureString(name, font);
+
+                float nameX = node.X + (node.Size.Width - nameSize.Width) / 2;
+                float nameY = node.Y + node.Size.Height + 2;
+
+                var backgroundRect = new RectangleF(
+                    nameX - 2,
+                    nameY - 1,
+                    nameSize.Width + 4,
+                    nameSize.Height + 2
+                );
+
+                g.FillRectangle(backgroundBrush, backgroundRect);
+                g.DrawRectangle(Pens.LightGray, backgroundRect.X, backgroundRect.Y, backgroundRect.Width, backgroundRect.Height);
+
+                g.DrawString(name, font, brush, nameX, nameY);
+            }
+        }
+
+        public void ClearImageCache()
+        {
+            foreach (var image in _imageCache.Values)
+            {
+                image?.Dispose();
+            }
+            _imageCache.Clear();
         }
     }
 }

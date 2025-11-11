@@ -1,4 +1,4 @@
-﻿namespace Proyecto_Grafos.Validate
+﻿namespace Proyecto_Grafos.Services.Validation
 {
     public class ValidationResult
     {
