@@ -127,8 +127,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalculateStatistics.cs" />
-    <Compile Include="DistanceCalculation.cs" />
+    <Compile Include="Models\CalculateStatistics.cs" />
+    <Compile Include="Models\DistanceCalculation.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +151,7 @@
     <Compile Include="Models\Node.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\VisualNode.cs" />
+    <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DrawingService.cs" />

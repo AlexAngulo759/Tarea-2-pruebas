@@ -1,14 +1,15 @@
-﻿using System;
+﻿using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsForms;
+using GMap.NET.WindowsForms.Markers;
+using Proyecto_Grafos.Models;
+using Proyecto_Grafos.Presenters;
+using Proyecto_Grafos.Views;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-
-using GMap.NET;
-using GMap.NET.MapProviders;
-using GMap.NET.WindowsForms;
-using GMap.NET.WindowsForms.Markers;
-using Proyecto_Grafos.Views;
 
 namespace Proyecto_Grafos
 {
@@ -26,6 +27,9 @@ namespace Proyecto_Grafos
 
         private bool modeSelection = true;
 
+        private List<FamilyMember> familyMembers;
+        private MapPresenter presenter;
+
         public MapForm()
         {
             InitializeComponent();
@@ -38,10 +42,13 @@ namespace Proyecto_Grafos
             this.KeyPreview = true;
 
             dt = new DataTable();
-            dt.Columns.Add(new DataColumn("Nombre", typeof(string)));
-            dt.Columns.Add(new DataColumn("Lat", typeof(double)));
-            dt.Columns.Add(new DataColumn("Long", typeof(double)));
+            dt.Columns.Add("Nombre", typeof(string));
+            dt.Columns.Add("Lat", typeof(double));
+            dt.Columns.Add("Long", typeof(double));
+
+            presenter = new MapPresenter(this, dt);
             dataGridView1.DataSource = dt;
+
             dataGridView1.Columns[1].Visible = false;
             dataGridView1.Columns[2].Visible = false;
 
@@ -73,9 +80,23 @@ namespace Proyecto_Grafos
             LocationSelection();
         }
         // Implementacion inicial de interfase IMapView
-        public string Description => Descriptiontext.Text;
-        public string Latitude => Latitudtext.Text;
-        public string Longitude => Longitudtext.Text;
+        public string Description
+        {
+            get => Descriptiontext.Text;
+            set => Descriptiontext.Text = value;
+        }
+
+        public string Latitude
+        {
+            get => Latitudtext.Text;
+            set => Latitudtext.Text = value;
+        }
+
+        public string Longitude
+        {
+            get => Longitudtext.Text;
+            set => Longitudtext.Text = value;
+        }
 
         public void AddMarker(string name, double lat, double lng)
         {

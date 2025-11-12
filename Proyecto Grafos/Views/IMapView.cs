@@ -2,9 +2,9 @@
 {
     public interface IMapView
     {
-        string Description { get; }
-        string Latitude { get; }
-        string Longitude { get; }
+        string Description {get; set;}
+        string Latitude {get; set;}
+        string Longitude {get; set; }
         void AddMarker(string name, double lat, double lng);
         void UpdateStatistics(string text);
         void ShowMessage(string text, string caption = "Mensaje");
