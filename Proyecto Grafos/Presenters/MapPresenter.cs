@@ -39,7 +39,6 @@ namespace Proyecto_Grafos.Presenters
             view.RefreshGrid(members.ToList());
             UpdateStatistics();
 
-            // Limpiar campos
             view.Description = "";
             view.Latitude = 0;
             view.Longitude = 0;
@@ -56,7 +55,7 @@ namespace Proyecto_Grafos.Presenters
             UpdateStatistics();
         }
 
-        public void SelectMemberByName(string name)
+        public void SelectMemberByName(string name, bool centerMap = true)
         {
             var member = members.FirstOrDefault(m => m.Name == name);
             if (member == null) return;
@@ -64,19 +63,26 @@ namespace Proyecto_Grafos.Presenters
             view.Description = member.Name;
             view.Latitude = member.Lat;
             view.Longitude = member.Lng;
-            view.CenterMap(member.Lat, member.Lng);
-        }
 
+            if (centerMap)
+                view.CenterMap(member.Lat, member.Lng);
+        }
         public void CalculateAndShowRoutes(string originName)
         {
             var origin = members.FirstOrDefault(m => m.Name == originName);
             if (origin == null) return;
 
-            var points = new List<PointLatLng> { new PointLatLng(origin.Lat, origin.Lng) };
-            points.AddRange(members.Where(m => m.Name != originName)
-                                   .Select(m => new PointLatLng(m.Lat, m.Lng)));
-            view.DrawRoutes(points);
+            var allRoutes = members
+                .Where(m => m.Name != originName)
+                .Select(m => new List<PointLatLng> {
+            new PointLatLng(origin.Lat, origin.Lng),
+            new PointLatLng(m.Lat, m.Lng)
+                })
+                .ToList();
+
+            view.DrawRoutes(allRoutes);
         }
+
 
         public void HandleMapDoubleClick(double lat, double lng)
         {

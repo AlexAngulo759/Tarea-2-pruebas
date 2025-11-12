@@ -15,7 +15,7 @@ namespace Proyecto_Grafos.Views
         void RefreshMap();
         void RefreshGrid(object dataSource);
         void ShowMessage(string message, string caption = "Mensaje");
-        void DrawRoutes(List<PointLatLng> routePoints);
+        void DrawRoutes(List<List<PointLatLng>> routes);
         void CenterMap(double lat, double lng);
     }
 }

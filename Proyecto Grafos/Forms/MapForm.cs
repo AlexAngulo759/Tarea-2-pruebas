@@ -121,11 +121,12 @@ namespace Proyecto_Grafos
 
         public void ShowMessage(string message, string caption = "Mensaje") => MessageBox.Show(message, caption);
 
-        public void DrawRoutes(List<PointLatLng> routePoints)
+        public void DrawRoutes(List<List<PointLatLng>> routes)
         {
             routesOverlay.Clear();
-            if (routePoints.Count >= 2)
+            foreach (var routePoints in routes)
             {
+                if (routePoints.Count < 2) continue;
                 var route = new GMapRoute(routePoints, "connection")
                 {
                     Stroke = new Pen(Color.Red, 2)
@@ -227,9 +228,22 @@ namespace Proyecto_Grafos
             if (clickedMarker == marker || clickedMarker.Tag == null) return;
 
             string name = clickedMarker.Tag.ToString();
+
+            presenter.SelectMemberByName(name, centerMap: false);
+
             presenter.CalculateAndShowRoutes(name);
-            presenter.SelectMemberByName(name);
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.Cells["Nombre"].Value?.ToString() == name)
+                {
+                    row.Selected = true;
+                    dataGridView1.CurrentCell = row.Cells["Nombre"];
+                    break;
+                }
+            }
         }
+
 
         private void SelectUbication(object sender, DataGridViewCellMouseEventArgs e)
         {
