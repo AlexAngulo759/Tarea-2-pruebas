@@ -127,8 +127,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\CalculateStatistics.cs" />
-    <Compile Include="Models\DistanceCalculation.cs" />
+    <Compile Include="Services\CalculateStatistics.cs" />
+    <Compile Include="Services\DistanceCalculation.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,10 +138,10 @@
     <Compile Include="Forms\SimpleInputForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MapForm.cs">
+    <Compile Include="Forms\MapForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MapForm.Designer.cs">
+    <Compile Include="Forms\MapForm.Designer.cs">
       <DependentUpon>MapForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\FamilyMember.cs" />
@@ -161,7 +161,7 @@
     <Compile Include="Validate\GraphValidator.cs" />
     <Compile Include="Validate\ValidationResult.cs" />
     <Compile Include="Views\IMapView.cs" />
-    <EmbeddedResource Include="MapForm.resx">
+    <EmbeddedResource Include="Forms\MapForm.resx">
       <DependentUpon>MapForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
