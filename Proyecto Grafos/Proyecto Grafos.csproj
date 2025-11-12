@@ -144,6 +144,7 @@
     <Compile Include="MapForm.Designer.cs">
       <DependentUpon>MapForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\FamilyMember.cs" />
     <Compile Include="Models\Dictionary.cs" />
     <Compile Include="Models\Graph.cs" />
     <Compile Include="Models\LinkedList.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Services\LayoutService.cs" />
     <Compile Include="Validate\GraphValidator.cs" />
     <Compile Include="Validate\ValidationResult.cs" />
+    <Compile Include="Views\IMapView.cs" />
     <EmbeddedResource Include="MapForm.resx">
       <DependentUpon>MapForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -8,10 +8,11 @@ using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using Proyecto_Grafos.Views;
 
 namespace Proyecto_Grafos
 {
-    public partial class MapForm : Form
+    public partial class MapForm : Form, IMapView
     {
         GMarkerGoogle marker;
         GMapOverlay markersOverlay;
@@ -71,6 +72,39 @@ namespace Proyecto_Grafos
 
             LocationSelection();
         }
+        // Implementacion inicial de interfase IMapView
+        public string Description => Descriptiontext.Text;
+        public string Latitude => Latitudtext.Text;
+        public string Longitude => Longitudtext.Text;
+
+        public void AddMarker(string name, double lat, double lng)
+        {
+            var familyMarker = new GMarkerGoogle(new PointLatLng(lat, lng), GMarkerGoogleType.blue)
+            {
+                ToolTipMode = MarkerTooltipMode.Always,
+                ToolTipText = $"{name}\nLat: {lat}\nLng: {lng}"
+            };
+
+            markersOverlay.Markers.Add(familyMarker);
+            RefreshMap();
+        }
+
+        public void UpdateStatistics(string text)
+        {
+            if (richTextBox1 != null)
+                richTextBox1.Text = text;
+        }
+
+        public void ShowMessage(string text, string caption = "Mensaje")
+        {
+            MessageBox.Show(text, caption);
+        }
+
+        public void RefreshMap()
+        {
+            gMapControl1.Refresh();
+        }
+        //
         private void LocationSelection()
         {
             modeSelection = true;
