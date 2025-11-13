@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\JoseA\\FamilyGraph\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\services\\calculatestatistics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\services\\calculatestatistics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\forms\\mapform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\forms\\mapform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\presenters\\mappresenter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\presenters\\mappresenter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\models\\familymember.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,28 +23,20 @@
       "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\views\\imapview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\presenters\\mappresenter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\presenters\\mappresenter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\forms\\simpleinputform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\forms\\simpleinputform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|c:\\users\\josea\\familygraph\\proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\services\\distancecalculation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\services\\distancecalculation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\forms\\mapform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\forms\\mapform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|c:\\users\\josea\\familygraph\\proyecto grafos\\services\\calculatestatistics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\services\\calculatestatistics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\services\\distancecalculation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\services\\distancecalculation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
@@ -110,17 +110,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "MapForm.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\MapForm.cs",
               "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.cs",
               "RelativeToolTip": "Proyecto Grafos\\Forms\\MapForm.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAOYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIkAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-06T04:30:08.858Z",
               "IsPinned": true,
@@ -128,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "SimpleInputForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\SimpleInputForm.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\SimpleInputForm.cs",
@@ -140,33 +140,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "MapPresenter.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Presenters\\MapPresenter.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Presenters\\MapPresenter.cs",
               "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Presenters\\MapPresenter.cs",
               "RelativeToolTip": "Proyecto Grafos\\Presenters\\MapPresenter.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAgwGYAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-12T00:54:03Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "IMapView.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Views\\IMapView.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Views\\IMapView.cs",
               "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Views\\IMapView.cs",
               "RelativeToolTip": "Proyecto Grafos\\Views\\IMapView.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAzwBMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-11T23:35:30.404Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "FamilyMember.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Models\\FamilyMember.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Models\\FamilyMember.cs",
@@ -179,51 +179,54 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "CalculateStatistics.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\CalculateStatistics.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\CalculateStatistics.cs",
               "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\CalculateStatistics.cs",
               "RelativeToolTip": "Proyecto Grafos\\Services\\CalculateStatistics.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwEUAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAADoAAAAAAAAAAADwv1YAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-10T21:15:16.863Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 6,
               "Title": "DistanceCalculation.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\DistanceCalculation.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\DistanceCalculation.cs",
               "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\DistanceCalculation.cs",
               "RelativeToolTip": "Proyecto Grafos\\Services\\DistanceCalculation.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-08T07:10:25.455Z"
+              "WhenOpened": "2025-11-08T07:10:25.455Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "MapForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.Designer.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\MapForm.Designer.cs",
               "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.Designer.cs",
               "RelativeToolTip": "Proyecto Grafos\\Forms\\MapForm.Designer.cs",
-              "ViewState": "AgIAAKoAAAAAAAAAAAAAANwAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAxwAwAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-06T04:48:23.805Z"
+              "WhenOpened": "2025-11-06T04:48:23.805Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "MapForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\MapForm.cs",
               "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.cs [Design]",
               "RelativeToolTip": "Proyecto Grafos\\Forms\\MapForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-06T02:02:09.898Z"
+              "WhenOpened": "2025-11-06T02:02:09.898Z",
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",

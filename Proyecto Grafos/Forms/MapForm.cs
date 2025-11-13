@@ -33,6 +33,7 @@ namespace Proyecto_Grafos
 
         private void MapForm_Load(object sender, EventArgs e)
         {
+            this.KeyPreview = true;
             this.WindowState = FormWindowState.Maximized;
             this.MinimumSize = new Size(1080, 800);
             gMapControl1.DragButton = MouseButtons.Left;
@@ -123,19 +124,52 @@ namespace Proyecto_Grafos
 
         public void DrawRoutes(List<List<PointLatLng>> routes)
         {
+            if (gMapControl1 == null || gMapControl1.IsDisposed) return;
+            if (routesOverlay == null) return;
+
             routesOverlay.Clear();
+
             foreach (var routePoints in routes)
             {
-                if (routePoints.Count < 2) continue;
+                if (routePoints == null || routePoints.Count < 2) continue;
                 var route = new GMapRoute(routePoints, "connection")
                 {
                     Stroke = new Pen(Color.Red, 2)
                 };
                 routesOverlay.Routes.Add(route);
+
+                try
+                {
+                    var start = routePoints[0];
+                    var end = routePoints[1];
+                    double distance = DistanceCalculation.CalculateDistance(start, end);
+
+                    var midLat = (start.Lat + end.Lat) / 2.0;
+                    var midLng = (start.Lng + end.Lng) / 2.0;
+
+                    Bitmap transparentBitmap = new Bitmap(1, 1);
+                    transparentBitmap.SetPixel(0, 0, Color.Transparent);
+
+                    var labelMarker = new GMarkerGoogle(
+                        new PointLatLng(midLat, midLng),
+                        transparentBitmap)
+                    {
+                        ToolTipMode = MarkerTooltipMode.Always,
+                        ToolTipText = $"{distance:F2} km"
+                    };
+                    labelMarker.ToolTip.Fill = new SolidBrush(Color.FromArgb(200, Color.White));
+                    labelMarker.ToolTip.Foreground = Brushes.Black;
+                    labelMarker.ToolTip.Stroke = Pens.Black;
+                    routesOverlay.Markers.Add(labelMarker);
+                }
+                catch
+                {
+                    continue;
+                }
             }
+
             RefreshMap();
         }
-
         public void CenterMap(double lat, double lng)
         {
             gMapControl1.Position = new PointLatLng(lat, lng);
