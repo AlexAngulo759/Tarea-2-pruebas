@@ -3,7 +3,30 @@
   "WorkspaceRootPath": "C:\\Users\\JoseA\\FamilyGraph\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\JoseA\\FamilyGraph\\MapForm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MapForm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B659B91-59EB-4B4F-8D93-21CE554850B7}|Proyect_Tests\\Proyect_Tests.csproj|c:\\users\\josea\\familygraph\\proyect_tests\\maptests\\maptests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B659B91-59EB-4B4F-8D93-21CE554850B7}|Proyect_Tests\\Proyect_Tests.csproj|solutionrelative:proyect_tests\\maptests\\maptests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B659B91-59EB-4B4F-8D93-21CE554850B7}|Proyect_Tests\\Proyect_Tests.csproj|c:\\users\\josea\\familygraph\\proyect_tests\\proyect_tests.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{2B659B91-59EB-4B4F-8D93-21CE554850B7}|Proyect_Tests\\Proyect_Tests.csproj|solutionrelative:proyect_tests\\proyect_tests.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|c:\\users\\josea\\familygraph\\proyecto grafos\\packages.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\packages.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B659B91-59EB-4B4F-8D93-21CE554850B7}|Proyect_Tests\\Proyect_Tests.csproj|c:\\users\\josea\\familygraph\\proyect_tests\\proyect_tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{2B659B91-59EB-4B4F-8D93-21CE554850B7}|Proyect_Tests\\Proyect_Tests.csproj|solutionrelative:proyect_tests\\proyect_tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Proyecto Grafos||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|c:\\users\\josea\\familygraph\\proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\forms\\mapform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -31,7 +54,7 @@
       "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\services\\distancecalculation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|c:\\users\\josea\\familygraph\\proyecto grafos\\services\\calculatestatistics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\services\\calculatestatistics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\services\\calculatestatistics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -101,6 +124,9 @@
     {
       "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\JoseA\\FamilyGraph\\proyecto grafos\\forms\\simpleinputform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\forms\\simpleinputform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|c:\\users\\josea\\familygraph\\proyecto grafos\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
     }
   ],
   "DocumentGroupContainers": [
@@ -110,11 +136,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "MapForm.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\MapForm.cs",
@@ -128,7 +154,83 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MapForm.cs",
+              "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\MapForm.cs",
+              "RelativeDocumentMoniker": "MapForm.cs",
+              "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\MapForm.cs",
+              "RelativeToolTip": "MapForm.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T02:12:28.702Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "Proyecto Grafos",
+              "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj",
+              "RelativeDocumentMoniker": "Proyecto Grafos\\Proyecto Grafos.csproj",
+              "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj",
+              "RelativeToolTip": "Proyecto Grafos\\Proyecto Grafos.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-11-13T01:53:42.165Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Proyect_Tests",
+              "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
+              "RelativeDocumentMoniker": "Proyect_Tests\\Proyect_Tests.csproj",
+              "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
+              "RelativeToolTip": "Proyect_Tests\\Proyect_Tests.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-13T01:53:22.832Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "packages.config",
+              "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\packages.config",
+              "RelativeDocumentMoniker": "Proyecto Grafos\\packages.config",
+              "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\packages.config",
+              "RelativeToolTip": "Proyecto Grafos\\packages.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-11-13T01:49:08.101Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Proyect_Tests",
+              "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
+              "RelativeDocumentMoniker": "Proyect_Tests\\Proyect_Tests.csproj",
+              "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
+              "RelativeToolTip": "Proyect_Tests\\Proyect_Tests.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-13T01:30:34.337Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MapTests.cs",
+              "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\MapTests\\MapTests.cs",
+              "RelativeDocumentMoniker": "Proyect_Tests\\MapTests\\MapTests.cs",
+              "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\MapTests\\MapTests.cs",
+              "RelativeToolTip": "Proyect_Tests\\MapTests\\MapTests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T01:30:10.229Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "SimpleInputForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\SimpleInputForm.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\SimpleInputForm.cs",
@@ -140,7 +242,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "MapPresenter.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Presenters\\MapPresenter.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Presenters\\MapPresenter.cs",
@@ -153,7 +255,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 10,
               "Title": "IMapView.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Views\\IMapView.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Views\\IMapView.cs",
@@ -166,7 +268,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "FamilyMember.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Models\\FamilyMember.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Models\\FamilyMember.cs",
@@ -179,7 +281,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 13,
               "Title": "CalculateStatistics.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\CalculateStatistics.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\CalculateStatistics.cs",
@@ -192,7 +294,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "DistanceCalculation.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\DistanceCalculation.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\DistanceCalculation.cs",
@@ -205,7 +307,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "MapForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.Designer.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\MapForm.Designer.cs",
@@ -218,7 +320,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 14,
               "Title": "MapForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\MapForm.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\MapForm.cs",
@@ -230,7 +332,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 17,
               "Title": "GraphValidator.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Validate\\GraphValidator.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Validate\\GraphValidator.cs",
@@ -238,11 +340,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Validate\\GraphValidator.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAHcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T04:54:35.461Z"
+              "WhenOpened": "2025-11-05T04:54:35.461Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 29,
               "Title": "ValidationResult.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Validate\\ValidationResult.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Validate\\ValidationResult.cs",
@@ -250,11 +353,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Validate\\ValidationResult.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T04:54:07.931Z"
+              "WhenOpened": "2025-11-05T04:54:07.931Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 30,
               "Title": "SimpleInputForm.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Forms\\SimpleInputForm.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Forms\\SimpleInputForm.cs",
@@ -267,7 +371,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 19,
               "Title": "Form1.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Form1.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Form1.cs",
@@ -275,11 +379,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Form1.cs",
               "ViewState": "AgIAAH0AAAAAAAAAAAAAAI4AAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:22:18.904Z"
+              "WhenOpened": "2025-11-05T00:22:18.904Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "InteractionService.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\InteractionService.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\InteractionService.cs",
@@ -287,11 +392,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Services\\InteractionService.cs",
               "ViewState": "AgIAAD8AAAAAAAAAAAAqwEkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:58:30.126Z"
+              "WhenOpened": "2025-11-05T00:58:30.126Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 27,
               "Title": "DrawingService.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\DrawingService.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\DrawingService.cs",
@@ -299,11 +405,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Services\\DrawingService.cs",
               "ViewState": "AgIAACQAAAAAAAAAAAAYwDsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:42:36.953Z"
+              "WhenOpened": "2025-11-05T00:42:36.953Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 28,
               "Title": "LayoutService.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\LayoutService.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\LayoutService.cs",
@@ -311,11 +418,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Services\\LayoutService.cs",
               "ViewState": "AgIAAEsAAAAAAAAAAAAYwFoAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:42:11.016Z"
+              "WhenOpened": "2025-11-05T00:42:11.016Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 26,
               "Title": "VisualNode.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Models\\VisualNode.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Models\\VisualNode.cs",
@@ -323,11 +431,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Models\\VisualNode.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAA3wAQAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:41:52.815Z"
+              "WhenOpened": "2025-11-05T00:41:52.815Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 20,
               "Title": "GraphService.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Services\\GraphService.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\GraphService.cs",
@@ -335,11 +444,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Services\\GraphService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:41:19.139Z"
+              "WhenOpened": "2025-11-05T00:41:19.139Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 25,
               "Title": "Person.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Models\\Person.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Models\\Person.cs",
@@ -347,11 +457,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Models\\Person.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:29:27.521Z"
+              "WhenOpened": "2025-11-05T00:29:27.521Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 16,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Program.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Program.cs",
@@ -359,11 +470,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:22:05.53Z"
+              "WhenOpened": "2025-11-05T00:22:05.53Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 22,
               "Title": "Graph.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Models\\Graph.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Models\\Graph.cs",
@@ -371,11 +483,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Models\\Graph.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:16:39.959Z"
+              "WhenOpened": "2025-11-05T00:16:39.959Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 21,
               "Title": "Dictionary.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Models\\Dictionary.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Models\\Dictionary.cs",
@@ -383,11 +496,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Models\\Dictionary.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:13:07.827Z"
+              "WhenOpened": "2025-11-05T00:13:07.827Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 23,
               "Title": "LinkedList.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Models\\LinkedList.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Models\\LinkedList.cs",
@@ -395,11 +509,12 @@
               "RelativeToolTip": "Proyecto Grafos\\Models\\LinkedList.cs",
               "ViewState": "AgIAAEMAAAAAAAAAAAAkwEcAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:12:29.286Z"
+              "WhenOpened": "2025-11-05T00:12:29.286Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 24,
               "Title": "Node.cs",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Models\\Node.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Models\\Node.cs",
@@ -407,18 +522,20 @@
               "RelativeToolTip": "Proyecto Grafos\\Models\\Node.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:11:47.604Z"
+              "WhenOpened": "2025-11-05T00:11:47.604Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 15,
               "Title": "Form1.cs [Design]",
               "DocumentMoniker": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Form1.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Form1.cs",
               "ToolTip": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Form1.cs [Design]",
               "RelativeToolTip": "Proyecto Grafos\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-05T00:07:12.173Z"
+              "WhenOpened": "2025-11-05T00:07:12.173Z",
+              "EditorCaption": " [Design]"
             }
           ]
         }
