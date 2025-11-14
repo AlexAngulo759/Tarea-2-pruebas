@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using Proyecto_Grafos.Core.Models;
 
 namespace Proyecto_Grafos.Services
 {
@@ -8,77 +7,96 @@ namespace Proyecto_Grafos.Services
     {
         private const int NODE_SPACING_X = 120;
         private const int NODE_SPACING_Y = 100;
-        private const int MARGIN_X = 50;
-        private const int MARGIN_Y = 50;
+        private const int MARGIN = 50;
 
-        public List<VisualNode> CalculateLayout(List<string> people, GraphService graphService)
+        public List<Models.VisualNode> CalculateLayout(Models.LinkedList<string> people, GraphService graphService)
         {
-            var visualNodes = new List<VisualNode>();
+            var visualNodes = new List<Models.VisualNode>();
+            var positions = new Dictionary<string, Point>();
 
-            var roots = new List<string>();
-            foreach (var p in people)
-            {
-                var parents = graphService.GetParents(p);
-                if (parents.Count == 0)
-                    roots.Add(p);
-            }
+            var levels = OrganizeByLevels(people, graphService);
 
-            float currentX = MARGIN_X;
-            foreach (var root in roots)
+            int currentY = MARGIN;
+            foreach (var level in levels.ToArray())
             {
-                LayoutSubtree(graphService, root, currentX, MARGIN_Y, visualNodes);
-                currentX += GetSubtreeWidth(graphService, root) + NODE_SPACING_X;
+                int nodeCount = level.Count;
+                int totalWidth = nodeCount * NODE_SPACING_X;
+                int startX = (1000 - totalWidth) / 2;
+
+                for (int i = 0; i < nodeCount; i++)
+                {
+                    string personName = level.Get(i);
+                    int x = startX + i * NODE_SPACING_X;
+
+                    var visualNode = new Models.VisualNode(personName, x, currentY);
+                    visualNodes.Add(visualNode);
+                }
+                currentY += NODE_SPACING_Y;
             }
 
             return visualNodes;
         }
 
-        private float LayoutSubtree(GraphService graphService, string person, float x, float y, List<VisualNode> visualNodes)
+        private Models.LinkedList<Models.LinkedList<string>> OrganizeByLevels(Models.LinkedList<string> people, GraphService graphService)
         {
-            if (visualNodes.Exists(v => v.Name == person))
-                return x;
+            var levels = new Models.LinkedList<Models.LinkedList<string>>();
+            var visited = new Dictionary<string, bool>();
+            var roots = new Models.LinkedList<string>();
 
-            visualNodes.Add(new VisualNode(person, (int)x, (int)y));
-
-            var parents = graphService.GetParents(person);
-            var children = graphService.GetChildren(person);
-
-            if (parents.Count > 0)
+            for (int i = 0; i < people.Count; i++)
             {
-                float parentX = x - ((parents.Count - 1) * NODE_SPACING_X) / 2f;
-                for (int i = 0; i < parents.Count; i++)
+                string person = people.Get(i);
+                var parent = GetParent(person, graphService);
+                if (string.IsNullOrEmpty(parent))
                 {
-                    string parent = parents.Get(i);
-                    LayoutSubtree(graphService, parent, parentX, y - NODE_SPACING_Y, visualNodes);
-                    parentX += NODE_SPACING_X;
+                    roots.Add(person);
                 }
             }
 
-            if (children.Count > 0)
+            if (roots.Count == 0 && people.Count > 0)
             {
-                float childX = x - ((children.Count - 1) * NODE_SPACING_X) / 2f;
+                roots.Add(people.Get(0));
+            }
+
+            var queue = new Models.LinkedList<(string person, int level)>();
+
+            var rootsArray = roots.ToArray();
+            foreach (var root in rootsArray)
+            {
+                queue.Add((root, 0));
+                visited[root] = true;
+            }
+
+            while (queue.Count > 0)
+            {
+                var current = queue.Get(0);
+                queue.RemoveAt(0);
+
+                while (levels.Count <= current.level)
+                {
+                    levels.Add(new Models.LinkedList<string>());
+                }
+                levels.Get(current.level).Add(current.person);
+
+                var children = graphService.GetChildren(current.person);
                 for (int i = 0; i < children.Count; i++)
                 {
                     string child = children.Get(i);
-                    LayoutSubtree(graphService, child, childX, y + NODE_SPACING_Y, visualNodes);
-                    childX += NODE_SPACING_X;
+                    if (!visited.ContainsKey(child))
+                    {
+                        visited[child] = true;
+                        queue.Add((child, current.level + 1));
+                    }
                 }
             }
 
-            return x;
+            return levels;
         }
 
-        private float GetSubtreeWidth(GraphService graphService, string person)
+        private string GetParent(string person, GraphService graphService)
         {
-            var children = graphService.GetChildren(person);
-            if (children.Count == 0)
-                return NODE_SPACING_X;
-
-            float total = 0;
-            for (int i = 0; i < children.Count; i++)
-                total += GetSubtreeWidth(graphService, children.Get(i));
-
-            return total;
+            var personData = graphService.GetPersonData(person);
+            return personData?.ChildOf ?? string.Empty;
         }
     }
 }

@@ -16,12 +16,31 @@ C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\
 C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.CoreCompileInputs.cache
 C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.exe
 C:\Users\Usuario\Desktop\Progra\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.pdb
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\bin\Debug\Proyecto Grafos.exe.config
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\bin\Debug\Proyecto Grafos.exe
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\bin\Debug\Proyecto Grafos.pdb
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.AssemblyReference.cache
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto_Grafos.Properties.Resources.resources
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.GenerateResource.cache
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.CoreCompileInputs.cache
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.exe
-C:\Users\Usuario\Desktop\Progra\C#\Proyecto Grafos\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.pdb
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\Proyecto Grafos.exe.config
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\Proyecto Grafos.exe
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\Proyecto Grafos.pdb
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\AjaxMin.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\EntityFramework.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\GMap.NET.Core.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\GMap.NET.WindowsForms.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\Newtonsoft.Json.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\System.Data.SqlClient.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\System.Data.SQLite.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\System.Security.Principal.Windows.dll
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\EntityFramework.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\Newtonsoft.Json.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\System.Data.SqlClient.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\bin\Debug\System.Security.Principal.Windows.xml
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.AssemblyReference.cache
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.exe.config
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto_Grafos.MapForm.resources
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto_Grafos.Properties.Resources.resources
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.GenerateResource.cache
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.csproj.CoreCompileInputs.cache
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto.07A288EC.Up2Date
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.exe
+C:\Users\JoseA\FamilyGraph\Proyecto Grafos\obj\Debug\Proyecto Grafos.pdb
