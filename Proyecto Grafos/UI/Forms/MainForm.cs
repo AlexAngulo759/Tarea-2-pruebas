@@ -11,9 +11,9 @@ using Proyecto_Grafos.UI.Controls;
 
 namespace Proyecto_Grafos.UI.Forms
 {
-    public partial class MainForm : Form // ✅ Cambiado de "Form1" a "MainForm"
+    public partial class MainForm : Form 
     {
-        private GraphService _graphService; // ✅ Quitar readonly temporalmente
+        private GraphService _graphService; 
         private LayoutService _layoutService;
         private DrawingService _drawingService;
         private InteractionService _interactionService;
@@ -29,7 +29,7 @@ namespace Proyecto_Grafos.UI.Forms
         private const float MIN_ZOOM = 0.3f;
         private const float MAX_ZOOM = 3.0f;
 
-        public MainForm() // ✅ Cambiado de "Form1" a "MainForm"
+        public MainForm() 
         {
             InitializeServices();
             InitializeCustomComponents();
@@ -193,7 +193,7 @@ namespace Proyecto_Grafos.UI.Forms
 
             using (var detailForm = new PersonDetailForm(""))
             {
-                detailForm.Text = formTitle; 
+                detailForm.Text = formTitle;
 
                 if (detailForm.ShowDialog() == DialogResult.OK)
                 {
@@ -338,7 +338,7 @@ namespace Proyecto_Grafos.UI.Forms
             {
                 using (var detailForm = new PersonDetailForm(person.Name))
                 {
-                    detailForm.Text = $"Detalles de {person.Name}"; 
+                    detailForm.Text = $"Detalles de {person.Name}";
                     detailForm.SetExistingData(person);
 
                     if (detailForm.ShowDialog() == DialogResult.OK)
