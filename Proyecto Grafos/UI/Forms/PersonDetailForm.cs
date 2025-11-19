@@ -26,6 +26,9 @@ namespace Proyecto_Grafos
         private TextBox txtLatitude;
         private TextBox txtLongitude;
         private Button btnSelectPhoto;
+
+        private Button btnSelectLocation;  
+
         private PictureBox picPhoto;
         private Button btnOK;
         private Button btnCancel;
@@ -48,7 +51,8 @@ namespace Proyecto_Grafos
         private void InitializeComponent()
         {
             this.Text = "Información de Persona";
-            this.Size = new Size(500, 670);
+            this.Size = new Size(520, 760);                 
+            this.MinimumSize = new Size(520, 760);           
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -139,7 +143,7 @@ namespace Proyecto_Grafos
                 Font = new Font("Arial", 10, FontStyle.Bold),
                 ForeColor = Color.DarkGreen,
                 Location = new Point(20, 230),
-                Width = 200,
+                Width = 220,
                 Height = 20
             };
 
@@ -173,12 +177,23 @@ namespace Proyecto_Grafos
                 Font = new Font("Arial", 9)
             };
 
+            btnSelectLocation = new Button
+            {
+                Text = "Seleccionar en mapa",
+                Location = new Point(150, 325),
+                Width = 150,
+                Height = 30,
+                Font = new Font("Arial", 9),
+                BackColor = Color.LightYellow
+            };
+            btnSelectLocation.Click += BtnSelectLocation_Click;
+
             var lblPhotoTitle = new Label
             {
                 Text = "Fotografía",
                 Font = new Font("Arial", 10, FontStyle.Bold),
                 ForeColor = Color.DarkOrange,
-                Location = new Point(20, 330),
+                Location = new Point(20, 360),
                 Width = 100,
                 Height = 20
             };
@@ -186,7 +201,7 @@ namespace Proyecto_Grafos
             btnSelectPhoto = new Button
             {
                 Text = "Seleccionar Foto",
-                Location = new Point(150, 330),
+                Location = new Point(150, 360),
                 Width = 120,
                 Height = 30,
                 Font = new Font("Arial", 9),
@@ -196,7 +211,7 @@ namespace Proyecto_Grafos
             lblPhotoInfo = new Label
             {
                 Text = "No se ha seleccionado foto",
-                Location = new Point(280, 337),
+                Location = new Point(280, 367),
                 Width = 200,
                 Font = new Font("Arial", 8),
                 ForeColor = Color.Gray
@@ -204,7 +219,7 @@ namespace Proyecto_Grafos
 
             picPhoto = new PictureBox
             {
-                Location = new Point(150, 370),
+                Location = new Point(150, 400),
                 Size = new Size(200, 200),
                 BorderStyle = BorderStyle.FixedSingle,
                 SizeMode = PictureBoxSizeMode.Zoom,
@@ -214,7 +229,7 @@ namespace Proyecto_Grafos
             btnOK = new Button
             {
                 Text = "Aceptar",
-                Location = new Point(150, 590),
+                Location = new Point(150, 670), 
                 Width = 100,
                 Height = 35,
                 Font = new Font("Arial", 9, FontStyle.Bold),
@@ -225,7 +240,7 @@ namespace Proyecto_Grafos
             btnCancel = new Button
             {
                 Text = "Cancelar",
-                Location = new Point(260, 590),
+                Location = new Point(260, 670), 
                 Width = 100,
                 Height = 35,
                 Font = new Font("Arial", 9),
@@ -248,6 +263,7 @@ namespace Proyecto_Grafos
             this.Controls.Add(txtLatitude);
             this.Controls.Add(lblLongitude);
             this.Controls.Add(txtLongitude);
+            this.Controls.Add(btnSelectLocation);
             this.Controls.Add(lblPhotoTitle);
             this.Controls.Add(btnSelectPhoto);
             this.Controls.Add(lblPhotoInfo);
@@ -260,13 +276,10 @@ namespace Proyecto_Grafos
             btnOK.Click += BtnOK_Click;
 
             var toolTip = new ToolTip();
-            toolTip.SetToolTip(txtCedula, "Número de cédula de identidad");
-            toolTip.SetToolTip(txtLatitude, "Coordenada de latitud (-90 a 90)");
-            toolTip.SetToolTip(txtLongitude, "Coordenada de longitud (-180 a 180)");
-            toolTip.SetToolTip(btnSelectPhoto, "Seleccionar fotografía de la persona");
-
-            this.AcceptButton = btnOK;
-            this.CancelButton = btnCancel;
+            toolTip.SetToolTip(txtCedula, "Número de cédula");
+            toolTip.SetToolTip(txtLatitude, "Latitud (-90 a 90)");
+            toolTip.SetToolTip(txtLongitude, "Longitud (-180 a 180)");
+            toolTip.SetToolTip(btnSelectPhoto, "Seleccionar fotografía");
         }
 
         private void ToggleFallecimientoControls(bool enabled)
@@ -360,6 +373,27 @@ namespace Proyecto_Grafos
                 lblPhotoInfo.ForeColor = Color.Gray;
                 picPhoto.Image = null;
             }
+        }
+        private void BtnSelectLocation_Click(object sender, EventArgs e)
+        {
+            var map = new MapForm();
+            if (double.TryParse(txtLatitude.Text, out double lat) &&
+                double.TryParse(txtLongitude.Text, out double lng))
+            {
+                map.Latitude = lat;
+                map.Longitude = lng;
+            }
+
+            if (map.ShowDialog() == DialogResult.OK)
+            {
+                txtLatitude.Text = map.SelectedLatitude.ToString("F6");
+                txtLongitude.Text = map.SelectedLongitude.ToString("F6");
+            }
+        }
+        public void SetLocation(double lat, double lng)
+        {
+            txtLatitude.Text = lat.ToString("F6");
+            txtLongitude.Text = lng.ToString("F6");
         }
 
         private void BtnOK_Click(object sender, EventArgs e)

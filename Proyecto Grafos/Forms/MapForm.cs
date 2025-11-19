@@ -15,7 +15,7 @@ namespace Proyecto_Grafos
 {
     public partial class MapForm : Form, IMapView
     {
-        private GMarkerGoogle marker; 
+        private GMarkerGoogle marker;
         private GMapOverlay markersOverlay;
         private GMapOverlay routesOverlay;
         private GMapOverlay tempOverlay;
@@ -26,9 +26,93 @@ namespace Proyecto_Grafos
         private double initialLat = 9.859023203965602;
         private double initialLng = -83.91360662945013;
 
+        private bool readOnlyMode = false;
+
+        private bool forceVisualizationOnLoad = false;
+        private List<Person> pendingPeople = null;
+
+        public double SelectedLatitude { get; private set; }
+        public double SelectedLongitude { get; private set; }
+
         public MapForm()
         {
             InitializeComponent();
+        }
+
+        public void LoadMembersFromGraph(List<Person> people)
+        {
+            if (markersOverlay == null)
+            {
+                pendingPeople = people == null ? null : new List<Person>(people);
+                return;
+            }
+
+            markersOverlay.Markers.Clear();
+            if (people == null) return;
+
+            foreach (var p in people)
+            {
+                if (p == null) continue;
+                if (Math.Abs(p.Latitude) < double.Epsilon && Math.Abs(p.Longitude) < double.Epsilon)
+                    continue;
+
+                var m = new GMarkerGoogle(new PointLatLng(p.Latitude, p.Longitude), GMarkerGoogleType.blue)
+                {
+                    ToolTipMode = MarkerTooltipMode.Always,
+                    ToolTipText = $"{p.Name}\nLat: {p.Latitude:G}\nLng: {p.Longitude:G}",
+                    Tag = p.Name
+                };
+                markersOverlay.Markers.Add(m);
+            }
+
+            var familyMembers = people
+                .Where(p => p != null && !(Math.Abs(p.Latitude) < double.Epsilon && Math.Abs(p.Longitude) < double.Epsilon))
+                .Select(p => new FamilyMember(p.Name, p.Latitude, p.Longitude))
+                .ToList();
+
+            presenter?.LoadMembers(familyMembers);
+            RefreshMap();
+        }
+
+        public void AddOrUpdateMarker(string name, double lat, double lng)
+        {
+            if (markersOverlay == null) return;
+
+            var existing = markersOverlay.Markers.FirstOrDefault(x => (x.Tag as string) == name);
+            if (existing != null)
+            {
+                existing.Position = new PointLatLng(lat, lng);
+                existing.ToolTipText = $"{name}\nLat: {lat:G}\nLng: {lng:G}";
+            }
+            else
+            {
+                if (Math.Abs(lat) < double.Epsilon && Math.Abs(lng) < double.Epsilon)
+                    return;
+
+                var m = new GMarkerGoogle(new PointLatLng(lat, lng), GMarkerGoogleType.blue)
+                {
+                    ToolTipMode = MarkerTooltipMode.Always,
+                    ToolTipText = $"{name}\nLat: {lat:G}\nLng: {lng:G}",
+                    Tag = name
+                };
+                markersOverlay.Markers.Add(m);
+            }
+            RefreshMap();
+        }
+
+        public void SetReadOnlyVisualization(bool readOnly)
+        {
+            readOnlyMode = readOnly;
+            try
+            {
+                Acceptbtn.Visible = !readOnly && modeSelection;
+            }
+            catch { }
+        }
+
+        public void SetModeVisualization()
+        {
+            forceVisualizationOnLoad = true;
         }
 
         private void MapForm_Load(object sender, EventArgs e)
@@ -36,9 +120,11 @@ namespace Proyecto_Grafos
             this.KeyPreview = true;
             this.WindowState = FormWindowState.Maximized;
             this.MinimumSize = new Size(1080, 800);
+
             gMapControl1.DragButton = MouseButtons.Left;
             gMapControl1.CanDragMap = true;
             gMapControl1.MapProvider = GMapProviders.GoogleMap;
+
             gMapControl1.Position = new PointLatLng(initialLat, initialLng);
             gMapControl1.MinZoom = 0;
             gMapControl1.MaxZoom = 24;
@@ -53,20 +139,34 @@ namespace Proyecto_Grafos
             gMapControl1.Overlays.Add(routesOverlay);
             gMapControl1.Overlays.Add(tempOverlay);
 
-            marker = new GMarkerGoogle(new PointLatLng(initialLat, initialLng), GMarkerGoogleType.red_dot)
-            {
-                ToolTipMode = MarkerTooltipMode.Always,
-                ToolTipText = $"Ubicación:\nLat: {initialLat:G}\nLng: {initialLng:G}"
-            };
-
-            gMapControl1.OnMarkerClick += FamilyMarker_Click;
-            gMapControl1.MouseClick += gMapControl1_MouseClick;
-            gMapControl1.MouseDoubleClick += gMapControl1_MouseDoubleClick;
-            this.KeyDown += MapForm_KeyDown;
-
             presenter = new MapPresenter(this);
 
-            LocationSelection();
+            gMapControl1.OnMarkerClick -= FamilyMarker_Click;
+            gMapControl1.OnMarkerClick += FamilyMarker_Click;
+
+            this.KeyDown -= MapForm_KeyDown;
+            this.KeyDown += MapForm_KeyDown;
+            this.Resize -= MapForm_Resize;
+            this.Resize += MapForm_Resize;
+
+            marker = null;
+
+            if (pendingPeople != null)
+            {
+                var toLoad = pendingPeople;
+                pendingPeople = null;
+                LoadMembersFromGraph(toLoad);
+            }
+
+            if (forceVisualizationOnLoad)
+            {
+                FamilyVisualization();
+                try { presenter.UpdateStatistics(); } catch { }
+            }
+            else
+            {
+                LocationSelection();
+            }
         }
 
         public string Description
@@ -78,13 +178,13 @@ namespace Proyecto_Grafos
         public double Latitude
         {
             get => double.TryParse(Latitudtext.Text, out var v) ? v : 0;
-            set => Latitudtext.Text = value.ToString("G"); 
+            set => Latitudtext.Text = value.ToString("G");
         }
 
         public double Longitude
         {
             get => double.TryParse(Longitudtext.Text, out var v) ? v : 0;
-            set => Longitudtext.Text = value.ToString("G"); 
+            set => Longitudtext.Text = value.ToString("G");
         }
 
         public void AddMarker(string name, double lat, double lng)
@@ -132,6 +232,7 @@ namespace Proyecto_Grafos
             foreach (var routePoints in routes)
             {
                 if (routePoints == null || routePoints.Count < 2) continue;
+
                 var route = new GMapRoute(routePoints, "connection")
                 {
                     Stroke = new Pen(Color.Red, 2)
@@ -150,26 +251,24 @@ namespace Proyecto_Grafos
                     Bitmap transparentBitmap = new Bitmap(1, 1);
                     transparentBitmap.SetPixel(0, 0, Color.Transparent);
 
-                    var labelMarker = new GMarkerGoogle(
-                        new PointLatLng(midLat, midLng),
-                        transparentBitmap)
+                    var labelMarker = new GMarkerGoogle(new PointLatLng(midLat, midLng), transparentBitmap)
                     {
                         ToolTipMode = MarkerTooltipMode.Always,
                         ToolTipText = $"{distance:F2} km"
                     };
+
                     labelMarker.ToolTip.Fill = new SolidBrush(Color.FromArgb(200, Color.White));
                     labelMarker.ToolTip.Foreground = Brushes.Black;
                     labelMarker.ToolTip.Stroke = Pens.Black;
+
                     routesOverlay.Markers.Add(labelMarker);
                 }
-                catch
-                {
-                    continue;
-                }
+                catch { continue; }
             }
 
             RefreshMap();
         }
+
         public void CenterMap(double lat, double lng)
         {
             gMapControl1.Position = new PointLatLng(lat, lng);
@@ -180,11 +279,10 @@ namespace Proyecto_Grafos
             modeSelection = true;
             this.Text = "Seleccionar Ubicación";
             Acceptbtn.Visible = true;
-            ChangeModebtn.Visible = true;
+            ChangeModebtn.Visible = false;
+            label1.Visible = false;
+            Descriptiontext.Visible = false;
             dataGridView1.Visible = false;
-            Addbtn.Visible = false;
-            Deletebtn.Visible = false;
-            ChangeModebtn.Text = "Cambiar Modo";
         }
 
         private void FamilyVisualization()
@@ -193,36 +291,33 @@ namespace Proyecto_Grafos
             this.Text = "Visualización Familiares";
             Acceptbtn.Visible = false;
             dataGridView1.Visible = true;
-            Addbtn.Visible = true;
-            Deletebtn.Visible = true;
+
+            label1.Visible = true;
+            Descriptiontext.Visible = true;
+
             ChangeModebtn.Visible = true;
-            ChangeModebtn.Text = "Cambiar Modo";
-        }
+            ChangeModebtn.Text = "Volver al Árbol";
+            ChangeModebtn.AutoSize = true;
+            ChangeModebtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ChangeModebtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
-        private void Addbtn_Click(object sender, EventArgs e)
-        {
-            tempOverlay.Markers.Clear();
-            presenter.AddMember();
-        }
-
-        private void Deletebtn_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.CurrentRow != null)
-            {
-                string name = dataGridView1.CurrentRow.Cells["Nombre"].Value.ToString();
-                presenter.DeleteMember(name);
-            }
+            LayoutReturnButton(); 
         }
 
         private void Acceptbtn_Click(object sender, EventArgs e)
         {
             tempOverlay.Markers.Clear();
-            presenter.AddMember();
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
         private void ChangeModebtn_Click(object sender, EventArgs e)
         {
-            if (modeSelection) FamilyVisualization(); else LocationSelection();
+            if (!modeSelection)
+            {
+                this.DialogResult = DialogResult.Cancel;
+                this.Close();
+            }
         }
 
         private void MapForm_KeyDown(object sender, KeyEventArgs e)
@@ -234,26 +329,41 @@ namespace Proyecto_Grafos
                 e.Handled = true;
             }
         }
+
         private void gMapControl1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
                 tempOverlay.Markers.Clear();
+                marker = null;
                 RefreshMap();
             }
         }
 
         private void gMapControl1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (!modeSelection || readOnlyMode) return;
+
             var point = gMapControl1.FromLocalToLatLng(e.X, e.Y);
-            presenter.HandleMapDoubleClick(point.Lat, point.Lng);
+            presenter?.HandleMapDoubleClick(point.Lat, point.Lng);
+
+            if (marker == null)
+            {
+                marker = new GMarkerGoogle(point, GMarkerGoogleType.red)
+                {
+                    ToolTipMode = MarkerTooltipMode.Always
+                };
+            }
 
             marker.Position = point;
             marker.ToolTipText = $"Ubicación:\nLat: {point.Lat:G}\nLng: {point.Lng:G}";
-            if (!tempOverlay.Markers.Contains(marker))
-                tempOverlay.Markers.Add(marker);
 
-            routesOverlay.Clear();
+            tempOverlay.Markers.Clear();
+            tempOverlay.Markers.Add(marker);
+
+            SelectedLatitude = point.Lat;
+            SelectedLongitude = point.Lng;
+
             RefreshMap();
         }
 
@@ -263,9 +373,8 @@ namespace Proyecto_Grafos
 
             string name = clickedMarker.Tag.ToString();
 
-            presenter.SelectMemberByName(name, centerMap: false);
-
-            presenter.CalculateAndShowRoutes(name);
+            presenter?.SelectMemberByName(name, centerMap: false);
+            presenter?.CalculateAndShowRoutes(name);
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
@@ -278,12 +387,36 @@ namespace Proyecto_Grafos
             }
         }
 
-
         private void SelectUbication(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex < 0) return;
+
             string name = dataGridView1.Rows[e.RowIndex].Cells["Nombre"].Value.ToString();
-            presenter.SelectMemberByName(name);
+            presenter?.SelectMemberByName(name);
+        }
+
+        private void LayoutReturnButton()
+        {
+            const int margin = 8;
+
+            ChangeModebtn.AutoSize = true;
+            ChangeModebtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ChangeModebtn.Left = Longitudtext.Left;
+            ChangeModebtn.Top = Longitudtext.Bottom + margin;
+
+            int rightEdge = Longitudtext.Right;
+            if (ChangeModebtn.Right > rightEdge)
+            {
+                ChangeModebtn.Left = Math.Max(Longitudtext.Left, rightEdge - ChangeModebtn.Width);
+            }
+        }
+
+        private void MapForm_Resize(object sender, EventArgs e)
+        {
+            if (ChangeModebtn.Visible && !modeSelection)
+            {
+                LayoutReturnButton();
+            }
         }
     }
 }

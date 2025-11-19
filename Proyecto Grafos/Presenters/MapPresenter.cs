@@ -67,6 +67,7 @@ namespace Proyecto_Grafos.Presenters
             if (centerMap)
                 view.CenterMap(member.Lat, member.Lng);
         }
+
         public void CalculateAndShowRoutes(string originName)
         {
             var origin = members.FirstOrDefault(m => m.Name == originName);
@@ -75,14 +76,13 @@ namespace Proyecto_Grafos.Presenters
             var allRoutes = members
                 .Where(m => m.Name != originName)
                 .Select(m => new List<PointLatLng> {
-            new PointLatLng(origin.Lat, origin.Lng),
-            new PointLatLng(m.Lat, m.Lng)
+                    new PointLatLng(origin.Lat, origin.Lng),
+                    new PointLatLng(m.Lat, m.Lng)
                 })
                 .ToList();
 
             view.DrawRoutes(allRoutes);
         }
-
 
         public void HandleMapDoubleClick(double lat, double lng)
         {
@@ -121,6 +121,14 @@ DISTANCIA PROMEDIO:
 └ {avgD:F2} km";
 
             view.UpdateStatistics(stats);
+        }
+        public void LoadMembers(IEnumerable<FamilyMember> newMembers)
+        {
+            members.Clear();
+            if (newMembers != null)
+                members.AddRange(newMembers);
+            view.RefreshGrid(members.ToList());
+            UpdateStatistics();
         }
     }
 }

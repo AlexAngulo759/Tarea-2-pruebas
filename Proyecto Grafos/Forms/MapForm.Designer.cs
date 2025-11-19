@@ -17,8 +17,6 @@
 
         private void InitializeComponent()
         {
-            this.Addbtn = new System.Windows.Forms.Button();
-            this.Deletebtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -32,28 +30,6 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // Addbtn
-            // 
-            this.Addbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Addbtn.Location = new System.Drawing.Point(768, 300);
-            this.Addbtn.Name = "Addbtn";
-            this.Addbtn.Size = new System.Drawing.Size(120, 44);
-            this.Addbtn.TabIndex = 1;
-            this.Addbtn.Text = "Agregar";
-            this.Addbtn.UseVisualStyleBackColor = true;
-            this.Addbtn.Click += new System.EventHandler(this.Addbtn_Click);
-            // 
-            // Deletebtn
-            // 
-            this.Deletebtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Deletebtn.Location = new System.Drawing.Point(894, 300);
-            this.Deletebtn.Name = "Deletebtn";
-            this.Deletebtn.Size = new System.Drawing.Size(120, 44);
-            this.Deletebtn.TabIndex = 2;
-            this.Deletebtn.Text = "Eliminar";
-            this.Deletebtn.UseVisualStyleBackColor = true;
-            this.Deletebtn.Click += new System.EventHandler(this.Deletebtn_Click);
             // 
             // label1
             // 
@@ -176,6 +152,7 @@
             this.gMapControl1.TabIndex = 0;
             this.gMapControl1.Zoom = 5D;
             this.gMapControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gMapControl1_MouseDoubleClick);
+            this.gMapControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gMapControl1_MouseClick);
             // 
             // richTextBox1
             // 
@@ -201,8 +178,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.Deletebtn);
-            this.Controls.Add(this.Addbtn);
             this.Controls.Add(this.gMapControl1);
             this.MinimumSize = new System.Drawing.Size(1150, 750);
             this.Name = "MapForm";
@@ -217,8 +192,6 @@
         #endregion
 
         private GMap.NET.WindowsForms.GMapControl gMapControl1;
-        private System.Windows.Forms.Button Addbtn;
-        private System.Windows.Forms.Button Deletebtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;

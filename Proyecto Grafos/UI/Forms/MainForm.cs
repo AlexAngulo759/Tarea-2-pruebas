@@ -8,16 +8,21 @@ using Proyecto_Grafos.Models;
 using Proyecto_Grafos.Services;
 using Proyecto_Grafos.Services.Validation;
 using Proyecto_Grafos.UI.Controls;
+using Proyecto_Grafos; 
 
 namespace Proyecto_Grafos.UI.Forms
 {
-    public partial class MainForm : Form 
+    public partial class MainForm : Form
     {
-        private GraphService _graphService; 
+        private GraphService _graphService;
+        private LayoutService _layout_service;
         private LayoutService _layoutService;
+        private DrawingService _drawing_service;
         private DrawingService _drawingService;
         private InteractionService _interactionService;
+        private InteractionService _interaction_service;
         private List<VisualNode> _visualNodes;
+        private List<VisualNode> _visual_nodes;
 
         private DoubleBufferedPanel _treePanel;
 
@@ -29,7 +34,7 @@ namespace Proyecto_Grafos.UI.Forms
         private const float MIN_ZOOM = 0.3f;
         private const float MAX_ZOOM = 3.0f;
 
-        public MainForm() 
+        public MainForm()
         {
             InitializeServices();
             InitializeCustomComponents();
@@ -41,10 +46,18 @@ namespace Proyecto_Grafos.UI.Forms
             IValidationService validator = new GraphValidator(familyGraph);
 
             _graphService = new GraphService(familyGraph, validator);
+
+            _layout_service = new LayoutService();
             _layoutService = new LayoutService();
+
+            _drawing_service = new DrawingService();
             _drawingService = new DrawingService();
+
             _interactionService = new InteractionService();
+            _interaction_service = _interactionService;
+
             _visualNodes = new List<VisualNode>();
+            _visual_nodes = _visualNodes;
         }
 
         private void InitializeCustomComponents()
@@ -63,7 +76,10 @@ namespace Proyecto_Grafos.UI.Forms
             this.Controls.Add(_treePanel);
 
             this.Text = "Árbol Genealógico - Click derecho para agregar | Arrastrar: Click izquierdo | Zoom: Rueda del mouse";
-            this.Size = new Size(1000, 600);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.WindowState = FormWindowState.Maximized; 
+            this.MinimumSize = new Size(1000, 700);      
+
             this.ResumeLayout();
         }
 
@@ -100,6 +116,10 @@ namespace Proyecto_Grafos.UI.Forms
                     var resetViewItem = new ToolStripMenuItem("Resetear Vista");
                     resetViewItem.Click += (s, ev) => ResetView();
                     contextMenu.Items.Add(resetViewItem);
+
+                    var viewMapItemNoNode = new ToolStripMenuItem("Visualizar mapa familiar");
+                    viewMapItemNoNode.Click += (s, ev) => OpenMapVisualization();
+                    contextMenu.Items.Add(viewMapItemNoNode);
                 }
                 else
                 {
@@ -118,6 +138,10 @@ namespace Proyecto_Grafos.UI.Forms
                     var viewDetailsItem = new ToolStripMenuItem("Ver Detalles");
                     viewDetailsItem.Click += (s, ev) => ShowPersonDetails(nodeName);
                     contextMenu.Items.Add(viewDetailsItem);
+
+                    var viewMapItem = new ToolStripMenuItem("Visualizar mapa familiar");
+                    viewMapItem.Click += (s, ev) => OpenMapVisualization();
+                    contextMenu.Items.Add(viewMapItem);
                 }
 
                 contextMenu.Show(_treePanel, e.Location);
@@ -181,12 +205,14 @@ namespace Proyecto_Grafos.UI.Forms
         {
             _zoomFactor = 1.0f;
             _translation = PointF.Empty;
+            _treePanel?.Invalidate();
             _treePanel.Invalidate();
         }
 
         private void ShowPersonDetailForm(InteractionService.NodeAction action, string nodeName)
         {
             _interactionService.CurrentAction = action;
+            _interaction_service.SelectedNode = nodeName;
             _interactionService.SelectedNode = nodeName;
 
             string formTitle = GetFormTitle();
@@ -213,9 +239,9 @@ namespace Proyecto_Grafos.UI.Forms
                 case InteractionService.NodeAction.AddSuccessor:
                     return $"Agregar Sucesor de {_interactionService.SelectedNode}";
                 case InteractionService.NodeAction.AddPredecessor:
-                    return $"Agregar Predecesor de {_interactionService.SelectedNode}";
+                    return $"Agregar Predecesor de {_interaction_service.SelectedNode}";
                 case InteractionService.NodeAction.AddSibling:
-                    return $"Agregar Hermano de {_interactionService.SelectedNode}";
+                    return $"Agregar Hermano de {_interaction_service.SelectedNode}";
                 default:
                     return "Agregar Persona";
             }
@@ -255,13 +281,13 @@ namespace Proyecto_Grafos.UI.Forms
                     break;
 
                 case InteractionService.NodeAction.AddSuccessor:
-                    validationResult = _graphService.ValidateAddSuccessor(_interactionService.SelectedNode, personData.Name);
+                    validationResult = _graphService.ValidateAddSuccessor(_interaction_service.SelectedNode, personData.Name);
                     if (validationResult.IsValid)
                     {
                         success = AddPersonWithData(personData);
                         if (success)
                         {
-                            success = _graphService.AddRelationship(_interactionService.SelectedNode, personData.Name);
+                            success = _graphService.AddRelationship(_interaction_service.SelectedNode, personData.Name);
                         }
                         message = success ? "Sucesor agregado" : "Error al agregar sucesor";
                     }
@@ -272,43 +298,64 @@ namespace Proyecto_Grafos.UI.Forms
                     break;
 
                 case InteractionService.NodeAction.AddPredecessor:
-                    validationResult = _graphService.ValidateAddPredecessor(_interactionService.SelectedNode, personData.Name);
+                    validationResult = _graphService.ValidateAddPredecessor(_interaction_service.SelectedNode, personData.Name);
+
                     if (validationResult.IsValid)
                     {
                         success = AddPersonWithData(personData);
+
                         if (success)
                         {
-                            success = _graphService.AddRelationship(personData.Name, _interactionService.SelectedNode);
+                            success = _graphService.AddRelationship(personData.Name, _interaction_service.SelectedNode);
                         }
+
                         message = success ? "Predecesor agregado" : "Error al agregar predecesor";
                     }
                     else
                     {
                         message = validationResult.Message;
                     }
+
                     break;
 
                 case InteractionService.NodeAction.AddSibling:
-                    validationResult = _graphService.ValidateAddSibling(_interactionService.SelectedNode, personData.Name);
+                    validationResult = _graphService.ValidateAddSibling(_interaction_service.SelectedNode, personData.Name);
+
                     if (validationResult.IsValid)
                     {
                         success = AddPersonWithData(personData);
+
                         if (success)
                         {
-                            success = _graphService.AddSibling(_interactionService.SelectedNode, personData.Name);
+                            success = _graphService.AddSibling(_interaction_service.SelectedNode, personData.Name);
                         }
+
                         message = success ? "Hermano agregado" : "Error al agregar hermano";
                     }
                     else
                     {
                         message = validationResult.Message;
                     }
+
                     break;
             }
 
             if (success)
             {
                 UpdateVisualTree();
+
+                foreach (Form f in Application.OpenForms)
+                {
+                    if (f is MapForm mf)
+                    {
+                        try
+                        {
+                            mf.AddOrUpdateMarker(personData.Name, personData.Latitude, personData.Longitude);
+                        }
+                        catch { }
+                    }
+                }
+
                 MessageBox.Show(message, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else if (!string.IsNullOrEmpty(message))
@@ -375,9 +422,11 @@ Coordenadas: ({person.Latitude}, {person.Longitude})
             foreach (var node in _visualNodes)
             {
                 var bounds = node.GetBounds();
+
                 if (bounds.Contains((int)worldPos.X, (int)worldPos.Y))
                     return node;
             }
+
             return null;
         }
 
@@ -386,12 +435,15 @@ Coordenadas: ({person.Latitude}, {person.Longitude})
             var allPeople = _graphService.GetAllPeople();
 
             var peopleList = new List<string>();
+
             for (int i = 0; i < allPeople.Count; i++)
             {
                 peopleList.Add(allPeople.Get(i));
             }
 
-            _visualNodes = _layoutService.CalculateLayout(peopleList, _graphService);
+            _visual_nodes = _layoutService.CalculateLayout(peopleList, _graphService);
+            _visualNodes = _visual_nodes;
+
             _treePanel.Invalidate();
         }
 
@@ -400,7 +452,7 @@ Coordenadas: ({person.Latitude}, {person.Longitude})
             e.Graphics.TranslateTransform(_translation.X * _zoomFactor, _translation.Y * _zoomFactor);
             e.Graphics.ScaleTransform(_zoomFactor, _zoomFactor);
 
-            _drawingService.DrawTree(e.Graphics, _visualNodes, _graphService);
+            _drawingService.DrawTree(e.Graphics, _visual_nodes, _graphService);
 
             DrawZoomInfo(e.Graphics);
         }
@@ -412,6 +464,7 @@ Coordenadas: ({person.Latitude}, {person.Longitude})
             g.ResetTransform();
 
             string zoomText = $"Zoom: {(_zoomFactor * 100):F0}%";
+
             using (var font = new Font("Arial", 10))
             using (var brush = new SolidBrush(Color.DarkGray))
             {
@@ -419,6 +472,34 @@ Coordenadas: ({person.Latitude}, {person.Longitude})
             }
 
             g.Transform = oldTransform;
+        }
+
+        private void OpenMapVisualization()
+        {
+            try
+            {
+                var people = new List<Person>();
+                var allNames = _graphService.GetAllPeople();
+
+                for (int i = 0; i < allNames.Count; i++)
+                {
+                    var name = allNames.Get(i);
+                    var p = _graphService.GetPersonData(name);
+                    if (p != null) people.Add(p);
+                }
+
+                using (var map = new MapForm())
+                {
+                    map.LoadMembersFromGraph(people);
+                    map.SetReadOnlyVisualization(true);
+                    map.SetModeVisualization();
+                    map.ShowDialog(this);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"No se pudo abrir el mapa: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
