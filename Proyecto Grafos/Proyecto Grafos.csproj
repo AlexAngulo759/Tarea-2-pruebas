@@ -128,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Interfaces\IFamilyGraph.cs" />
+    <Compile Include="Markers\PhotoMarker.cs" />
     <!-- Validation -->
     <Compile Include="Services\Validation\IValidationService.cs" />
     <Compile Include="Services\Validation\GraphValidator.cs" />

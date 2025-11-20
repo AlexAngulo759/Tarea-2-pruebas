@@ -5,9 +5,11 @@ using GMap.NET.WindowsForms.Markers;
 using Proyecto_Grafos.Models;
 using Proyecto_Grafos.Presenters;
 using Proyecto_Grafos.Views;
+using Proyecto_Grafos.Markers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -30,6 +32,8 @@ namespace Proyecto_Grafos
 
         private bool forceVisualizationOnLoad = false;
         private List<Person> pendingPeople = null;
+
+        private readonly System.Collections.Generic.Dictionary<string, Bitmap> photoCache = new System.Collections.Generic.Dictionary<string, Bitmap>(StringComparer.OrdinalIgnoreCase);
 
         public double SelectedLatitude { get; private set; }
         public double SelectedLongitude { get; private set; }
@@ -56,13 +60,31 @@ namespace Proyecto_Grafos
                 if (Math.Abs(p.Latitude) < double.Epsilon && Math.Abs(p.Longitude) < double.Epsilon)
                     continue;
 
-                var m = new GMarkerGoogle(new PointLatLng(p.Latitude, p.Longitude), GMarkerGoogleType.blue)
+                var pos = new PointLatLng(p.Latitude, p.Longitude);
+                var bmp = GetCircularPhoto(p.PhotoPath);
+
+                if (bmp != null)
                 {
-                    ToolTipMode = MarkerTooltipMode.Always,
-                    ToolTipText = $"{p.Name}\nLat: {p.Latitude:G}\nLng: {p.Longitude:G}",
-                    Tag = p.Name
-                };
-                markersOverlay.Markers.Add(m);
+                    var photoMarker = new Proyecto_Grafos.Markers.PhotoMarker(pos, bmp, p.Name)
+                    {
+                        ToolTipText = $"{p.Name}\nLat: {p.Latitude:G}\nLng: {p.Longitude:G}",
+                        Tag = p.Name
+                    };
+                    markersOverlay.Markers.Add(photoMarker);
+                }
+                else
+                {
+                    var blueMarker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(pos, GMap.NET.WindowsForms.Markers.GMarkerGoogleType.blue)
+                    {
+                        ToolTipMode = GMap.NET.WindowsForms.MarkerTooltipMode.Always,
+                        ToolTipText = $"{p.Name}\nLat: {p.Latitude:G}\nLng: {p.Longitude:G}",
+                        Tag = p.Name
+                    };
+
+                    blueMarker.Offset = new Point(-blueMarker.Size.Width / 2, -blueMarker.Size.Height);
+
+                    markersOverlay.Markers.Add(blueMarker);
+                }
             }
 
             var familyMembers = people
@@ -89,13 +111,16 @@ namespace Proyecto_Grafos
                 if (Math.Abs(lat) < double.Epsilon && Math.Abs(lng) < double.Epsilon)
                     return;
 
-                var m = new GMarkerGoogle(new PointLatLng(lat, lng), GMarkerGoogleType.blue)
+                var placeholderMarker = new GMarkerGoogle(new PointLatLng(lat, lng), GMarkerGoogleType.blue)
                 {
                     ToolTipMode = MarkerTooltipMode.Always,
                     ToolTipText = $"{name}\nLat: {lat:G}\nLng: {lng:G}",
                     Tag = name
                 };
-                markersOverlay.Markers.Add(m);
+
+                placeholderMarker.Offset = new Point(-placeholderMarker.Size.Width / 2, -placeholderMarker.Size.Height);
+
+                markersOverlay.Markers.Add(placeholderMarker);
             }
             RefreshMap();
         }
@@ -135,8 +160,8 @@ namespace Proyecto_Grafos
             routesOverlay = new GMapOverlay("routes");
             tempOverlay = new GMapOverlay("temp");
 
-            gMapControl1.Overlays.Add(markersOverlay);
             gMapControl1.Overlays.Add(routesOverlay);
+            gMapControl1.Overlays.Add(markersOverlay);
             gMapControl1.Overlays.Add(tempOverlay);
 
             presenter = new MapPresenter(this);
@@ -195,6 +220,8 @@ namespace Proyecto_Grafos
                 ToolTipText = $"{name}\nLat: {lat:G}\nLng: {lng:G}",
                 Tag = name
             };
+            m.Offset = new Point(-m.Size.Width / 2, -m.Size.Height);
+
             markersOverlay.Markers.Add(m);
             RefreshMap();
         }
@@ -301,7 +328,7 @@ namespace Proyecto_Grafos
             ChangeModebtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ChangeModebtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
-            LayoutReturnButton(); 
+            LayoutReturnButton();
         }
 
         private void Acceptbtn_Click(object sender, EventArgs e)
@@ -417,6 +444,50 @@ namespace Proyecto_Grafos
             {
                 LayoutReturnButton();
             }
+        }
+
+        private Bitmap GetCircularPhoto(string path)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+                    return null;
+
+                if (photoCache.TryGetValue(path, out var cached))
+                    return cached;
+
+                using (var original = Image.FromFile(path))
+                {
+                    var size = 64;
+                    var bmp = new Bitmap(size, size);
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        using (var gp = new System.Drawing.Drawing2D.GraphicsPath())
+                        {
+                            gp.AddEllipse(0, 0, size, size);
+                            g.SetClip(gp);
+                            g.DrawImage(original, new Rectangle(0, 0, size, size));
+                        }
+                    }
+                    photoCache[path] = bmp;
+                    return bmp;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            base.OnFormClosed(e);
+            foreach (var kv in photoCache)
+            {
+                kv.Value.Dispose();
+            }
+            photoCache.Clear();
         }
     }
 }
