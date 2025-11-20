@@ -3311,24 +3311,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\JoseA\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Isaac\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
+      "projectUniqueName": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
       "projectName": "Proyect_Tests",
-      "projectPath": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
-      "packagesPath": "C:\\Users\\JoseA\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\JoseA\\FamilyGraph\\Proyect_Tests\\obj\\",
+      "projectPath": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
+      "packagesPath": "C:\\Users\\Isaac\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyect_Tests\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\JoseA\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Isaac\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3342,8 +3337,8 @@
         "net472": {
           "targetAlias": "net472",
           "projectReferences": {
-            "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj": {
-              "projectPath": "C:\\Users\\JoseA\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj"
+            "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj": {
+              "projectPath": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj"
             }
           }
         }
@@ -3358,7 +3353,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net472": {
@@ -3381,7 +3376,7 @@
             "version": "[18.0.1, )"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

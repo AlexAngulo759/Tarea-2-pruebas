@@ -131,9 +131,7 @@ namespace Proyecto_Grafos.UI.Forms
                     addPredecessorItem.Click += (s, ev) => ShowPersonDetailForm(InteractionService.NodeAction.AddPredecessor, nodeName);
                     contextMenu.Items.Add(addPredecessorItem);
 
-                    var addSiblingItem = new ToolStripMenuItem("Agregar Hermano");
-                    addSiblingItem.Click += (s, ev) => ShowPersonDetailForm(InteractionService.NodeAction.AddSibling, nodeName);
-                    contextMenu.Items.Add(addSiblingItem);
+                    // "Agregar Hermano" option removed per request
 
                     var viewDetailsItem = new ToolStripMenuItem("Ver Detalles");
                     viewDetailsItem.Click += (s, ev) => ShowPersonDetails(nodeName);

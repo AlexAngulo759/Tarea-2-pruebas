@@ -21,6 +21,14 @@ namespace Proyecto_Grafos.Services
         private System.Collections.Generic.Dictionary<string, string> _familySide = new System.Collections.Generic.Dictionary<string, string>();
         private System.Collections.Generic.Dictionary<string, Image> _imageCache = new System.Collections.Generic.Dictionary<string, Image>();
 
+        private class Block
+        {
+            public List<VisualNode> Nodes { get; set; }
+            public int Width { get; set; }
+            public int X { get; set; }
+            public int Y { get; set; }
+        }
+
         public void DrawTree(Graphics g, List<VisualNode> nodes, GraphService graphService)
         {
             if (nodes == null || nodes.Count == 0) return;
@@ -57,109 +65,200 @@ namespace Proyecto_Grafos.Services
         private void AssignLevelsRecursively(VisualNode node, List<VisualNode> nodes, GraphService graphService,
             System.Collections.Generic.Dictionary<string, int> depth, System.Collections.Generic.HashSet<string> processed, int currentLevel)
         {
-            if (processed.Contains(node.Name)) return;
-            depth[node.Name] = currentLevel;
-            processed.Add(node.Name);
-
-            var children = graphService.GetChildren(node.Name).ToList();
-            for (int i = 0; i < children.Count; i++)
-            {
-                var c = nodes.FirstOrDefault(n => n.Name == children[i]);
-                if (c != null) AssignLevelsRecursively(c, nodes, graphService, depth, processed, currentLevel + 1);
-            }
-
-            var parents = graphService.GetParents(node.Name).ToList();
-            for (int i = 0; i < parents.Count; i++)
-            {
-                var p = nodes.FirstOrDefault(n => n.Name == parents[i]);
-                if (p != null) AssignLevelsRecursively(p, nodes, graphService, depth, processed, currentLevel - 1);
-            }
-        }
-
-        private void DetectFamilySides(List<VisualNode> nodes, GraphService graphService)
-        {
-            foreach (var node in nodes)
-            {
-                if (node.Name.IndexOf("padre", StringComparison.OrdinalIgnoreCase) >= 0)
-                    _familySide[node.Name] = "paterno";
-                else if (node.Name.IndexOf("madre", StringComparison.OrdinalIgnoreCase) >= 0)
-                    _familySide[node.Name] = "materno";
-            }
-
-            foreach (var node in nodes)
-            {
-                var children = graphService.GetChildren(node.Name).ToList();
-                foreach (var childName in children)
-                {
-                    if (_familySide.ContainsKey(node.Name))
-                        _familySide[childName] = _familySide[node.Name];
-                }
-            }
-        }
-
-        private void CalculateNodePositions(List<VisualNode> nodes, System.Collections.Generic.Dictionary<int, List<VisualNode>> levels, GraphService graphService)
-        {
-            int treeDepth = levels.Keys.Max() + 1;
-            int spacing = CalculateDynamicSpacing(treeDepth);
-            int startX = 400;
-            int startY = 50;
-            var sorted = levels.OrderBy(kvp => kvp.Key).ToList();
-            foreach (var kvp in sorted) DetectCouplesInLevel(kvp.Value, nodes, graphService);
-            CalculateFinalPositions(nodes, levels, startX, startY, spacing);
-        }
-
-        private void DetectCouplesInLevel(List<VisualNode> levelNodes, List<VisualNode> allNodes, GraphService graphService)
-        {
-            var processed = new System.Collections.Generic.HashSet<string>();
-            foreach (var node in levelNodes)
-            {
-                if (processed.Contains(node.Name)) continue;
-                var partner = FindPartner(node, levelNodes, allNodes, graphService);
-                if (partner != null && !processed.Contains(partner.Name))
-                {
-                    _coupleRelationships[node.Name] = partner.Name;
-                    _coupleRelationships[partner.Name] = node.Name;
-                    processed.Add(node.Name);
-                    processed.Add(partner.Name);
-                }
+                if (processed.Contains(node.Name)) return;
+                depth[node.Name] = currentLevel;
                 processed.Add(node.Name);
-            }
-        }
 
-        private VisualNode FindPartner(VisualNode node, List<VisualNode> levelNodes, List<VisualNode> allNodes, GraphService graphService)
-        {
-            var children = graphService.GetChildren(node.Name).ToList();
-            if (children.Count == 0) return null;
-            foreach (var p in levelNodes)
-            {
-                if (p.Name == node.Name) continue;
-                var c2 = graphService.GetChildren(p.Name).ToList();
+                var children = graphService.GetChildren(node.Name).ToList();
                 for (int i = 0; i < children.Count; i++)
-                    if (c2.Contains(children[i])) return p;
-            }
-            return null;
-        }
+                {
+                    var c = nodes.FirstOrDefault(n => n.Name == children[i]);
+                    if (c != null) AssignLevelsRecursively(c, nodes, graphService, depth, processed, currentLevel + 1);
+                }
 
-        private void CalculateFinalPositions(List<VisualNode> nodes, System.Collections.Generic.Dictionary<int, List<VisualNode>> levels, int startX, int startY, int spacing)
-        {
-            var sorted = levels.OrderBy(kvp => kvp.Key).ToList();
-            var widths = new System.Collections.Generic.Dictionary<int, int>();
-            foreach (var kvp in sorted)
-            {
-                int couples = kvp.Value.Count(n => _coupleRelationships.ContainsKey(n.Name) && string.Compare(n.Name, _coupleRelationships[n.Name]) < 0);
-                int singles = kvp.Value.Count(n => !_coupleRelationships.ContainsKey(n.Name));
-                widths[kvp.Key] = (couples * (NodeWidth * 2 + CoupleSpacing)) + (singles * (NodeWidth + spacing));
+                var parents = graphService.GetParents(node.Name).ToList();
+                for (int i = 0; i < parents.Count; i++)
+                {
+                    var p = nodes.FirstOrDefault(n => n.Name == parents[i]);
+                    if (p != null) AssignLevelsRecursively(p, nodes, graphService, depth, processed, currentLevel - 1);
+                }
             }
-            int maxWidth = widths.Values.Max();
-            foreach (var kvp in sorted)
+
+            private void CalculateFinalPositions(List<VisualNode> nodes, System.Collections.Generic.Dictionary<int, List<VisualNode>> levels, int startX, int startY, int spacing, GraphService graphService)
             {
-                int level = kvp.Key;
-                int y = startY + level * (NodeHeight + VerticalSpacing);
-                int levelWidth = widths[level];
-                int center = startX + (maxWidth - levelWidth) / 2;
-                OrganizeLevelPositions(kvp.Value, center, y, spacing, level);
+                var sorted = levels.OrderBy(kvp => kvp.Key).ToList();
+                int maxWidth = 0;
+                var widths = new System.Collections.Generic.Dictionary<int, int>();
+                foreach (var kvp in sorted)
+                {
+                    int couples = kvp.Value.Count(n => _coupleRelationships.ContainsKey(n.Name) && string.Compare(n.Name, _coupleRelationships[n.Name]) < 0);
+                    int singles = kvp.Value.Count(n => !_coupleRelationships.ContainsKey(n.Name));
+                    widths[kvp.Key] = (couples * (NodeWidth * 2 + CoupleSpacing)) + (singles * (NodeWidth + spacing));
+                }
+                if (widths.Count > 0) maxWidth = widths.Values.Max();
+
+                // Block-based layout: treat couples as indivisible blocks to avoid splits and cascading shifts
+                var nodeByName = nodes.ToDictionary(n => n.Name);
+                var blocksByLevel = new System.Collections.Generic.Dictionary<int, List<Block>>();
+
+                foreach (var kvp in sorted)
+                {
+                    int level = kvp.Key;
+                    int y = startY + level * (NodeHeight + VerticalSpacing);
+                    var levelNodes = kvp.Value;
+
+                    var processed = new System.Collections.Generic.HashSet<string>();
+                    var blocks = new List<Block>();
+
+                    foreach (var n in levelNodes)
+                    {
+                        if (processed.Contains(n.Name)) continue;
+
+                        if (_coupleRelationships.ContainsKey(n.Name))
+                        {
+                            var partnerName = _coupleRelationships[n.Name];
+                            var partner = levelNodes.FirstOrDefault(x => x.Name == partnerName);
+                            if (partner != null && !processed.Contains(partnerName))
+                            {
+                                // decide left/right by family side heuristics
+                                var leftNode = n;
+                                var rightNode = partner;
+                                string sideNode = _familySide.ContainsKey(n.Name) ? _familySide[n.Name] : "none";
+                                string sidePartner = _familySide.ContainsKey(partner.Name) ? _familySide[partner.Name] : "none";
+                                if (sidePartner == "paterno" && sideNode != "paterno")
+                                {
+                                    leftNode = partner; rightNode = n;
+                                }
+                                else if (sideNode == "paterno" && sidePartner != "paterno")
+                                {
+                                    leftNode = n; rightNode = partner;
+                                }
+
+                                var b = new Block { Nodes = new List<VisualNode> { leftNode, rightNode }, Width = NodeWidth * 2 + CoupleSpacing };
+                                blocks.Add(b);
+                                processed.Add(leftNode.Name);
+                                processed.Add(rightNode.Name);
+                                continue;
+                            }
+                        }
+
+                        // single node block
+                        var singleBlock = new Block { Nodes = new List<VisualNode> { n }, Width = NodeWidth };
+                        blocks.Add(singleBlock);
+                        processed.Add(n.Name);
+                    }
+
+                    // compute total width and start offset
+                    int totalWidth = blocks.Sum(b => b.Width) + Math.Max(0, blocks.Count - 1) * spacing;
+                    int startLeft = startX + (maxWidth - totalWidth) / 2;
+
+                    // assign positions for blocks and inner nodes
+                    foreach (var b in blocks)
+                    {
+                        b.X = startLeft;
+                        b.Y = y;
+                        if (b.Nodes.Count == 2)
+                        {
+                            var left = b.Nodes[0];
+                            var right = b.Nodes[1];
+                            left.X = b.X;
+                            left.Y = y;
+                            left.Size = new Size(NodeWidth, NodeHeight);
+                            right.X = b.X + NodeWidth + CoupleSpacing;
+                            right.Y = y;
+                            right.Size = new Size(NodeWidth, NodeHeight);
+                        }
+                        else
+                        {
+                            var node = b.Nodes[0];
+                            node.X = b.X;
+                            node.Y = y;
+                            node.Size = new Size(NodeWidth, NodeHeight);
+                        }
+
+                        startLeft += b.Width + spacing;
+                    }
+
+                    blocksByLevel[level] = blocks;
+                }
+
+                // Post-process: align parent blocks above their children's centers (bottom-up)
+                var levelKeysDesc = sorted.Select(k => k.Key).OrderByDescending(k => k).ToList();
+                foreach (var lvl in levelKeysDesc)
+                {
+                    if (!blocksByLevel.ContainsKey(lvl)) continue;
+                    var blocks = blocksByLevel[lvl];
+                    foreach (var b in blocks)
+                    {
+                        // gather children centers for all nodes in this block
+                        var childCenters = new System.Collections.Generic.List<int>();
+                        foreach (var node in b.Nodes)
+                        {
+                            var children = graphService.GetChildren(node.Name).ToList();
+                            foreach (var cn in children)
+                            {
+                                if (!nodeByName.ContainsKey(cn)) continue;
+                                var ch = nodeByName[cn];
+                                childCenters.Add(ch.X + ch.Size.Width / 2);
+                            }
+                        }
+
+                        if (childCenters.Count == 0) continue;
+
+                        int avgCenter = (int)childCenters.Average();
+                        int newLeft = avgCenter - b.Width / 2;
+                        // move block and update internal node positions
+                        b.X = newLeft;
+                        if (b.Nodes.Count == 2)
+                        {
+                            var left = b.Nodes[0];
+                            var right = b.Nodes[1];
+                            left.X = b.X;
+                            right.X = b.X + NodeWidth + CoupleSpacing;
+                        }
+                        else
+                        {
+                            var node = b.Nodes[0];
+                            node.X = b.X;
+                        }
+                    }
+                }
+
+                // Resolve overlaps per level at block granularity
+                foreach (var kvp2 in sorted)
+                {
+                    int lvl = kvp2.Key;
+                    if (!blocksByLevel.ContainsKey(lvl)) continue;
+                    var levelBlocks = blocksByLevel[lvl].OrderBy(b => b.X).ToList();
+                    int prevRight = int.MinValue;
+                    foreach (var b in levelBlocks)
+                    {
+                        int minLeft = (prevRight == int.MinValue) ? b.X : Math.Max(b.X, prevRight + spacing);
+                        int shift = minLeft - b.X;
+                        if (shift > 0)
+                        {
+                            b.X += shift;
+                        }
+
+                        // update node positions
+                        if (b.Nodes.Count == 2)
+                        {
+                            var left = b.Nodes[0];
+                            var right = b.Nodes[1];
+                            left.X = b.X;
+                            right.X = b.X + NodeWidth + CoupleSpacing;
+                        }
+                        else
+                        {
+                            var node = b.Nodes[0];
+                            node.X = b.X;
+                        }
+
+                        prevRight = Math.Max(prevRight, b.X + b.Width);
+                    }
+                }
             }
-        }
+        
 
         private void OrganizeLevelPositions(List<VisualNode> levelNodes, int startX, int y, int spacing, int level)
         {
@@ -169,8 +268,13 @@ namespace Proyecto_Grafos.Services
 
             couples = couples.OrderBy(n =>
             {
-                string side = _familySide.ContainsKey(n.Name) ? _familySide[n.Name] : "none";
-                return side == "paterno" ? 0 : (side == "materno" ? 2 : 1);
+                string sideA = _familySide.ContainsKey(n.Name) ? _familySide[n.Name] : "none";
+                string partnerName = _coupleRelationships.ContainsKey(n.Name) ? _coupleRelationships[n.Name] : null;
+                string sideB = (partnerName != null && _familySide.ContainsKey(partnerName)) ? _familySide[partnerName] : "none";
+                // If either is paternal prefer left (0), if either is materno prefer right (2), otherwise middle (1)
+                if (sideA == "paterno" || sideB == "paterno") return 0;
+                if (sideA == "materno" || sideB == "materno") return 2;
+                return 1;
             }).ToList();
 
             foreach (var node in couples)
@@ -182,10 +286,23 @@ namespace Proyecto_Grafos.Services
                 {
                     var leftNode = node;
                     var rightNode = partner;
-                    if (_familySide.ContainsKey(partner.Name) && _familySide[partner.Name] == "paterno")
+                    // Decide left/right by family side when available: paternal left, maternal right
+                    string sideNode = _familySide.ContainsKey(node.Name) ? _familySide[node.Name] : "none";
+                    string sidePartner = _familySide.ContainsKey(partner.Name) ? _familySide[partner.Name] : "none";
+                    if (sidePartner == "paterno" && sideNode != "paterno")
                     {
                         leftNode = partner;
                         rightNode = node;
+                    }
+                    else if (sideNode == "paterno" && sidePartner != "paterno")
+                    {
+                        leftNode = node;
+                        rightNode = partner;
+                    }
+                    else if (sidePartner == "materno" && sideNode != "materno")
+                    {
+                        leftNode = node;
+                        rightNode = partner;
                     }
                     leftNode.X = currentX;
                     leftNode.Y = y;
@@ -212,7 +329,9 @@ namespace Proyecto_Grafos.Services
         private int CalculateDynamicSpacing(int treeDepth)
         {
             int baseSpacing = BaseHorizontalSpacing;
+            // Prevent spacing from growing too large with depth which can push the whole tree to the right.
             int mult = Math.Max(1, (int)Math.Log(treeDepth + 1, 2));
+            mult = Math.Min(mult, 2); // cap multiplier to avoid excessive spacing on deep trees
             int dynamic = baseSpacing * mult;
             return Math.Max(dynamic, MinimumSpacing);
         }
@@ -258,21 +377,30 @@ namespace Proyecto_Grafos.Services
                     if (partner != null)
                     {
                         int center = (n.X + partner.X + NodeWidth) / 2;
-                        parentPoint = new Point(center, n.Y + NodeHeight);
+                        parentPoint = new Point(center, n.Y + NodeHeight / 2);
                     }
-                    else parentPoint = new Point(n.X + NodeWidth / 2, n.Y + NodeHeight);
+                    else parentPoint = new Point(n.X + NodeWidth / 2, n.Y + NodeHeight / 2);
                 }
-                else parentPoint = new Point(n.X + NodeWidth / 2, n.Y + NodeHeight);
+                else parentPoint = new Point(n.X + NodeWidth / 2, n.Y + NodeHeight / 2);
 
                 foreach (var cName in children)
                 {
                     var child = nodes.FirstOrDefault(x => x.Name == cName);
                     if (child == null) continue;
-                    Point top = new Point(child.X + NodeWidth / 2, child.Y);
-                    Point end = new Point(parentPoint.X, top.Y - 10);
-                    g.DrawLine(pen, parentPoint, end);
-                    g.DrawLine(pen, end, top);
-                    g.FillEllipse(Brushes.Red, end.X - 3, end.Y - 3, 6, 6);
+
+                    int childCenterX = child.X + NodeWidth / 2;
+                    int childTopY = child.Y;
+                    int parentBottomY = parentPoint.Y;
+
+                    // compute a middle Y between parent bottom and child top to route connectors smoothly
+                    int midY = parentBottomY + (childTopY - parentBottomY) / 2;
+
+                    // vertical from parent bottom to midY
+                    g.DrawLine(pen, new Point(parentPoint.X, parentBottomY), new Point(parentPoint.X, midY));
+                    // horizontal from parent X to child center X at midY
+                    g.DrawLine(pen, new Point(parentPoint.X, midY), new Point(childCenterX, midY));
+                    // vertical down to child top
+                    g.DrawLine(pen, new Point(childCenterX, midY), new Point(childCenterX, childTopY));
                 }
             }
         }
@@ -284,6 +412,38 @@ namespace Proyecto_Grafos.Services
                 var person = graphService.GetPersonData(n.Name);
                 DrawNode(g, n, person);
             }
+        }
+
+        private void DetectFamilySides(List<VisualNode> nodes, GraphService graphService)
+        {
+            // Simple heuristic: detect parent pairs (couples) from shared children
+            // and register couple relationships. Family side ('paterno'/'materno')
+            // is left as 'none' unless further rules are added.
+            foreach (var n in nodes)
+            {
+                var parents = graphService.GetParents(n.Name)?.ToList();
+                if (parents == null || parents.Count < 2) continue;
+                // take first two parents as the couple
+                var a = parents[0];
+                var b = parents[1];
+                if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) continue;
+                if (!_coupleRelationships.ContainsKey(a)) _coupleRelationships[a] = b;
+                if (!_coupleRelationships.ContainsKey(b)) _coupleRelationships[b] = a;
+            }
+        }
+
+        private void CalculateNodePositions(List<VisualNode> nodes, System.Collections.Generic.Dictionary<int, List<VisualNode>> levels, GraphService graphService)
+        {
+            if (levels == null || levels.Count == 0) return;
+            int minLevel = levels.Keys.Min();
+            int maxLevel = levels.Keys.Max();
+            int treeDepth = Math.Max(1, maxLevel - minLevel + 1);
+
+            int spacing = CalculateDynamicSpacing(treeDepth);
+            int startX = 20;
+            int startY = 20;
+
+            CalculateFinalPositions(nodes, levels, startX, startY, spacing, graphService);
         }
 
         private void DrawNode(Graphics g, VisualNode node, Person person)
@@ -333,14 +493,23 @@ namespace Proyecto_Grafos.Services
                 using (var path = new GraphicsPath())
                 {
                     path.AddEllipse(circleRect);
+                    var state = g.Save();
                     g.SetClip(path);
 
-                    var imageSize = CalculateImageSize(image.Size, circleRect.Size);
-                    var imageX = circleRect.X + (circleRect.Width - imageSize.Width) / 2;
-                    var imageY = circleRect.Y + (circleRect.Height - imageSize.Height) / 2;
+                    var prevInterpolation = g.InterpolationMode;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-                    g.DrawImage(image, imageX, imageY, imageSize.Width, imageSize.Height);
-                    g.ResetClip();
+                    if (image.Width > 0 && image.Height > 0)
+                    {
+                        var imageSize = CalculateImageSize(image.Size, circleRect.Size);
+                        var imageX = circleRect.X + (circleRect.Width - imageSize.Width) / 2;
+                        var imageY = circleRect.Y + (circleRect.Height - imageSize.Height) / 2;
+
+                        g.DrawImage(image, imageX, imageY, imageSize.Width, imageSize.Height);
+                    }
+
+                    g.InterpolationMode = prevInterpolation;
+                    g.Restore(state);
                 }
 
                 g.DrawEllipse(Pens.DarkGray, circleRect);
@@ -384,13 +553,16 @@ namespace Proyecto_Grafos.Services
 
         private Size CalculateImageSize(Size originalSize, Size maxSize)
         {
+            if (originalSize.Width == 0 || originalSize.Height == 0)
+                return maxSize;
+
             double ratioX = (double)maxSize.Width / originalSize.Width;
             double ratioY = (double)maxSize.Height / originalSize.Height;
-            double ratio = Math.Max(ratioX, ratioY);
+            double ratio = Math.Min(ratioX, ratioY);
 
             return new Size(
-                (int)(originalSize.Width * ratio),
-                (int)(originalSize.Height * ratio)
+                Math.Max(1, (int)(originalSize.Width * ratio)),
+                Math.Max(1, (int)(originalSize.Height * ratio))
             );
         }
 

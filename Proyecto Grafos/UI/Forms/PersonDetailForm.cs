@@ -82,6 +82,7 @@ namespace Proyecto_Grafos
                 Width = 300,
                 Font = new Font("Arial", 9)
             };
+            txtName.KeyPress += TxtName_KeyPress;
 
             var lblCedula = new Label
             {
@@ -96,6 +97,7 @@ namespace Proyecto_Grafos
                 Width = 300,
                 Font = new Font("Arial", 9)
             };
+            txtCedula.KeyPress += TxtCedula_KeyPress;
 
             var lblNacimiento = new Label
             {
@@ -161,6 +163,9 @@ namespace Proyecto_Grafos
                 Text = "0.0",
                 Font = new Font("Arial", 9)
             };
+            // Latitude/Longitude should not be typed manually; only via map selection
+            txtLatitude.ReadOnly = true;
+            txtLatitude.BackColor = Color.WhiteSmoke;
 
             var lblLongitude = new Label
             {
@@ -176,6 +181,8 @@ namespace Proyecto_Grafos
                 Text = "0.0",
                 Font = new Font("Arial", 9)
             };
+            txtLongitude.ReadOnly = true;
+            txtLongitude.BackColor = Color.WhiteSmoke;
 
             btnSelectLocation = new Button
             {
@@ -390,6 +397,24 @@ namespace Proyecto_Grafos
                 txtLongitude.Text = map.SelectedLongitude.ToString("F6");
             }
         }
+
+        private void TxtCedula_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Allow control keys (backspace), and digits only
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void TxtName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Allow letters, control keys, spaces, hyphen and apostrophe
+            if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && e.KeyChar != ' ' && e.KeyChar != '-' && e.KeyChar != '\'')
+            {
+                e.Handled = true;
+            }
+        }
         public void SetLocation(double lat, double lng)
         {
             txtLatitude.Text = lat.ToString("F6");
@@ -410,6 +435,17 @@ namespace Proyecto_Grafos
                 MessageBox.Show("El nombre debe tener al menos 2 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtName.Focus();
                 return;
+            }
+
+            // Validate name contains only allowed characters (letters, spaces, hyphen, apostrophe)
+            foreach (char ch in txtName.Text.Trim())
+            {
+                if (!(char.IsLetter(ch) || ch == ' ' || ch == '-' || ch == '\''))
+                {
+                    MessageBox.Show("El nombre solo puede contener letras, espacios, guiones y apóstrofes", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtName.Focus();
+                    return;
+                }
             }
 
             if (!double.TryParse(txtLatitude.Text, out double lat))
@@ -475,6 +511,21 @@ namespace Proyecto_Grafos
             else
             {
                 FechaFallecimiento = null;
+            }
+
+            // Cedula must be digits only (if provided)
+            var ced = txtCedula.Text.Trim();
+            if (!string.IsNullOrEmpty(ced))
+            {
+                foreach (char c in ced)
+                {
+                    if (!char.IsDigit(c))
+                    {
+                        MessageBox.Show("La cédula solo debe contener números.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        txtCedula.Focus();
+                        return;
+                    }
+                }
             }
 
             this.DialogResult = DialogResult.OK;
