@@ -19,6 +19,7 @@ namespace Proyecto_Grafos.Core.Interfaces
         LinkedList<string> GetParents(string person);
         LinkedList<string> GetPeople();
 
-        LinkedList<string> GetAllPeople(); 
+        LinkedList<string> GetAllPeople();
+        bool UpdatePersonName(string oldName, string newName);
     }
 }

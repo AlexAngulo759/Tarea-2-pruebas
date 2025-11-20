@@ -111,6 +111,30 @@ namespace Proyecto_Grafos.Models
             return keys;
         }
 
+        public bool Remove(K key)
+        {
+            int hash = GetHash(key);
+            int index = hash % _capacity;
+
+            if (_buckets[index] == null)
+                return false;
+
+            var bucket = _buckets[index];
+            
+            for (int i = 0; i < bucket.Count; i++)
+            {
+                var pair = bucket.Get(i);
+                if (pair.Key.Equals(key))
+                {
+                    bucket.RemoveAt(i);
+                    _count--;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public V this[K key]
         {
             get { return Get(key); }

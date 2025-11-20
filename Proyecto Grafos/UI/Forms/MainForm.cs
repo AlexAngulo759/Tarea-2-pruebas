@@ -131,8 +131,6 @@ namespace Proyecto_Grafos.UI.Forms
                     addPredecessorItem.Click += (s, ev) => ShowPersonDetailForm(InteractionService.NodeAction.AddPredecessor, nodeName);
                     contextMenu.Items.Add(addPredecessorItem);
 
-                    // "Agregar Hermano" option removed per request
-
                     var viewDetailsItem = new ToolStripMenuItem("Ver Detalles");
                     viewDetailsItem.Click += (s, ev) => ShowPersonDetails(nodeName);
                     contextMenu.Items.Add(viewDetailsItem);
@@ -388,26 +386,87 @@ namespace Proyecto_Grafos.UI.Forms
 
                     if (detailForm.ShowDialog() == DialogResult.OK)
                     {
-                        ShowPersonInfo(person);
+                        string originalName = detailForm.OriginalName ?? person.Name;
+                        string newName = detailForm.PersonName;
+                        bool nameChanged = originalName != newName;
+                        bool success = true;
+
+                        if (nameChanged)
+                        {
+                            success = _graphService.UpdatePersonName(originalName, newName);
+                            
+                            if (!success)
+                            {
+                                MessageBox.Show($"No se pudo cambiar el nombre a '{newName}'. Es posible que ya exista otra persona con ese nombre.",
+                                              "Error al cambiar nombre",
+                                              MessageBoxButtons.OK,
+                                              MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+
+                        if (success)
+                        {
+                            var updatedPerson = _graphService.GetPersonData(newName);
+                            if (updatedPerson != null)
+                            {
+                                updatedPerson.Latitude = detailForm.Latitude;
+                                updatedPerson.Longitude = detailForm.Longitude;
+                                updatedPerson.Cedula = detailForm.Cedula;
+                                updatedPerson.FechaNacimiento = detailForm.FechaNacimiento;
+                                updatedPerson.EstaVivo = detailForm.EstaVivo;
+                                updatedPerson.FechaFallecimiento = detailForm.FechaFallecimiento;
+                                updatedPerson.PhotoPath = detailForm.PhotoPath;
+                            }
+                            else
+                            {
+                                success = false;
+                            }
+                        }
+
+                        if (success)
+                        {
+                            foreach (Form f in Application.OpenForms)
+                            {
+                                if (f is MapForm mf)
+                                {
+                                    try
+                                    {
+                                        if (nameChanged)
+                                        {
+                                            mf.RemoveMarker(originalName);
+                                            mf.AddOrUpdateMarker(newName, detailForm.Latitude, detailForm.Longitude);
+                                        }
+                                        else
+                                        {
+                                            mf.AddOrUpdateMarker(newName, detailForm.Latitude, detailForm.Longitude);
+                                        }
+                                    }
+                                    catch { }
+                                }
+                            }
+
+                            UpdateVisualTree();
+
+                            string message = nameChanged 
+                                ? $"Nombre cambiado de '{originalName}' a '{newName}' e información actualizada correctamente"
+                                : $"Información de {newName} actualizada correctamente";
+
+                            MessageBox.Show(message,
+                                              "Actualización Exitosa",
+                                              MessageBoxButtons.OK,
+                                              MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se pudo actualizar la información",
+                                              "Error",
+                                              MessageBoxButtons.OK,
+                                              MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
-        }
-
-        private void ShowPersonInfo(Person person)
-        {
-            string estado = person.EstaVivo ? "Vivo" : "Fallecido";
-            string infoFallecimiento = person.EstaVivo ? "" : $"\nFecha de Fallecimiento: {person.FechaFallecimiento.Value.ToShortDateString()}";
-
-            string info = $@"Nombre: {person.Name}
-Cédula: {person.Cedula}
-Fecha de Nacimiento: {person.FechaNacimiento.ToShortDateString()}
-Edad: {person.Edad} años
-Estado: {estado}{infoFallecimiento}
-Coordenadas: ({person.Latitude}, {person.Longitude})
-{(string.IsNullOrEmpty(person.PhotoPath) ? "Sin fotografía" : "Con fotografía")}";
-
-            MessageBox.Show(info, "Información de Persona", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private VisualNode FindNodeAtPosition(Point position)

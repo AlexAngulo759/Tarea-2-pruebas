@@ -16,11 +16,14 @@ namespace Proyecto_Grafos
         public DateTime? FechaFallecimiento { get; private set; }
         public string PhotoPath { get; private set; }
 
+        public string OriginalName { get; private set; }
+
         private OpenFileDialog openFileDialog;
 
         private TextBox txtName;
         private TextBox txtCedula;
         private DateTimePicker dtpNacimiento;
+        private TextBox txtEdadActual;
         private CheckBox chkEstaVivo;
         private DateTimePicker dtpFallecimiento;
         private TextBox txtLatitude;
@@ -46,13 +49,14 @@ namespace Proyecto_Grafos
             dtpNacimiento.Value = DateTime.Now.AddYears(-30);
             chkEstaVivo.Checked = true;
             ToggleFallecimientoControls(false);
+            UpdateEdadActual();
         }
 
         private void InitializeComponent()
         {
             this.Text = "Información de Persona";
-            this.Size = new Size(520, 760);                 
-            this.MinimumSize = new Size(520, 760);           
+            this.Size = new Size(520, 770);                 
+            this.MinimumSize = new Size(520, 770);           
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -113,11 +117,29 @@ namespace Proyecto_Grafos
                 Font = new Font("Arial", 9),
                 Format = DateTimePickerFormat.Short
             };
+            dtpNacimiento.ValueChanged += (s, e) => UpdateEdadActual();
+
+            var lblEdadActual = new Label
+            {
+                Text = "Edad actual:",
+                Location = new Point(20, 155),
+                Width = 120,
+                Font = new Font("Arial", 9, FontStyle.Bold)
+            };
+            txtEdadActual = new TextBox
+            {
+                Location = new Point(150, 155),
+                Width = 150,
+                Font = new Font("Arial", 9),
+                ReadOnly = true,
+                BackColor = Color.WhiteSmoke,
+                Text = "0 años"
+            };
 
             chkEstaVivo = new CheckBox
             {
                 Text = "Persona viva",
-                Location = new Point(150, 155),
+                Location = new Point(150, 190),
                 Width = 120,
                 Font = new Font("Arial", 9, FontStyle.Bold),
                 Checked = true
@@ -126,25 +148,26 @@ namespace Proyecto_Grafos
             var lblFallecimiento = new Label
             {
                 Text = "Fecha Fallecimiento:",
-                Location = new Point(20, 190),
+                Location = new Point(20, 225),
                 Width = 120,
                 Font = new Font("Arial", 9, FontStyle.Bold)
             };
             dtpFallecimiento = new DateTimePicker
             {
-                Location = new Point(150, 190),
+                Location = new Point(150, 225),
                 Width = 300,
                 Font = new Font("Arial", 9),
                 Format = DateTimePickerFormat.Short,
                 Enabled = false
             };
+            dtpFallecimiento.ValueChanged += (s, e) => UpdateEdadActual();
 
             var lblCoordsTitle = new Label
             {
                 Text = "Coordenadas de Residencia",
                 Font = new Font("Arial", 10, FontStyle.Bold),
                 ForeColor = Color.DarkGreen,
-                Location = new Point(20, 230),
+                Location = new Point(20, 265),
                 Width = 220,
                 Height = 20
             };
@@ -152,31 +175,31 @@ namespace Proyecto_Grafos
             var lblLatitude = new Label
             {
                 Text = "Latitud:",
-                Location = new Point(20, 260),
+                Location = new Point(20, 295),
                 Width = 120,
                 Font = new Font("Arial", 9, FontStyle.Bold)
             };
             txtLatitude = new TextBox
             {
-                Location = new Point(150, 260),
+                Location = new Point(150, 295),
                 Width = 300,
                 Text = "0.0",
                 Font = new Font("Arial", 9)
             };
-            // Latitude/Longitude should not be typed manually; only via map selection
+            
             txtLatitude.ReadOnly = true;
             txtLatitude.BackColor = Color.WhiteSmoke;
 
             var lblLongitude = new Label
             {
                 Text = "Longitud:",
-                Location = new Point(20, 295),
+                Location = new Point(20, 330),
                 Width = 120,
                 Font = new Font("Arial", 9, FontStyle.Bold)
             };
             txtLongitude = new TextBox
             {
-                Location = new Point(150, 295),
+                Location = new Point(150, 330),
                 Width = 300,
                 Text = "0.0",
                 Font = new Font("Arial", 9)
@@ -187,7 +210,7 @@ namespace Proyecto_Grafos
             btnSelectLocation = new Button
             {
                 Text = "Seleccionar en mapa",
-                Location = new Point(150, 325),
+                Location = new Point(150, 360),
                 Width = 150,
                 Height = 30,
                 Font = new Font("Arial", 9),
@@ -200,7 +223,7 @@ namespace Proyecto_Grafos
                 Text = "Fotografía",
                 Font = new Font("Arial", 10, FontStyle.Bold),
                 ForeColor = Color.DarkOrange,
-                Location = new Point(20, 360),
+                Location = new Point(20, 400),
                 Width = 100,
                 Height = 20
             };
@@ -208,7 +231,7 @@ namespace Proyecto_Grafos
             btnSelectPhoto = new Button
             {
                 Text = "Seleccionar Foto",
-                Location = new Point(150, 360),
+                Location = new Point(150, 400),
                 Width = 120,
                 Height = 30,
                 Font = new Font("Arial", 9),
@@ -218,7 +241,7 @@ namespace Proyecto_Grafos
             lblPhotoInfo = new Label
             {
                 Text = "No se ha seleccionado foto",
-                Location = new Point(280, 367),
+                Location = new Point(280, 407),
                 Width = 200,
                 Font = new Font("Arial", 8),
                 ForeColor = Color.Gray
@@ -226,7 +249,7 @@ namespace Proyecto_Grafos
 
             picPhoto = new PictureBox
             {
-                Location = new Point(150, 400),
+                Location = new Point(150, 440),
                 Size = new Size(200, 200),
                 BorderStyle = BorderStyle.FixedSingle,
                 SizeMode = PictureBoxSizeMode.Zoom,
@@ -236,7 +259,7 @@ namespace Proyecto_Grafos
             btnOK = new Button
             {
                 Text = "Aceptar",
-                Location = new Point(150, 670), 
+                Location = new Point(150, 680), 
                 Width = 100,
                 Height = 35,
                 Font = new Font("Arial", 9, FontStyle.Bold),
@@ -247,7 +270,7 @@ namespace Proyecto_Grafos
             btnCancel = new Button
             {
                 Text = "Cancelar",
-                Location = new Point(260, 670), 
+                Location = new Point(260, 680), 
                 Width = 100,
                 Height = 35,
                 Font = new Font("Arial", 9),
@@ -262,6 +285,8 @@ namespace Proyecto_Grafos
             this.Controls.Add(txtCedula);
             this.Controls.Add(lblNacimiento);
             this.Controls.Add(dtpNacimiento);
+            this.Controls.Add(lblEdadActual);
+            this.Controls.Add(txtEdadActual);
             this.Controls.Add(chkEstaVivo);
             this.Controls.Add(lblFallecimiento);
             this.Controls.Add(dtpFallecimiento);
@@ -278,7 +303,11 @@ namespace Proyecto_Grafos
             this.Controls.Add(btnOK);
             this.Controls.Add(btnCancel);
 
-            chkEstaVivo.CheckedChanged += (s, e) => ToggleFallecimientoControls(!chkEstaVivo.Checked);
+            chkEstaVivo.CheckedChanged += (s, e) => 
+            {
+                ToggleFallecimientoControls(!chkEstaVivo.Checked);
+                UpdateEdadActual();
+            };
             btnSelectPhoto.Click += BtnSelectPhoto_Click;
             btnOK.Click += BtnOK_Click;
 
@@ -287,6 +316,17 @@ namespace Proyecto_Grafos
             toolTip.SetToolTip(txtLatitude, "Latitud (-90 a 90)");
             toolTip.SetToolTip(txtLongitude, "Longitud (-180 a 180)");
             toolTip.SetToolTip(btnSelectPhoto, "Seleccionar fotografía");
+            toolTip.SetToolTip(txtEdadActual, "Edad calculada automáticamente basada en la fecha de nacimiento");
+        }
+
+        private void UpdateEdadActual()
+        {
+            EstaVivo = chkEstaVivo.Checked;
+            FechaNacimiento = dtpNacimiento.Value;
+            FechaFallecimiento = !EstaVivo ? dtpFallecimiento.Value : (DateTime?)null;
+
+            int edad = CalcularEdad();
+            txtEdadActual.Text = $"{edad} años";
         }
 
         private void ToggleFallecimientoControls(bool enabled)
@@ -346,6 +386,7 @@ namespace Proyecto_Grafos
         {
             if (person == null) return;
 
+            OriginalName = person.Name; 
             txtName.Text = person.Name;
             txtCedula.Text = person.Cedula;
             dtpNacimiento.Value = person.FechaNacimiento;
@@ -380,6 +421,8 @@ namespace Proyecto_Grafos
                 lblPhotoInfo.ForeColor = Color.Gray;
                 picPhoto.Image = null;
             }
+
+            UpdateEdadActual();
         }
         private void BtnSelectLocation_Click(object sender, EventArgs e)
         {
@@ -400,7 +443,6 @@ namespace Proyecto_Grafos
 
         private void TxtCedula_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Allow control keys (backspace), and digits only
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
@@ -409,7 +451,6 @@ namespace Proyecto_Grafos
 
         private void TxtName_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Allow letters, control keys, spaces, hyphen and apostrophe
             if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && e.KeyChar != ' ' && e.KeyChar != '-' && e.KeyChar != '\'')
             {
                 e.Handled = true;
@@ -423,26 +464,31 @@ namespace Proyecto_Grafos
 
         private void BtnOK_Click(object sender, EventArgs e)
         {
+            bool isModifying = !string.IsNullOrEmpty(OriginalName);
+            string action = isModifying ? "modificar" : "crear";
+
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
-                MessageBox.Show("El nombre es requerido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"El nombre es requerido. No se puede {action} la persona sin un nombre.", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtName.Focus();
                 return;
             }
 
             if (txtName.Text.Trim().Length < 2)
             {
-                MessageBox.Show("El nombre debe tener al menos 2 caracteres", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"El nombre debe tener al menos 2 caracteres. No se puede {action} la persona.", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtName.Focus();
                 return;
             }
 
-            // Validate name contains only allowed characters (letters, spaces, hyphen, apostrophe)
             foreach (char ch in txtName.Text.Trim())
             {
                 if (!(char.IsLetter(ch) || ch == ' ' || ch == '-' || ch == '\''))
                 {
-                    MessageBox.Show("El nombre solo puede contener letras, espacios, guiones y apóstrofes", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"El nombre solo puede contener letras, espacios, guiones y apóstrofes. No se puede {action} la persona.", 
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtName.Focus();
                     return;
                 }
@@ -450,29 +496,41 @@ namespace Proyecto_Grafos
 
             if (!double.TryParse(txtLatitude.Text, out double lat))
             {
-                MessageBox.Show("Latitud inválida. Debe ser un número.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Latitud inválida. Debe ser un número. No se puede {action} la persona sin una ubicación válida.", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtLatitude.Focus();
                 return;
             }
 
             if (lat < -90 || lat > 90)
             {
-                MessageBox.Show("Latitud debe estar entre -90 y 90 grados", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Latitud debe estar entre -90 y 90 grados. No se puede {action} la persona sin una ubicación válida.", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtLatitude.Focus();
                 return;
             }
 
             if (!double.TryParse(txtLongitude.Text, out double lon))
             {
-                MessageBox.Show("Longitud inválida. Debe ser un número.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Longitud inválida. Debe ser un número. No se puede {action} la persona sin una ubicación válida.", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtLongitude.Focus();
                 return;
             }
 
             if (lon < -180 || lon > 180)
             {
-                MessageBox.Show("Longitud debe estar entre -180 y 180 grados", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Longitud debe estar entre -180 y 180 grados. No se puede {action} la persona sin una ubicación válida.", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtLongitude.Focus();
+                return;
+            }
+
+            if (lat == 0.0 && lon == 0.0)
+            {
+                MessageBox.Show($"Debe seleccionar una ubicación válida en el mapa. No se puede {action} la persona sin una ubicación.", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnSelectLocation.Focus();
                 return;
             }
 
@@ -513,7 +571,6 @@ namespace Proyecto_Grafos
                 FechaFallecimiento = null;
             }
 
-            // Cedula must be digits only (if provided)
             var ced = txtCedula.Text.Trim();
             if (!string.IsNullOrEmpty(ced))
             {

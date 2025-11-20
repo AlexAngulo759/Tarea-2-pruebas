@@ -93,5 +93,89 @@ namespace Proyecto_Grafos.Core.Models
         {
             return _people.Keys();
         }
+
+        public bool UpdatePersonName(string oldName, string newName)
+        {
+            if (!_people.ContainsKey(oldName) || _people.ContainsKey(newName))
+                return false;
+
+
+            var person = _people.Get(oldName);
+            var children = _adjacencyList.ContainsKey(oldName) ? _adjacencyList.Get(oldName) : new LinkedList<string>();
+            var parents = _parentList.ContainsKey(oldName) ? _parentList.Get(oldName) : new LinkedList<string>();
+
+            person.Name = newName;
+
+            _people.Remove(oldName);
+            _adjacencyList.Remove(oldName);
+            _parentList.Remove(oldName);
+
+            _people.Add(newName, person);
+            _adjacencyList.Add(newName, children);
+            _parentList.Add(newName, parents);
+            for (int i = 0; i < children.Count; i++)
+            {
+                var childName = children.Get(i);
+                if (_parentList.ContainsKey(childName))
+                {
+                    var childParents = _parentList.Get(childName);
+                    for (int j = 0; j < childParents.Count; j++)
+                    {
+                        if (childParents.Get(j) == oldName)
+                        {
+                            childParents.RemoveAt(j);
+                            childParents.Add(newName);
+                            break;
+                        }
+                    }
+                }
+                
+                var childPerson = _people.Get(childName);
+                if (childPerson.ChildOf == oldName)
+                    childPerson.ChildOf = newName;
+            }
+
+            for (int i = 0; i < parents.Count; i++)
+            {
+                var parentName = parents.Get(i);
+                if (_adjacencyList.ContainsKey(parentName))
+                {
+                    var parentChildren = _adjacencyList.Get(parentName);
+                    for (int j = 0; j < parentChildren.Count; j++)
+                    {
+                        if (parentChildren.Get(j) == oldName)
+                        {
+                            parentChildren.RemoveAt(j);
+                            parentChildren.Add(newName);
+                            break;
+                        }
+                    }
+                }
+                
+                var parentPerson = _people.Get(parentName);
+                if (parentPerson.FatherOf == oldName)
+                    parentPerson.FatherOf = newName;
+            }
+
+            return true;
+        }
+
+        public void UpdatePerson(string name, double latitude, double longitude,
+                                string cedula, DateTime fechaNacimiento,
+                                bool estaVivo, DateTime? fechaFallecimiento,
+                                string photoPath)
+        {
+            if (_people.ContainsKey(name))
+            {
+                var person = _people.Get(name);
+                person.Latitude = latitude;
+                person.Longitude = longitude;
+                person.Cedula = cedula;
+                person.FechaNacimiento = fechaNacimiento;
+                person.EstaVivo = estaVivo;
+                person.FechaFallecimiento = fechaFallecimiento;
+                person.PhotoPath = photoPath;
+            }
+        }
     }
 }

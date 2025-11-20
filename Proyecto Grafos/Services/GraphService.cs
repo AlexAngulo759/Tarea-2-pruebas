@@ -149,5 +149,34 @@ namespace Proyecto_Grafos.Services
 
             return siblings;
         }
+
+        public bool UpdatePersonName(string oldName, string newName)
+        {
+            if (string.IsNullOrEmpty(oldName) || string.IsNullOrEmpty(newName))
+                return false;
+
+            if (oldName == newName)
+                return true; 
+
+            var existingPerson = _familyTree.GetPerson(newName);
+            if (existingPerson != null)
+                return false;
+            var nameValidation = _validator.ValidatePersonName(newName);
+            if (!nameValidation.IsValid)
+                return false;
+
+            try
+            {
+                var person = _familyTree.GetPerson(oldName);
+                if (person == null)
+                    return false;
+
+                return _familyTree.UpdatePersonName(oldName, newName);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
