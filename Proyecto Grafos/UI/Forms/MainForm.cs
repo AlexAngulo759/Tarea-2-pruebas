@@ -66,7 +66,7 @@ namespace Proyecto_Grafos.UI.Forms
 
             _treePanel = new DoubleBufferedPanel();
             _treePanel.Dock = DockStyle.Fill;
-            _treePanel.BackColor = Color.White;
+            _treePanel.BackColor = ColorTranslator.FromHtml("#404040");
             _treePanel.Paint += TreePanel_Paint;
             _treePanel.MouseDown += TreePanel_MouseDown;
             _treePanel.MouseMove += TreePanel_MouseMove;

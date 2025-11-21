@@ -61,13 +61,13 @@ namespace Proyecto_Grafos
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.BackColor = Color.White;
+            this.BackColor = ColorTranslator.FromHtml("#404040");
 
             var lblTitle = new Label
             {
                 Text = "Datos de la Persona",
                 Font = new Font("Arial", 12, FontStyle.Bold),
-                ForeColor = Color.DarkBlue,
+                ForeColor = Color.White,
                 Location = new Point(20, 15),
                 Width = 200,
                 Height = 25
@@ -78,7 +78,8 @@ namespace Proyecto_Grafos
                 Text = "Nombre completo:",
                 Location = new Point(20, 50),
                 Width = 120,
-                Font = new Font("Arial", 9, FontStyle.Bold)
+                Font = new Font("Arial", 9, FontStyle.Bold),
+                ForeColor = Color.White
             };
             txtName = new TextBox
             {
@@ -93,7 +94,8 @@ namespace Proyecto_Grafos
                 Text = "Cédula:",
                 Location = new Point(20, 85),
                 Width = 120,
-                Font = new Font("Arial", 9, FontStyle.Bold)
+                Font = new Font("Arial", 9, FontStyle.Bold),
+                ForeColor = Color.White
             };
             txtCedula = new TextBox
             {
@@ -108,7 +110,8 @@ namespace Proyecto_Grafos
                 Text = "Fecha Nacimiento:",
                 Location = new Point(20, 120),
                 Width = 120,
-                Font = new Font("Arial", 9, FontStyle.Bold)
+                Font = new Font("Arial", 9, FontStyle.Bold),
+                ForeColor = Color.White
             };
             dtpNacimiento = new DateTimePicker
             {
@@ -124,7 +127,8 @@ namespace Proyecto_Grafos
                 Text = "Edad actual:",
                 Location = new Point(20, 155),
                 Width = 120,
-                Font = new Font("Arial", 9, FontStyle.Bold)
+                Font = new Font("Arial", 9, FontStyle.Bold),
+                ForeColor = Color.White
             };
             txtEdadActual = new TextBox
             {
@@ -142,7 +146,8 @@ namespace Proyecto_Grafos
                 Location = new Point(150, 190),
                 Width = 120,
                 Font = new Font("Arial", 9, FontStyle.Bold),
-                Checked = true
+                Checked = true,
+                ForeColor = Color.White,
             };
 
             var lblFallecimiento = new Label
@@ -150,7 +155,8 @@ namespace Proyecto_Grafos
                 Text = "Fecha Fallecimiento:",
                 Location = new Point(20, 225),
                 Width = 120,
-                Font = new Font("Arial", 9, FontStyle.Bold)
+                Font = new Font("Arial", 9, FontStyle.Bold),
+                ForeColor = Color.White
             };
             dtpFallecimiento = new DateTimePicker
             {
@@ -166,7 +172,7 @@ namespace Proyecto_Grafos
             {
                 Text = "Coordenadas de Residencia",
                 Font = new Font("Arial", 10, FontStyle.Bold),
-                ForeColor = Color.DarkGreen,
+                ForeColor = Color.White,
                 Location = new Point(20, 265),
                 Width = 220,
                 Height = 20
@@ -177,7 +183,8 @@ namespace Proyecto_Grafos
                 Text = "Latitud:",
                 Location = new Point(20, 295),
                 Width = 120,
-                Font = new Font("Arial", 9, FontStyle.Bold)
+                Font = new Font("Arial", 9, FontStyle.Bold),
+                ForeColor = Color.White,
             };
             txtLatitude = new TextBox
             {
@@ -195,7 +202,8 @@ namespace Proyecto_Grafos
                 Text = "Longitud:",
                 Location = new Point(20, 330),
                 Width = 120,
-                Font = new Font("Arial", 9, FontStyle.Bold)
+                Font = new Font("Arial", 9, FontStyle.Bold),
+                ForeColor = Color.White,
             };
             txtLongitude = new TextBox
             {
@@ -222,7 +230,7 @@ namespace Proyecto_Grafos
             {
                 Text = "Fotografía",
                 Font = new Font("Arial", 10, FontStyle.Bold),
-                ForeColor = Color.DarkOrange,
+                ForeColor = Color.White,
                 Location = new Point(20, 400),
                 Width = 100,
                 Height = 20

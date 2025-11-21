@@ -16,7 +16,7 @@ namespace Proyecto_Grafos.Core.Models
             Name = name;
             X = x;
             Y = y;
-            Color = Color.LightBlue;
+            Color = ColorTranslator.FromHtml("#13678A");
             Size = new Size(120, 140); 
         }
 

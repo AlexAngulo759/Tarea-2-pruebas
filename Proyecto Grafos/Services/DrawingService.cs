@@ -339,7 +339,7 @@ namespace Proyecto_Grafos.Services
         private void DrawConnections(Graphics g, List<VisualNode> nodes, GraphService graphService)
         {
             using (var pen = new Pen(Color.Black, 2))
-            using (var couplePen = new Pen(Color.DarkBlue, 2))
+            using (var couplePen = new Pen(Color.White, 2))
             {
                 DrawCoupleConnections(g, couplePen, nodes);
                 DrawParentChildConnections(g, pen, nodes, graphService);
@@ -569,8 +569,8 @@ namespace Proyecto_Grafos.Services
         private void DrawNameBelowNode(Graphics g, VisualNode node, string name)
         {
             using (var font = new Font("Segoe UI", 8, FontStyle.Bold))
-            using (var brush = new SolidBrush(Color.Black))
-            using (var backgroundBrush = new SolidBrush(Color.FromArgb(200, Color.White)))
+            using (var brush = new SolidBrush(Color.White))
+            using (var backgroundBrush = new SolidBrush(Color.FromArgb(200, ColorTranslator.FromHtml("#404040"))))
             {
                 var nameSize = g.MeasureString(name, font);
 

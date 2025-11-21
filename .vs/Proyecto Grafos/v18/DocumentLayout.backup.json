@@ -3,8 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|c:\\users\\isaac\\onedrive\\desktop\\progra\\c#\\familygraph\\familygraph\\proyecto grafos\\services\\drawingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\proyecto grafos\\core\\models\\visualnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\core\\models\\visualnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|c:\\users\\isaac\\onedrive\\desktop\\progra\\c#\\familygraph\\familygraph\\proyecto grafos\\ui\\forms\\persondetailform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\ui\\forms\\persondetailform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\proyecto grafos\\services\\drawingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\services\\drawingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\proyecto grafos\\ui\\forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A5DECFF-14D5-4DED-BB1A-EEC58BE8762B}|Proyecto Grafos\\Proyecto Grafos.csproj|solutionrelative:proyecto grafos\\ui\\forms\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,17 +26,56 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PersonDetailForm.cs",
+              "DocumentMoniker": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\UI\\Forms\\PersonDetailForm.cs",
+              "RelativeDocumentMoniker": "Proyecto Grafos\\UI\\Forms\\PersonDetailForm.cs",
+              "ToolTip": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\UI\\Forms\\PersonDetailForm.cs",
+              "RelativeToolTip": "Proyecto Grafos\\UI\\Forms\\PersonDetailForm.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAIwEMAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T02:21:05.273Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\UI\\Forms\\MainForm.cs",
+              "RelativeDocumentMoniker": "Proyecto Grafos\\UI\\Forms\\MainForm.cs",
+              "ToolTip": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\UI\\Forms\\MainForm.cs",
+              "RelativeToolTip": "Proyecto Grafos\\UI\\Forms\\MainForm.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAADwv0kAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T02:19:11.811Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "VisualNode.cs",
+              "DocumentMoniker": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\Core\\Models\\VisualNode.cs",
+              "RelativeDocumentMoniker": "Proyecto Grafos\\Core\\Models\\VisualNode.cs",
+              "ToolTip": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\Core\\Models\\VisualNode.cs",
+              "RelativeToolTip": "Proyecto Grafos\\Core\\Models\\VisualNode.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAA/wBIAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T01:57:04.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "DrawingService.cs",
               "DocumentMoniker": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\Services\\DrawingService.cs",
               "RelativeDocumentMoniker": "Proyecto Grafos\\Services\\DrawingService.cs",
               "ToolTip": "C:\\Users\\Isaac\\OneDrive\\Desktop\\Progra\\C#\\FamilyGraph\\FamilyGraph\\Proyecto Grafos\\Services\\DrawingService.cs",
               "RelativeToolTip": "Proyecto Grafos\\Services\\DrawingService.cs",
-              "ViewState": "AgIAAHgAAAAAAAAAAAAmwIYAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAACkCAAAAAAAAAAA+wDsCAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-19T22:00:53.06Z",
               "EditorCaption": ""
