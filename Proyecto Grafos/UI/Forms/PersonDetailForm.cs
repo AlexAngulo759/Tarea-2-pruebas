@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Proyecto_Grafos.Models;
+using Proyecto_Grafos.Services; 
 
 namespace Proyecto_Grafos
 {
@@ -36,10 +37,12 @@ namespace Proyecto_Grafos
         private Button btnOK;
         private Button btnCancel;
         private Label lblPhotoInfo;
+        private readonly GraphService _graphService; 
 
-        public PersonDetailForm(string defaultName = "", string formTitle = "Información de Persona")
+        public PersonDetailForm(GraphService graphService, string defaultName = "", string formTitle = "Información de Persona")
         {
             InitializeComponent();
+            _graphService = graphService; 
 
             if (!string.IsNullOrEmpty(formTitle))
                 this.Text = formTitle;
@@ -333,8 +336,17 @@ namespace Proyecto_Grafos
             FechaNacimiento = dtpNacimiento.Value;
             FechaFallecimiento = !EstaVivo ? dtpFallecimiento.Value : (DateTime?)null;
 
-            int edad = CalcularEdad();
+            int edad = CalcularEdadInterno(FechaNacimiento, FechaFallecimiento, EstaVivo);
             txtEdadActual.Text = $"{edad} años";
+        }
+
+        private int CalcularEdadInterno(DateTime nacimiento, DateTime? fallecimiento, bool vivo)
+        {
+            var referencia = vivo ? DateTime.Now : fallecimiento.Value;
+            int edad = referencia.Year - nacimiento.Year;
+            if (nacimiento.Date > referencia.AddYears(-edad))
+                edad--;
+            return edad;
         }
 
         private void ToggleFallecimientoControls(bool enabled)
@@ -434,18 +446,18 @@ namespace Proyecto_Grafos
         }
         private void BtnSelectLocation_Click(object sender, EventArgs e)
         {
-            var map = new MapForm();
-            if (double.TryParse(txtLatitude.Text, out double lat) &&
-                double.TryParse(txtLongitude.Text, out double lng))
+            using (var map = new MapForm(_graphService, true, false))
             {
-                map.Latitude = lat;
-                map.Longitude = lng;
-            }
+                if (double.TryParse(txtLatitude.Text, out double lat) &&
+                    double.TryParse(txtLongitude.Text, out double lng))
+                {
+                }
 
-            if (map.ShowDialog() == DialogResult.OK)
-            {
-                txtLatitude.Text = map.SelectedLatitude.ToString("F6");
-                txtLongitude.Text = map.SelectedLongitude.ToString("F6");
+                if (map.ShowDialog() == DialogResult.OK)
+                {
+                    txtLatitude.Text = map.SelectedLatitude.ToString("F6");
+                    txtLongitude.Text = map.SelectedLongitude.ToString("F6");
+                }
             }
         }
 
@@ -597,24 +609,14 @@ namespace Proyecto_Grafos
             this.Close();
         }
 
-        public int CalcularEdad()
-        {
-            var fechaReferencia = EstaVivo ? DateTime.Now : FechaFallecimiento.Value;
-            int edad = fechaReferencia.Year - FechaNacimiento.Year;
-
-            if (FechaNacimiento.Date > fechaReferencia.AddYears(-edad))
-                edad--;
-
-            return edad;
-        }
-
         public string ObtenerResumen()
         {
+            int edad = CalcularEdadInterno(FechaNacimiento, FechaFallecimiento, EstaVivo);
             string estado = EstaVivo ? "Vivo" : "Fallecido";
             string infoFallecimiento = EstaVivo ? "" : $", Falleció: {FechaFallecimiento.Value.ToShortDateString()}";
 
             return $"{PersonName} (Cédula: {Cedula})\n" +
-                   $"Nacimiento: {FechaNacimiento.ToShortDateString()}, Edad: {CalcularEdad()} años\n" +
+                   $"Nacimiento: {FechaNacimiento.ToShortDateString()}, Edad: {edad} años\n" +
                    $"Estado: {estado}{infoFallecimiento}\n" +
                    $"Ubicación: {Latitude:F6}, {Longitude:F6}";
         }

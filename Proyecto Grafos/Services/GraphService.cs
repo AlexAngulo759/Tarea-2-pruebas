@@ -1,6 +1,7 @@
 ﻿using System;
 using Proyecto_Grafos.Core.Interfaces;
 using Proyecto_Grafos.Core.Models;
+using Proyecto_Grafos.Models;
 using Proyecto_Grafos.Services.Validation;
 
 namespace Proyecto_Grafos.Services
@@ -17,9 +18,9 @@ namespace Proyecto_Grafos.Services
         }
 
         public bool AddPerson(string name, double latitude = 0.0, double longitude = 0.0,
-                            string cedula = "", DateTime? fechaNacimiento = null,
-                            bool estaVivo = true, DateTime? fechaFallecimiento = null,
-                            string photoPath = "")
+                              string cedula = "", DateTime? fechaNacimiento = null,
+                              bool estaVivo = true, DateTime? fechaFallecimiento = null,
+                              string photoPath = "")
         {
             if (string.IsNullOrEmpty(name))
                 return false;
@@ -31,14 +32,15 @@ namespace Proyecto_Grafos.Services
             try
             {
                 _familyTree.AddPerson(name, latitude, longitude, cedula, fechaNacimiento,
-                                    estaVivo, fechaFallecimiento, photoPath);
+                                      estaVivo, fechaFallecimiento, photoPath);
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
         }
+
         public bool AddRelationship(string parent, string child)
         {
             try
@@ -50,117 +52,32 @@ namespace Proyecto_Grafos.Services
                 _familyTree.AddRelationship(parent, child);
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
         }
 
-        public bool AddSibling(string existingSibling, string newSibling)
-        {
-            try
-            {
-                var siblingValidation = _validator.CanAddSibling(existingSibling, newSibling);
-                if (!siblingValidation.IsValid)
-                    return false;
+        public ValidationResult ValidateAddRoot(string personName) => _validator.CanAddRoot(personName);
+        public ValidationResult ValidateAddPredecessor(string childName, string predecessorName) => _validator.CanAddPredecessor(childName, predecessorName);
+        public ValidationResult ValidateAddSuccessor(string parentName, string successorName) => _validator.CanAddSuccessor(parentName, successorName);
 
-                var parents = _familyTree.GetParents(existingSibling);
-                if (parents.Count == 0)
-                    return false;
-
-                _familyTree.AddPerson(newSibling);
-
-                for (int i = 0; i < parents.Count; i++)
-                {
-                    string parent = parents.Get(i);
-                    _familyTree.AddRelationship(parent, newSibling, setRelationships: false);
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error en AddSibling: {ex.Message}");
-                return false;
-            }
-        }
-
-        public ValidationResult ValidateAddRoot(string personName)
-        {
-            return _validator.CanAddRoot(personName);
-        }
-
-        public ValidationResult ValidateAddPredecessor(string childName, string predecessorName)
-        {
-            return _validator.CanAddPredecessor(childName, predecessorName);
-        }
-
-        public ValidationResult ValidateAddSuccessor(string parentName, string successorName)
-        {
-            return _validator.CanAddSuccessor(parentName, successorName);
-        }
-
-        public ValidationResult ValidateAddSibling(string siblingName, string newSiblingName)
-        {
-            return _validator.CanAddSibling(siblingName, newSiblingName);
-        }
-
-        public Models.LinkedList<string> GetChildren(string personName)
-        {
-            return _familyTree.GetChildren(personName);
-        }
-
-        public Models.LinkedList<string> GetAllPeople()
-        {
-            return _familyTree.GetPeople();
-        }
-
-        public Models.Person GetPersonData(string name)
-        {
-            return _familyTree.GetPerson(name);
-        }
-
-        public string GetParent(string personName)
-        {
-            return _familyTree.GetParent(personName);
-        }
-        public Models.LinkedList<string> GetParents(string personName)
-        {
-            return _familyTree.GetParents(personName);
-        }
-
-        public Models.LinkedList<string> GetSiblings(string personName)
-        {
-            var siblings = new Models.LinkedList<string>();
-            var parent = GetParent(personName);
-
-            if (!string.IsNullOrEmpty(parent))
-            {
-                var children = GetChildren(parent);
-                for (int i = 0; i < children.Count; i++)
-                {
-                    string child = children.Get(i);
-                    if (child != personName)
-                    {
-                        siblings.Add(child);
-                    }
-                }
-            }
-
-            return siblings;
-        }
+        public LinkedList<string> GetChildren(string personName) => _familyTree.GetChildren(personName);
+        public LinkedList<string> GetPeople() => _familyTree.GetPeople();
+        public Person GetPerson(string name) => _familyTree.GetPerson(name);
+        public LinkedList<string> GetParents(string personName) => _familyTree.GetParents(personName);
 
         public bool UpdatePersonName(string oldName, string newName)
         {
             if (string.IsNullOrEmpty(oldName) || string.IsNullOrEmpty(newName))
                 return false;
-
             if (oldName == newName)
-                return true; 
+                return true;
 
             var existingPerson = _familyTree.GetPerson(newName);
             if (existingPerson != null)
                 return false;
+
             var nameValidation = _validator.ValidatePersonName(newName);
             if (!nameValidation.IsValid)
                 return false;
@@ -173,7 +90,7 @@ namespace Proyecto_Grafos.Services
 
                 return _familyTree.UpdatePersonName(oldName, newName);
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }

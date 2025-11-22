@@ -8,21 +8,17 @@ using Proyecto_Grafos.Models;
 using Proyecto_Grafos.Services;
 using Proyecto_Grafos.Services.Validation;
 using Proyecto_Grafos.UI.Controls;
-using Proyecto_Grafos; 
+using Proyecto_Grafos;
 
 namespace Proyecto_Grafos.UI.Forms
 {
     public partial class MainForm : Form
     {
         private GraphService _graphService;
-        private LayoutService _layout_service;
         private LayoutService _layoutService;
-        private DrawingService _drawing_service;
         private DrawingService _drawingService;
         private InteractionService _interactionService;
-        private InteractionService _interaction_service;
         private List<VisualNode> _visualNodes;
-        private List<VisualNode> _visual_nodes;
 
         private DoubleBufferedPanel _treePanel;
 
@@ -46,18 +42,10 @@ namespace Proyecto_Grafos.UI.Forms
             IValidationService validator = new GraphValidator(familyGraph);
 
             _graphService = new GraphService(familyGraph, validator);
-
-            _layout_service = new LayoutService();
             _layoutService = new LayoutService();
-
-            _drawing_service = new DrawingService();
             _drawingService = new DrawingService();
-
             _interactionService = new InteractionService();
-            _interaction_service = _interactionService;
-
             _visualNodes = new List<VisualNode>();
-            _visual_nodes = _visualNodes;
         }
 
         private void InitializeCustomComponents()
@@ -77,8 +65,8 @@ namespace Proyecto_Grafos.UI.Forms
 
             this.Text = "Árbol Genealógico - Click derecho para agregar | Arrastrar: Click izquierdo | Zoom: Rueda del mouse";
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.WindowState = FormWindowState.Maximized; 
-            this.MinimumSize = new Size(1000, 700);      
+            this.WindowState = FormWindowState.Maximized;
+            this.MinimumSize = new Size(1000, 700);
 
             this.ResumeLayout();
         }
@@ -173,13 +161,9 @@ namespace Proyecto_Grafos.UI.Forms
             float oldZoom = _zoomFactor;
 
             if (e.Delta > 0)
-            {
                 _zoomFactor = Math.Min(_zoomFactor + ZOOM_INCREMENT, MAX_ZOOM);
-            }
             else
-            {
                 _zoomFactor = Math.Max(_zoomFactor - ZOOM_INCREMENT, MIN_ZOOM);
-            }
 
             if (oldZoom != _zoomFactor)
             {
@@ -201,19 +185,16 @@ namespace Proyecto_Grafos.UI.Forms
         {
             _zoomFactor = 1.0f;
             _translation = PointF.Empty;
-            _treePanel?.Invalidate();
             _treePanel.Invalidate();
         }
 
         private void ShowPersonDetailForm(InteractionService.NodeAction action, string nodeName)
         {
             _interactionService.CurrentAction = action;
-            _interaction_service.SelectedNode = nodeName;
             _interactionService.SelectedNode = nodeName;
 
             string formTitle = GetFormTitle();
-
-            using (var detailForm = new PersonDetailForm(""))
+            using (var detailForm = new PersonDetailForm(_graphService, ""))
             {
                 detailForm.Text = formTitle;
 
@@ -235,9 +216,7 @@ namespace Proyecto_Grafos.UI.Forms
                 case InteractionService.NodeAction.AddSuccessor:
                     return $"Agregar Sucesor de {_interactionService.SelectedNode}";
                 case InteractionService.NodeAction.AddPredecessor:
-                    return $"Agregar Predecesor de {_interaction_service.SelectedNode}";
-                case InteractionService.NodeAction.AddSibling:
-                    return $"Agregar Hermano de {_interaction_service.SelectedNode}";
+                    return $"Agregar Predecesor de {_interactionService.SelectedNode}";
                 default:
                     return "Agregar Persona";
             }
@@ -271,68 +250,31 @@ namespace Proyecto_Grafos.UI.Forms
                         message = success ? "Familiar inicial agregado" : "Error al agregar familiar inicial";
                     }
                     else
-                    {
                         message = validationResult.Message;
-                    }
                     break;
 
                 case InteractionService.NodeAction.AddSuccessor:
-                    validationResult = _graphService.ValidateAddSuccessor(_interaction_service.SelectedNode, personData.Name);
+                    validationResult = _graphService.ValidateAddSuccessor(_interactionService.SelectedNode, personData.Name);
                     if (validationResult.IsValid)
                     {
-                        success = AddPersonWithData(personData);
-                        if (success)
-                        {
-                            success = _graphService.AddRelationship(_interaction_service.SelectedNode, personData.Name);
-                        }
+                        success = AddPersonWithData(personData) &&
+                                  _graphService.AddRelationship(_interactionService.SelectedNode, personData.Name);
                         message = success ? "Sucesor agregado" : "Error al agregar sucesor";
                     }
                     else
-                    {
                         message = validationResult.Message;
-                    }
                     break;
 
                 case InteractionService.NodeAction.AddPredecessor:
-                    validationResult = _graphService.ValidateAddPredecessor(_interaction_service.SelectedNode, personData.Name);
-
+                    validationResult = _graphService.ValidateAddPredecessor(_interactionService.SelectedNode, personData.Name);
                     if (validationResult.IsValid)
                     {
-                        success = AddPersonWithData(personData);
-
-                        if (success)
-                        {
-                            success = _graphService.AddRelationship(personData.Name, _interaction_service.SelectedNode);
-                        }
-
+                        success = AddPersonWithData(personData) &&
+                                  _graphService.AddRelationship(personData.Name, _interactionService.SelectedNode);
                         message = success ? "Predecesor agregado" : "Error al agregar predecesor";
                     }
                     else
-                    {
                         message = validationResult.Message;
-                    }
-
-                    break;
-
-                case InteractionService.NodeAction.AddSibling:
-                    validationResult = _graphService.ValidateAddSibling(_interaction_service.SelectedNode, personData.Name);
-
-                    if (validationResult.IsValid)
-                    {
-                        success = AddPersonWithData(personData);
-
-                        if (success)
-                        {
-                            success = _graphService.AddSibling(_interaction_service.SelectedNode, personData.Name);
-                        }
-
-                        message = success ? "Hermano agregado" : "Error al agregar hermano";
-                    }
-                    else
-                    {
-                        message = validationResult.Message;
-                    }
-
                     break;
             }
 
@@ -346,7 +288,7 @@ namespace Proyecto_Grafos.UI.Forms
                     {
                         try
                         {
-                            mf.AddOrUpdateMarker(personData.Name, personData.Latitude, personData.Longitude);
+                            mf.AddOrUpdateMarker(detailForm.PersonName, detailForm.Latitude, detailForm.Longitude);
                         }
                         catch { }
                     }
@@ -376,95 +318,87 @@ namespace Proyecto_Grafos.UI.Forms
 
         private void ShowPersonDetails(string nodeName)
         {
-            var person = _graphService.GetPersonData(nodeName);
-            if (person != null)
+            var person = _graphService.GetPerson(nodeName);
+            if (person == null) return;
+            using (var detailForm = new PersonDetailForm(_graphService, person.Name))
             {
-                using (var detailForm = new PersonDetailForm(person.Name))
+                detailForm.Text = $"Detalles de {person.Name}";
+                detailForm.SetExistingData(person);
+
+                if (detailForm.ShowDialog() != DialogResult.OK) return;
+
+                string originalName = detailForm.OriginalName ?? person.Name;
+                string newName = detailForm.PersonName;
+                bool nameChanged = originalName != newName;
+                bool success = true;
+
+                if (nameChanged)
                 {
-                    detailForm.Text = $"Detalles de {person.Name}";
-                    detailForm.SetExistingData(person);
-
-                    if (detailForm.ShowDialog() == DialogResult.OK)
+                    success = _graphService.UpdatePersonName(originalName, newName);
+                    if (!success)
                     {
-                        string originalName = detailForm.OriginalName ?? person.Name;
-                        string newName = detailForm.PersonName;
-                        bool nameChanged = originalName != newName;
-                        bool success = true;
+                        MessageBox.Show($"No se pudo cambiar el nombre a '{newName}'. Posible duplicado.",
+                                        "Error al cambiar nombre",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Error);
+                        return;
+                    }
+                }
 
-                        if (nameChanged)
-                        {
-                            success = _graphService.UpdatePersonName(originalName, newName);
-                            
-                            if (!success)
-                            {
-                                MessageBox.Show($"No se pudo cambiar el nombre a '{newName}'. Es posible que ya exista otra persona con ese nombre.",
-                                              "Error al cambiar nombre",
-                                              MessageBoxButtons.OK,
-                                              MessageBoxIcon.Error);
-                                return;
-                            }
-                        }
+                if (success)
+                {
+                    var updatedPerson = _graphService.GetPerson(newName);
+                    if (updatedPerson != null)
+                    {
+                        updatedPerson.Latitude = detailForm.Latitude;
+                        updatedPerson.Longitude = detailForm.Longitude;
+                        updatedPerson.Cedula = detailForm.Cedula;
+                        updatedPerson.FechaNacimiento = detailForm.FechaNacimiento;
+                        updatedPerson.EstaVivo = detailForm.EstaVivo;
+                        updatedPerson.FechaFallecimiento = detailForm.FechaFallecimiento;
+                        updatedPerson.PhotoPath = detailForm.PhotoPath;
+                    }
+                    else
+                        success = false;
+                }
 
-                        if (success)
+                if (success)
+                {
+                    foreach (Form f in Application.OpenForms)
+                    {
+                        if (f is MapForm mf)
                         {
-                            var updatedPerson = _graphService.GetPersonData(newName);
-                            if (updatedPerson != null)
+                            try
                             {
-                                updatedPerson.Latitude = detailForm.Latitude;
-                                updatedPerson.Longitude = detailForm.Longitude;
-                                updatedPerson.Cedula = detailForm.Cedula;
-                                updatedPerson.FechaNacimiento = detailForm.FechaNacimiento;
-                                updatedPerson.EstaVivo = detailForm.EstaVivo;
-                                updatedPerson.FechaFallecimiento = detailForm.FechaFallecimiento;
-                                updatedPerson.PhotoPath = detailForm.PhotoPath;
-                            }
-                            else
-                            {
-                                success = false;
-                            }
-                        }
-
-                        if (success)
-                        {
-                            foreach (Form f in Application.OpenForms)
-                            {
-                                if (f is MapForm mf)
+                                if (nameChanged)
                                 {
-                                    try
-                                    {
-                                        if (nameChanged)
-                                        {
-                                            mf.RemoveMarker(originalName);
-                                            mf.AddOrUpdateMarker(newName, detailForm.Latitude, detailForm.Longitude);
-                                        }
-                                        else
-                                        {
-                                            mf.AddOrUpdateMarker(newName, detailForm.Latitude, detailForm.Longitude);
-                                        }
-                                    }
-                                    catch { }
+                                    mf.RemoveMarker(originalName);
+                                    mf.AddOrUpdateMarker(newName, detailForm.Latitude, detailForm.Longitude);
+                                }
+                                else
+                                {
+                                    mf.AddOrUpdateMarker(newName, detailForm.Latitude, detailForm.Longitude);
                                 }
                             }
-
-                            UpdateVisualTree();
-
-                            string message = nameChanged 
-                                ? $"Nombre cambiado de '{originalName}' a '{newName}' e información actualizada correctamente"
-                                : $"Información de {newName} actualizada correctamente";
-
-                            MessageBox.Show(message,
-                                              "Actualización Exitosa",
-                                              MessageBoxButtons.OK,
-                                              MessageBoxIcon.Information);
-                        }
-                        else
-                        {
-                            MessageBox.Show("No se pudo actualizar la información",
-                                              "Error",
-                                              MessageBoxButtons.OK,
-                                              MessageBoxIcon.Error);
+                            catch { }
                         }
                     }
+
+                    UpdateVisualTree();
+
+                    string message = nameChanged
+                        ? $"Nombre cambiado de '{originalName}' a '{newName}' e información actualizada"
+                        : $"Información de {newName} actualizada correctamente";
+
+                    MessageBox.Show(message, "Actualización Exitosa",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo actualizar la información",
+                                    "Error",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
                 }
             }
         }
@@ -479,28 +413,20 @@ namespace Proyecto_Grafos.UI.Forms
             foreach (var node in _visualNodes)
             {
                 var bounds = node.GetBounds();
-
                 if (bounds.Contains((int)worldPos.X, (int)worldPos.Y))
                     return node;
             }
-
             return null;
         }
 
         private void UpdateVisualTree()
         {
-            var allPeople = _graphService.GetAllPeople();
-
+            var allPeople = _graphService.GetPeople();
             var peopleList = new List<string>();
-
             for (int i = 0; i < allPeople.Count; i++)
-            {
                 peopleList.Add(allPeople.Get(i));
-            }
 
-            _visual_nodes = _layoutService.CalculateLayout(peopleList, _graphService);
-            _visualNodes = _visual_nodes;
-
+            _visualNodes = _layoutService.CalculateLayout(peopleList, _graphService);
             _treePanel.Invalidate();
         }
 
@@ -509,19 +435,16 @@ namespace Proyecto_Grafos.UI.Forms
             e.Graphics.TranslateTransform(_translation.X * _zoomFactor, _translation.Y * _zoomFactor);
             e.Graphics.ScaleTransform(_zoomFactor, _zoomFactor);
 
-            _drawingService.DrawTree(e.Graphics, _visual_nodes, _graphService);
-
+            _drawingService.DrawTree(e.Graphics, _visualNodes, _graphService);
             DrawZoomInfo(e.Graphics);
         }
 
         private void DrawZoomInfo(Graphics g)
         {
             var oldTransform = g.Transform;
-
             g.ResetTransform();
 
             string zoomText = $"Zoom: {(_zoomFactor * 100):F0}%";
-
             using (var font = new Font("Arial", 10))
             using (var brush = new SolidBrush(Color.DarkGray))
             {
@@ -535,21 +458,8 @@ namespace Proyecto_Grafos.UI.Forms
         {
             try
             {
-                var people = new List<Person>();
-                var allNames = _graphService.GetAllPeople();
-
-                for (int i = 0; i < allNames.Count; i++)
+                using (var map = new MapForm(_graphService, false, true))
                 {
-                    var name = allNames.Get(i);
-                    var p = _graphService.GetPersonData(name);
-                    if (p != null) people.Add(p);
-                }
-
-                using (var map = new MapForm())
-                {
-                    map.LoadMembersFromGraph(people);
-                    map.SetReadOnlyVisualization(true);
-                    map.SetModeVisualization();
                     map.ShowDialog(this);
                 }
             }

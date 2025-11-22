@@ -128,9 +128,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Interfaces\IFamilyGraph.cs" />
+    <Compile Include="Core\Interfaces\IValidationService.cs" />
     <Compile Include="Markers\PhotoMarker.cs" />
     <!-- Validation -->
-    <Compile Include="Services\Validation\IValidationService.cs" />
     <Compile Include="Services\Validation\GraphValidator.cs" />
     <Compile Include="Services\Validation\ValidationResult.cs" />
     <Compile Include="Core\Models\Dictionary.cs" />
@@ -142,9 +142,6 @@
     <Compile Include="Services\CalculateStatistics.cs" />
     <Compile Include="Services\DistanceCalculation.cs" />
     <!-- Form1 eliminado -->
-    <Compile Include="Forms\SimpleInputForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\MapForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -97,31 +97,31 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 82;
             this.dataGridView1.RowTemplate.Height = 33;
-            this.dataGridView1.Size = new System.Drawing.Size(350, 14);
+            this.dataGridView1.Size = new System.Drawing.Size(350, 212);
             this.dataGridView1.TabIndex = 9;
-            this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.SelectUbication);
+            this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.OnSelectUbication);
             // 
             // Acceptbtn
             // 
             this.Acceptbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Acceptbtn.Location = new System.Drawing.Point(768, 300);
+            this.Acceptbtn.Location = new System.Drawing.Point(889, 300);
             this.Acceptbtn.Name = "Acceptbtn";
-            this.Acceptbtn.Size = new System.Drawing.Size(120, 44);
-            this.Acceptbtn.TabIndex = 1;
+            this.Acceptbtn.Size = new System.Drawing.Size(112, 44);
+            this.Acceptbtn.TabIndex = 8;
             this.Acceptbtn.Text = "Aceptar";
             this.Acceptbtn.UseVisualStyleBackColor = true;
-            this.Acceptbtn.Click += new System.EventHandler(this.Acceptbtn_Click);
+            this.Acceptbtn.Click += new System.EventHandler(this.OnAcceptButtonClick);
             // 
             // ChangeModebtn
             // 
-            this.ChangeModebtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ChangeModebtn.Location = new System.Drawing.Point(1020, 300);
+                this.ChangeModebtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ChangeModebtn.Location = new System.Drawing.Point(845, 300);
             this.ChangeModebtn.Name = "ChangeModebtn";
-            this.ChangeModebtn.Size = new System.Drawing.Size(120, 44);
+            this.ChangeModebtn.Size = new System.Drawing.Size(200, 44);
             this.ChangeModebtn.TabIndex = 0;
-            this.ChangeModebtn.Text = "Cambiar";
+            this.ChangeModebtn.Text = "Volver al Arbol";
             this.ChangeModebtn.UseVisualStyleBackColor = true;
-            this.ChangeModebtn.Click += new System.EventHandler(this.ChangeModebtn_Click);
+            this.ChangeModebtn.Click += new System.EventHandler(this.OnChangeModeButtonClick);
             // 
             // gMapControl1
             // 
@@ -151,8 +151,8 @@
             this.gMapControl1.Size = new System.Drawing.Size(750, 691);
             this.gMapControl1.TabIndex = 0;
             this.gMapControl1.Zoom = 5D;
-            this.gMapControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gMapControl1_MouseDoubleClick);
             this.gMapControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gMapControl1_MouseClick);
+            this.gMapControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OnGMapControlMouseDoubleClick);
             // 
             // richTextBox1
             // 

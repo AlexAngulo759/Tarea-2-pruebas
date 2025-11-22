@@ -6,9 +6,9 @@ namespace Proyecto_Grafos.Core.Models
 {
     public class FamilyGraph : IFamilyGraph
     {
-        private Dictionary<string, Person> _people;
-        private Dictionary<string, LinkedList<string>> _adjacencyList;
-        private Dictionary<string, LinkedList<string>> _parentList;
+        private readonly Dictionary<string, Person> _people;
+        private readonly Dictionary<string, LinkedList<string>> _adjacencyList; 
+        private readonly Dictionary<string, LinkedList<string>> _parentList;   
 
         public FamilyGraph()
         {
@@ -16,19 +16,11 @@ namespace Proyecto_Grafos.Core.Models
             _adjacencyList = new Dictionary<string, LinkedList<string>>();
             _parentList = new Dictionary<string, LinkedList<string>>();
         }
-        public Person GetPersonData(string name)
-        {
-            return GetPerson(name); 
-        }
-        public LinkedList<string> GetAllPeople()
-        {
-            return GetPeople(); 
-        }
 
         public void AddPerson(string name, double latitude = 0.0, double longitude = 0.0,
-                           string cedula = "", DateTime? fechaNacimiento = null,
-                           bool estaVivo = true, DateTime? fechaFallecimiento = null,
-                           string photoPath = "")
+                              string cedula = "", DateTime? fechaNacimiento = null,
+                              bool estaVivo = true, DateTime? fechaFallecimiento = null,
+                              string photoPath = "")
         {
             if (!_people.ContainsKey(name))
             {
@@ -50,55 +42,41 @@ namespace Proyecto_Grafos.Core.Models
                 _parentList.Add(name, new LinkedList<string>());
         }
 
-        public void AddRelationship(string parent, string child, bool setRelationships = true)
+        public void AddRelationship(string parent, string child)
         {
-            AddPerson(parent);
-            AddPerson(child);
+            if (!_people.ContainsKey(parent))
+                throw new InvalidOperationException($"Parent '{parent}' does not exist. Call AddPerson first.");
+            if (!_people.ContainsKey(child))
+                throw new InvalidOperationException($"Child '{child}' does not exist. Call AddPerson first.");
+
+            if (!_adjacencyList.ContainsKey(parent))
+                _adjacencyList[parent] = new LinkedList<string>();
+            if (!_parentList.ContainsKey(child))
+                _parentList[child] = new LinkedList<string>();
 
             if (!_adjacencyList[parent].Contains(child))
                 _adjacencyList[parent].Add(child);
 
             if (!_parentList[child].Contains(parent))
                 _parentList[child].Add(parent);
-
-            if (setRelationships)
-            {
-                _people[parent].FatherOf = child;
-                _people[child].ChildOf = parent;
-            }
         }
 
-        public Person GetPerson(string name)
-        {
-            return _people.ContainsKey(name) ? _people[name] : null;
-        }
+        public Person GetPerson(string name) =>
+            _people.ContainsKey(name) ? _people[name] : null;
 
-        public LinkedList<string> GetChildren(string person)
-        {
-            return _adjacencyList.ContainsKey(person) ? _adjacencyList[person] : new LinkedList<string>();
-        }
+        public LinkedList<string> GetChildren(string person) =>
+            _adjacencyList.ContainsKey(person) ? _adjacencyList[person] : new LinkedList<string>();
 
-        public string GetParent(string childName)
-        {
-            var person = GetPerson(childName);
-            return person?.ChildOf ?? string.Empty;
-        }
+        public LinkedList<string> GetParents(string person) =>
+            _parentList.ContainsKey(person) ? _parentList[person] : new LinkedList<string>();
 
-        public LinkedList<string> GetParents(string person)
-        {
-            return _parentList.ContainsKey(person) ? _parentList[person] : new LinkedList<string>();
-        }
-
-        public LinkedList<string> GetPeople()
-        {
-            return _people.Keys();
-        }
+        public LinkedList<string> GetPeople() =>
+            _people.Keys();
 
         public bool UpdatePersonName(string oldName, string newName)
         {
             if (!_people.ContainsKey(oldName) || _people.ContainsKey(newName))
                 return false;
-
 
             var person = _people.Get(oldName);
             var children = _adjacencyList.ContainsKey(oldName) ? _adjacencyList.Get(oldName) : new LinkedList<string>();
@@ -113,6 +91,7 @@ namespace Proyecto_Grafos.Core.Models
             _people.Add(newName, person);
             _adjacencyList.Add(newName, children);
             _parentList.Add(newName, parents);
+
             for (int i = 0; i < children.Count; i++)
             {
                 var childName = children.Get(i);
@@ -129,10 +108,6 @@ namespace Proyecto_Grafos.Core.Models
                         }
                     }
                 }
-                
-                var childPerson = _people.Get(childName);
-                if (childPerson.ChildOf == oldName)
-                    childPerson.ChildOf = newName;
             }
 
             for (int i = 0; i < parents.Count; i++)
@@ -151,31 +126,9 @@ namespace Proyecto_Grafos.Core.Models
                         }
                     }
                 }
-                
-                var parentPerson = _people.Get(parentName);
-                if (parentPerson.FatherOf == oldName)
-                    parentPerson.FatherOf = newName;
             }
 
             return true;
         }
-
-        public void UpdatePerson(string name, double latitude, double longitude,
-                                string cedula, DateTime fechaNacimiento,
-                                bool estaVivo, DateTime? fechaFallecimiento,
-                                string photoPath)
-        {
-            if (_people.ContainsKey(name))
-            {
-                var person = _people.Get(name);
-                person.Latitude = latitude;
-                person.Longitude = longitude;
-                person.Cedula = cedula;
-                person.FechaNacimiento = fechaNacimiento;
-                person.EstaVivo = estaVivo;
-                person.FechaFallecimiento = fechaFallecimiento;
-                person.PhotoPath = photoPath;
-            }
         }
     }
-}

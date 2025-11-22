@@ -71,21 +71,6 @@ namespace Proyecto_Grafos.Models
 
         public int Count => _count;
 
-        public T[] ToArray()
-        {
-            T[] array = new T[_count];
-            Node<T> current = _head;
-            int index = 0;
-
-            while (current != null)
-            {
-                array[index] = current.Data;
-                current = current.Next;
-                index++;
-            }
-            return array;
-        }
-
         public bool Contains(T data)
         {
             Node<T> current = _head;

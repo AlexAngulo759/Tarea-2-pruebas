@@ -6,7 +6,8 @@ namespace Proyecto_Grafos.UI.Controls
     {
         public DoubleBufferedPanel()
         {
-            this.DoubleBuffered = true;
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            UpdateStyles();
         }
     }
 }

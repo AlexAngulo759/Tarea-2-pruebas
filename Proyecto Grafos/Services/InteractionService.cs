@@ -9,8 +9,7 @@ namespace Proyecto_Grafos.Services
             None,
             AddRoot,
             AddSuccessor,
-            AddPredecessor,
-            AddSibling
+            AddPredecessor
         }
 
         public NodeAction CurrentAction { get; set; }
