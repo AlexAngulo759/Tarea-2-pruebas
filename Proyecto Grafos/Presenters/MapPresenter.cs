@@ -80,8 +80,8 @@ namespace Proyecto_Grafos.Presenters
             if (person != null)
             {
                 UpdateSelectionDetails(person);
-                _view.SelectGridRow(person.Name); 
-                ShowRoutesFor(person);
+                _view.SelectGridRow(person.Name);
+                ShowDistancesUsingDijkstra(person.Name);
                 UpdateStatistics();
             }
         }
@@ -109,21 +109,6 @@ namespace Proyecto_Grafos.Presenters
             _view.Longitude = person.Longitude;
         }
 
-        private void ShowRoutesFor(Person origin)
-        {
-            var routes = new List<List<PointLatLng>>();
-            var originPoint = new PointLatLng(origin.Latitude, origin.Longitude);
-
-            foreach (var person in _people)
-            {
-                if (person != origin)
-                {
-                    var destinationPoint = new PointLatLng(person.Latitude, person.Longitude);
-                    routes.Add(new List<PointLatLng> { originPoint, destinationPoint });
-                }
-            }
-            _view.DrawRoutes(routes);
-        }
         public void LoadDataAndRefreshView()
         {
             _view.ClearAllMarkers();
@@ -237,6 +222,31 @@ DISTANCIA PROMEDIO:
                 _people.Remove(person);
             }
             LoadDataAndRefreshView();
+        }
+
+        private void ShowDistancesUsingDijkstra(string originName)
+        {
+            if (string.IsNullOrEmpty(originName)) return;
+
+            var (distances, previous) = GraphPathfinder.Dijkstra(_graphService, originName, treatAsUndirected: true, useCompleteGraph: true);
+
+            var originPerson = _graphService.GetPerson(originName);
+            if (originPerson == null) return;
+
+            var routes = new List<List<PointLatLng>>();
+            foreach (var destName in distances.Keys())
+            {
+                if (string.Equals(destName, originName, StringComparison.OrdinalIgnoreCase)) continue;
+                var destPerson = _graphService.GetPerson(destName);
+                if (destPerson == null) continue;
+
+                routes.Add(new List<PointLatLng> {
+                    new PointLatLng(originPerson.Latitude, originPerson.Longitude),
+                    new PointLatLng(destPerson.Latitude, destPerson.Longitude)
+                });
+            }
+
+            _view.DrawRoutes(routes); 
         }
 
         public void Dispose()

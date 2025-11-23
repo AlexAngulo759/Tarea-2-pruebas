@@ -130,6 +130,7 @@
     <Compile Include="Core\Interfaces\IFamilyGraph.cs" />
     <Compile Include="Core\Interfaces\IValidationService.cs" />
     <Compile Include="Markers\PhotoMarker.cs" />
+    <Compile Include="Services\GraphPathfinder.cs" />
     <!-- Validation -->
     <Compile Include="Services\Validation\GraphValidator.cs" />
     <Compile Include="Services\Validation\ValidationResult.cs" />
@@ -142,12 +143,6 @@
     <Compile Include="Services\CalculateStatistics.cs" />
     <Compile Include="Services\DistanceCalculation.cs" />
     <!-- Form1 eliminado -->
-    <Compile Include="Forms\MapForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MapForm.Designer.cs">
-      <DependentUpon>MapForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Core\Models\FamilyMember.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Program.cs" />
@@ -165,13 +160,16 @@
     <Compile Include="UI\Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Forms\MapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MapForm.Designer.cs">
+      <DependentUpon>MapForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Forms\PersonDetailForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\IMapView.cs" />
-    <EmbeddedResource Include="Forms\MapForm.resx">
-      <DependentUpon>MapForm.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Core\Interfaces\IMapView.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -181,6 +179,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UI\Forms\MapForm.resx">
+      <DependentUpon>MapForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -195,6 +196,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
