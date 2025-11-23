@@ -37,7 +37,7 @@ namespace Proyecto_Grafos
         public MapForm(GraphService graphService, bool isSelectionMode, bool isReadOnly)
         {
             InitializeComponent();
-            this.WindowState = FormWindowState.Maximized; 
+            this.WindowState = FormWindowState.Maximized;
             this.KeyPreview = true;
             _presenter = new MapPresenter(this, graphService);
             _presenter.SetMode(isSelectionMode); 
@@ -60,9 +60,27 @@ namespace Proyecto_Grafos
             gMapControl1.OnMarkerClick += OnFamilyMarkerClick;
             gMapControl1.MouseDoubleClick += OnGMapControlMouseDoubleClick;
             dataGridView1.CellMouseClick += OnSelectUbication;
-            this.KeyDown += MapForm_KeyDown; 
+            this.KeyDown += MapForm_KeyDown;
+
+            if (rightPanel != null)
+            {
+                rightPanel.Resize += RightPanel_Resize;
+                RightPanel_Resize(rightPanel, EventArgs.Empty); 
+            }
 
             ViewLoaded?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RightPanel_Resize(object sender, EventArgs e)
+        {
+            if (splitContainer1 == null || rightPanel == null) return;
+
+            int top = splitContainer1.Top;
+            int available = rightPanel.ClientSize.Height - top - 8;
+            if (available < 150) return;
+
+            splitContainer1.Height = available;
+            splitContainer1.SplitterDistance = available / 2;
         }
 
         public string Description { get => Descriptiontext.Text; set => Descriptiontext.Text = value; }
@@ -155,6 +173,7 @@ namespace Proyecto_Grafos
             }
             RefreshMap();
         }
+
         public void DrawLabeledSegments(List<RouteSegment> segments)
         {
             _routesOverlay.Routes.Clear();
