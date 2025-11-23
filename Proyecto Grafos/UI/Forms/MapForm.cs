@@ -216,14 +216,22 @@ namespace Proyecto_Grafos
             bool isVisualizationMode = !isSelectionMode;
             Descriptiontext.Visible = isVisualizationMode;
             dataGridView1.Visible = isVisualizationMode;
-            richTextBox1.Visible = isVisualizationMode; 
-            Latitudtext.Visible = true; 
-            Longitudtext.Visible = true; 
-            label1.Visible = isVisualizationMode; 
+            richTextBox1.Visible = isVisualizationMode;
+            Latitudtext.Visible = true;
+            Longitudtext.Visible = true;
+            label1.Visible = isVisualizationMode;
             label2.Visible = true;
             label3.Visible = true;
 
-            Text = isSelectionMode ? "Seleccionar Ubicación" : "Visualización Familiares";
+            if (isSelectionMode)
+            {
+                Text = "Seleccionar Ubicación - Doble click para seleccionar ubicación | Navegar: mantener click izquierdo y mover cursor";
+            }
+            else
+            {
+                Text = "Mapa Familiar | Click izquierdo: distancias directas | Click derecho: rutas y distancias con parentesco | " +
+                       "Navegar: mantener click izquierdo y mover cursor | ESC: ocultar líneas";
+            }
         }
 
         public void SelectGridRow(string personName)
