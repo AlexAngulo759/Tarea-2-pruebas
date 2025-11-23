@@ -14,6 +14,7 @@ namespace Proyecto_Grafos.Services
         private const int NodeHeight = 140;
         private const int MinimumSpacing = 80;
         private const int CoupleSpacing = 60;
+
         public List<VisualNode> CalculateLayout(List<string> people, GraphService graphService) =>
             BuildLayout(people, graphService);
 
@@ -28,10 +29,11 @@ namespace Proyecto_Grafos.Services
 
         private class Block
         {
-            public List<VisualNode> Nodes { get; set; }
+            public List<VisualNode> Nodes { get; set; } = new List<VisualNode>();
             public int Width { get; set; }
             public int X { get; set; }
             public int Y { get; set; }
+            public int TargetX { get; set; }
         }
 
         private SysCol.Dictionary<int, List<VisualNode>> CalculateLevels(List<VisualNode> nodes, GraphService graphService)
@@ -44,28 +46,22 @@ namespace Proyecto_Grafos.Services
             foreach (var r in roots)
                 AssignLevelsRecursively(r, nodes, graphService, depth, processed, 0);
 
-            foreach (var n in nodes.Where(n => !processed.Contains(n.Name)))
-                if (graphService.GetParents(n.Name).Count > 0)
-                    depth[n.Name] = 1;
+            foreach (var n in nodes.Where(n => !processed.Contains(n.Name) && graphService.GetParents(n.Name).Count > 0))
+                depth[n.Name] = 1;
 
             var levels = new SysCol.Dictionary<int, List<VisualNode>>();
             foreach (var n in nodes)
             {
-                int lvl = depth[n.Name];
+                int lvl = depth.ContainsKey(n.Name) ? depth[n.Name] : 0;
                 if (!levels.ContainsKey(lvl)) levels[lvl] = new List<VisualNode>();
                 levels[lvl].Add(n);
             }
             return levels;
         }
 
-        private void AssignLevelsRecursively(VisualNode node,
-                                             List<VisualNode> nodes,
-                                             GraphService graphService,
-                                             SysCol.Dictionary<string, int> depth,
-                                             SysCol.HashSet<string> processed,
-                                             int currentLevel)
+        private void AssignLevelsRecursively(VisualNode node, List<VisualNode> nodes, GraphService graphService, SysCol.Dictionary<string, int> depth, SysCol.HashSet<string> processed, int currentLevel)
         {
-            if (processed.Contains(node.Name)) return;
+            if (node == null || processed.Contains(node.Name)) return;
             depth[node.Name] = currentLevel;
             processed.Add(node.Name);
 
@@ -73,14 +69,14 @@ namespace Proyecto_Grafos.Services
             for (int i = 0; i < children.Count; i++)
             {
                 var c = nodes.FirstOrDefault(n => n.Name == children.Get(i));
-                if (c != null) AssignLevelsRecursively(c, nodes, graphService, depth, processed, currentLevel + 1);
+                AssignLevelsRecursively(c, nodes, graphService, depth, processed, currentLevel + 1);
             }
 
             var parents = graphService.GetParents(node.Name);
             for (int i = 0; i < parents.Count; i++)
             {
                 var p = nodes.FirstOrDefault(n => n.Name == parents.Get(i));
-                if (p != null) AssignLevelsRecursively(p, nodes, graphService, depth, processed, currentLevel - 1);
+                AssignLevelsRecursively(p, nodes, graphService, depth, processed, currentLevel - 1);
             }
         }
 
@@ -99,158 +95,286 @@ namespace Proyecto_Grafos.Services
             }
         }
 
-        private void CalculateNodePositions(List<VisualNode> nodes,
-                                            SysCol.Dictionary<int, List<VisualNode>> levels,
-                                            GraphService graphService,
-                                            SysCol.Dictionary<string, string> couples)
+        private void CalculateNodePositions(List<VisualNode> nodes, SysCol.Dictionary<int, List<VisualNode>> levels, GraphService graphService, SysCol.Dictionary<string, string> couples)
         {
             if (levels.Count == 0) return;
 
-            int minLevel = levels.Keys.Min();
-            int maxLevel = levels.Keys.Max();
-            int treeDepth = maxLevel - minLevel + 1;
-            int spacing = CalculateDynamicSpacing(treeDepth);
+            int spacing = CalculateDynamicSpacing(levels.Keys.Max() - levels.Keys.Min() + 1);
             int startX = 20;
             int startY = 20;
-
-            var sorted = levels.OrderBy(kvp => kvp.Key).ToList();
-            var widths = new SysCol.Dictionary<int, int>();
-            foreach (var kvp in sorted)
-            {
-                int coupleCount = kvp.Value.Count(n => couples.ContainsKey(n.Name) && string.Compare(n.Name, couples[n.Name]) < 0);
-                int singles = kvp.Value.Count(n => !couples.ContainsKey(n.Name));
-                widths[kvp.Key] = (coupleCount * (NodeWidth * 2 + CoupleSpacing)) + (singles * (NodeWidth + spacing));
-            }
-            int maxWidth = widths.Values.Max();
-
             var nodeByName = nodes.ToDictionary(n => n.Name);
-            var blocksByLevel = new SysCol.Dictionary<int, List<Block>>();
 
-            foreach (var kvp in sorted)
+            var allBlocksByLevel = new SysCol.Dictionary<int, List<Block>>();
+            int maxWidth = 0;
+            var sortedLevels = levels.Keys.OrderByDescending(k => k).ToList();
+            SysCol.Dictionary<string, VisualNode> positionedNodes = new SysCol.Dictionary<string, VisualNode>();
+
+            foreach (var level in sortedLevels)
             {
-                int level = kvp.Key;
+                var levelNodes = levels[level];
+                var blocks = CreateFamilyBlocks(levelNodes, graphService, couples, spacing);
+                if (allBlocksByLevel.Count > 0) 
+                {
+                    blocks = blocks.OrderBy(b => GetBlockChildrenCenterX(b, graphService, positionedNodes)).ToList();
+                }
+
+                allBlocksByLevel[level] = blocks;
+                int currentWidth = blocks.Sum(b => b.Width) + (blocks.Count > 1 ? (blocks.Count - 1) * spacing : 0);
+                if (currentWidth > maxWidth)
+                {
+                    maxWidth = currentWidth;
+                }
+                int totalWidth = blocks.Sum(b => b.Width) + (blocks.Count > 1 ? (blocks.Count - 1) * spacing : 0);
+                int currentX = startX + (maxWidth - totalWidth) / 2;
                 int y = startY + level * (NodeHeight + VerticalSpacing);
-                var levelNodes = kvp.Value;
 
-                var processed = new SysCol.HashSet<string>();
-                var blocks = new List<Block>();
-
-                foreach (var n in levelNodes)
+                foreach (var block in blocks)
                 {
-                    if (processed.Contains(n.Name)) continue;
-
-                    if (couples.ContainsKey(n.Name))
+                    PositionBlock(block, currentX, y, couples, spacing, nodeByName);
+                    currentX += block.Width + spacing;
+                    foreach (var node in block.Nodes)
                     {
-                        var partnerName = couples[n.Name];
-                        var partner = levelNodes.FirstOrDefault(x => x.Name == partnerName);
-                        if (partner != null && !processed.Contains(partnerName))
+                        if (!positionedNodes.ContainsKey(node.Name))
                         {
-                            VisualNode leftNode, rightNode;
-                            if (string.Compare(n.Name, partner.Name) <= 0)
-                            {
-                                leftNode = n; rightNode = partner;
-                            }
-                            else
-                            {
-                                leftNode = partner; rightNode = n;
-                            }
-                            blocks.Add(new Block
-                            {
-                                Nodes = new List<VisualNode> { leftNode, rightNode },
-                                Width = NodeWidth * 2 + CoupleSpacing,
-                                Y = y
-                            });
-                            processed.Add(leftNode.Name);
-                            processed.Add(rightNode.Name);
-                            continue;
+                            positionedNodes.Add(node.Name, node);
                         }
                     }
-
-                    blocks.Add(new Block
-                    {
-                        Nodes = new List<VisualNode> { n },
-                        Width = NodeWidth,
-                        Y = y
-                    });
-                    processed.Add(n.Name);
                 }
+            }
+            foreach (var level in levels.Keys.OrderBy(k => k))
+            {
+                var blocks = allBlocksByLevel[level];
+                int totalWidth = blocks.Sum(b => b.Width) + (blocks.Count > 1 ? (blocks.Count - 1) * spacing : 0);
+                int currentX = startX + (maxWidth - totalWidth) / 2;
+                int y = startY + level * (NodeHeight + VerticalSpacing);
 
-                int totalWidth = blocks.Sum(b => b.Width) + (blocks.Count - 1) * spacing;
-                int startLeft = startX + (maxWidth - totalWidth) / 2;
-
-                foreach (var b in blocks)
+                foreach (var block in blocks)
                 {
-                    b.X = startLeft;
-                    if (b.Nodes.Count == 2)
-                    {
-                        b.Nodes[0].X = b.X;
-                        b.Nodes[1].X = b.X + NodeWidth + CoupleSpacing;
-                    }
-                    else
-                    {
-                        b.Nodes[0].X = b.X;
-                    }
-                    foreach (var nn in b.Nodes)
-                    {
-                        nn.Y = y;
-                        nn.Size = new Size(NodeWidth, NodeHeight);
-                    }
-                    startLeft += b.Width + spacing;
+                    PositionBlock(block, currentX, y, couples, spacing, nodeByName);
+                    currentX += block.Width + spacing;
                 }
-
-                blocksByLevel[level] = blocks;
             }
 
-            var descending = sorted.Select(k => k.Key).OrderByDescending(k => k).ToList();
-            foreach (var lvl in descending)
+            AdjustLayoutForCentering(allBlocksByLevel, graphService, nodeByName, spacing, couples);
+        }
+
+        private int GetBlockChildrenCenterX(Block block, GraphService graphService, SysCol.Dictionary<string, VisualNode> positionedNodes)
+        {
+            var childrenXPositions = new List<int>();
+            foreach (var node in block.Nodes)
             {
-                var blocks = blocksByLevel[lvl];
-                foreach (var b in blocks)
+                var children = graphService.GetChildren(node.Name);
+                for (int i = 0; i < children.Count; i++)
                 {
-                    var centers = new List<int>();
-                    foreach (var node in b.Nodes)
+                    var childName = children.Get(i);
+                    if (positionedNodes.ContainsKey(childName))
                     {
-                        var children = graphService.GetChildren(node.Name);
-                        for (int i = 0; i < children.Count; i++)
+                        childrenXPositions.Add(positionedNodes[childName].X);
+                    }
+                }
+            }
+
+            if (childrenXPositions.Any())
+            {
+                return (int)childrenXPositions.Average();
+            }
+            return block.X;
+        }
+
+        private void PositionBlock(Block block, int x, int y, SysCol.Dictionary<string, string> couples, int spacing, SysCol.Dictionary<string, VisualNode> nodeByName)
+        {
+            block.X = x;
+            block.Y = y;
+            int innerX = x;
+
+            for (int i = 0; i < block.Nodes.Count; i++)
+            {
+                var node = block.Nodes[i];
+                node.X = innerX;
+                node.Y = y;
+                node.Size = new Size(NodeWidth, NodeHeight);
+
+                innerX += NodeWidth;
+                if (i < block.Nodes.Count - 1)
+                {
+                    var nextNode = block.Nodes[i + 1];
+                    bool areCouple = couples.ContainsKey(node.Name) && couples[node.Name] == nextNode.Name;
+                    innerX += areCouple ? CoupleSpacing : spacing;
+                }
+            }
+        }
+
+        private void AdjustLayoutForCentering(SysCol.Dictionary<int, List<Block>> allBlocksByLevel, GraphService graphService, SysCol.Dictionary<string, VisualNode> nodeByName, int spacing, SysCol.Dictionary<string, string> couples)
+        {
+            var sortedLevels = allBlocksByLevel.Keys.OrderByDescending(k => k).ToList();
+
+            for (int i = 0; i < sortedLevels.Count - 1; i++)
+            {
+                var childLevelKey = sortedLevels[i];
+                var parentLevelKey = sortedLevels[i + 1];
+
+                if (!allBlocksByLevel.ContainsKey(parentLevelKey)) continue;
+
+                var parentBlocks = allBlocksByLevel[parentLevelKey];
+                var childBlocks = allBlocksByLevel[childLevelKey];
+                var orderedParentBlocks = parentBlocks.OrderBy(p =>
+                {
+                    var childrenOfBlock = GetChildrenOfBlock(p, graphService, nodeByName);
+                    if (!childrenOfBlock.Any()) return p.X;
+                    var relevantChildBlocks = childBlocks.Where(c => c.Nodes.Any(n => childrenOfBlock.Contains(n)));
+                    if (!relevantChildBlocks.Any()) return p.X;
+                    return relevantChildBlocks.Min(c => c.X);
+                }).ToList();
+
+                for (int j = 0; j < orderedParentBlocks.Count; j++)
+                {
+                    var parentBlock = orderedParentBlocks[j];
+                    var childrenOfBlock = GetChildrenOfBlock(parentBlock, graphService, nodeByName);
+
+                    if (childrenOfBlock.Any())
+                    {
+                        var relevantChildBlocks = childBlocks.Where(b => b.Nodes.Any(n => childrenOfBlock.Contains(n))).Distinct().ToList();
+                        if (relevantChildBlocks.Any())
                         {
-                            var cname = children.Get(i);
-                            if (!nodeByName.ContainsKey(cname)) continue;
-                            centers.Add(nodeByName[cname].X + NodeWidth / 2);
+                            int minChildX = relevantChildBlocks.Min(b => b.X);
+                            int maxChildX = relevantChildBlocks.Max(b => b.X + b.Width);
+                            int childrenCenterX = minChildX + (maxChildX - minChildX) / 2;
+                            parentBlock.X = childrenCenterX - parentBlock.Width / 2;
                         }
                     }
-                    if (centers.Count == 0) continue;
-                    int avg = (int)centers.Average();
-                    int newLeft = avg - b.Width / 2;
-                    int shift = newLeft - b.X;
-                    if (shift != 0)
+                    if (j > 0)
                     {
-                        foreach (var node in b.Nodes) node.X += shift;
-                        b.X = newLeft;
+                        var leftBlock = orderedParentBlocks[j - 1];
+                        int desiredX = leftBlock.X + leftBlock.Width + spacing;
+                        if (parentBlock.X < desiredX)
+                        {
+                            parentBlock.X = desiredX;
+                        }
                     }
                 }
+                foreach (var block in orderedParentBlocks)
+                {
+                    PositionBlock(block, block.X, block.Y, couples, spacing, nodeByName);
+                }
+            }
+        }
+
+        private List<VisualNode> GetChildrenOfBlock(Block block, GraphService graphService, SysCol.Dictionary<string, VisualNode> nodeByName)
+        {
+            var children = new List<VisualNode>();
+            foreach (var node in block.Nodes)
+            {
+                var childrenNames = graphService.GetChildren(node.Name);
+                for (int i = 0; i < childrenNames.Count; i++)
+                {
+                    if (nodeByName.ContainsKey(childrenNames.Get(i)))
+                    {
+                        children.Add(nodeByName[childrenNames.Get(i)]);
+                    }
+                }
+            }
+            return children.Distinct().ToList();
+        }
+
+        private List<Block> CreateFamilyBlocks(List<VisualNode> levelNodes, GraphService graphService, SysCol.Dictionary<string, string> couples, int spacing)
+        {
+            var blocks = new List<Block>();
+            var processed = new HashSet<string>();
+            foreach (var node in levelNodes)
+            {
+                if (processed.Contains(node.Name)) continue;
+
+                if (couples.ContainsKey(node.Name))
+                {
+                    var partner = levelNodes.FirstOrDefault(n => n.Name == couples[node.Name]);
+                    if (partner != null && !processed.Contains(partner.Name))
+                    {
+                        var block = new Block();
+                        var familyUnit = new List<VisualNode>();
+
+                        var leftSpouse = (string.Compare(node.Name, partner.Name) < 0) ? node : partner;
+                        var rightSpouse = (leftSpouse == node) ? partner : node;
+
+                        var leftSiblings = GetSiblings(leftSpouse, levelNodes, graphService).Except(new[] { rightSpouse }).ToList();
+                        var rightSiblings = GetSiblings(rightSpouse, levelNodes, graphService).Except(new[] { leftSpouse }).ToList();
+
+                        familyUnit.AddRange(leftSiblings.OrderBy(n => n.Name));
+                        familyUnit.Add(leftSpouse);
+                        familyUnit.Add(rightSpouse);
+                        familyUnit.AddRange(rightSiblings.OrderBy(n => n.Name));
+
+                        block.Nodes.AddRange(familyUnit.Distinct());
+                        blocks.Add(block);
+
+                        familyUnit.ForEach(n => processed.Add(n.Name));
+                    }
+                }
+            }
+            foreach (var node in levelNodes)
+            {
+                if (processed.Contains(node.Name)) continue;
+
+                var block = new Block();
+                var siblings = GetSiblings(node, levelNodes, graphService);
+                var familyUnit = new List<VisualNode> { node };
+                familyUnit.AddRange(siblings);
+
+                block.Nodes.AddRange(familyUnit.Distinct().OrderBy(n => n.Name));
+                blocks.Add(block);
+
+                familyUnit.ForEach(n => processed.Add(n.Name));
+            }
+            foreach (var block in blocks)
+            {
+                int width = 0;
+                for (int i = 0; i < block.Nodes.Count; i++)
+                {
+                    width += NodeWidth;
+                    if (i < block.Nodes.Count - 1)
+                    {
+                        var currentNode = block.Nodes[i];
+                        var nextNode = block.Nodes[i + 1];
+                        bool areCouple = couples.ContainsKey(currentNode.Name) && couples[currentNode.Name] == nextNode.Name;
+                        width += areCouple ? CoupleSpacing : spacing;
+                    }
+                }
+                block.Width = width;
             }
 
-            foreach (var lvl in sorted.Select(k => k.Key))
+            return blocks;
+        }
+
+        private IEnumerable<VisualNode> GetSiblings(VisualNode node, List<VisualNode> levelNodes, GraphService graphService)
+        {
+            var parents = graphService.GetParents(node.Name);
+            if (parents.Count == 0) return Enumerable.Empty<VisualNode>();
+
+            var parentNames = new List<string>();
+            for (int i = 0; i < parents.Count; i++)
             {
-                var blocks = blocksByLevel[lvl].OrderBy(b => b.X).ToList();
-                int prevRight = int.MinValue;
-                foreach (var b in blocks)
-                {
-                    int desiredLeft = prevRight == int.MinValue ? b.X : prevRight + spacing;
-                    int shift = desiredLeft - b.X;
-                    if (shift > 0)
-                    {
-                        foreach (var node in b.Nodes) node.X += shift;
-                        b.X += shift;
-                    }
-                    prevRight = b.X + b.Width;
-                }
+                parentNames.Add(parents.Get(i));
             }
+
+            return levelNodes.Where(n =>
+            {
+                if (n == node) return false;
+                var otherParents = graphService.GetParents(n.Name);
+                if (otherParents.Count == 0) return false;
+
+                var otherParentNames = new List<string>();
+                for (int i = 0; i < otherParents.Count; i++)
+                {
+                    otherParentNames.Add(otherParents.Get(i));
+                }
+
+                return parentNames.Any(p => otherParentNames.Contains(p));
+            });
         }
 
         private int CalculateDynamicSpacing(int treeDepth)
         {
             int baseSpacing = BaseHorizontalSpacing;
+            if (treeDepth <= 0) treeDepth = 1;
             int mult = System.Math.Max(1, (int)System.Math.Log(treeDepth + 1, 2));
             mult = System.Math.Min(mult, 2);
             int dynamic = baseSpacing * mult;
