@@ -476,12 +476,6 @@ namespace Proyecto_Grafos
                 e.Handled = true;
             }
         }
-        public void SetLocation(double lat, double lng)
-        {
-            txtLatitude.Text = lat.ToString("F6");
-            txtLongitude.Text = lng.ToString("F6");
-        }
-
         private void BtnOK_Click(object sender, EventArgs e)
         {
             bool isModifying = !string.IsNullOrEmpty(OriginalName);
@@ -607,18 +601,6 @@ namespace Proyecto_Grafos
 
             this.DialogResult = DialogResult.OK;
             this.Close();
-        }
-
-        public string ObtenerResumen()
-        {
-            int edad = CalcularEdadInterno(FechaNacimiento, FechaFallecimiento, EstaVivo);
-            string estado = EstaVivo ? "Vivo" : "Fallecido";
-            string infoFallecimiento = EstaVivo ? "" : $", Falleció: {FechaFallecimiento.Value.ToShortDateString()}";
-
-            return $"{PersonName} (Cédula: {Cedula})\n" +
-                   $"Nacimiento: {FechaNacimiento.ToShortDateString()}, Edad: {edad} años\n" +
-                   $"Estado: {estado}{infoFallecimiento}\n" +
-                   $"Ubicación: {Latitude:F6}, {Longitude:F6}";
         }
     }
 }

@@ -235,12 +235,5 @@ namespace Proyecto_Grafos.Services
                 g.DrawString(name, font, brush, x, y);
             }
         }
-
-        public void ClearImageCache()
-        {
-            foreach (var img in _imageCache.Values)
-                img?.Dispose();
-            _imageCache.Clear();
-        }
     }
 }

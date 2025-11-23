@@ -17,13 +17,17 @@ namespace Proyecto_Grafos.Markers
         public PhotoMarker(PointLatLng position, Bitmap image, string name)
             : base(position)
         {
-            Size = new Size(64, 64);
+                Size = new Size(64, 64);
 
-            Offset = new Point(-Size.Width / 2, -Size.Height / 2); 
-            _image = image;
-            _initial = string.IsNullOrWhiteSpace(name) ? "?" : name.Trim()[0].ToString().ToUpperInvariant();
-            _backColor = Color.FromArgb(90, 140, 200); 
-            ToolTipMode = MarkerTooltipMode.Always;
+                Offset = new Point(-Size.Width / 2, -Size.Height / 2);
+                _image = image;
+                _initial = string.IsNullOrWhiteSpace(name) ? "?" : name.Trim()[0].ToString().ToUpperInvariant();
+                _backColor = Color.FromArgb(90, 140, 200);
+                ToolTipMode = MarkerTooltipMode.Always;
+        }
+        public void SetBorderColor(Color color)
+        {
+            _borderPen.Color = color;
         }
 
         public override void OnRender(Graphics g)

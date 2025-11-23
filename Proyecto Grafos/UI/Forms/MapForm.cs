@@ -32,6 +32,7 @@ namespace Proyecto_Grafos
         public event EventHandler<string> GridCellClicked;
         public event EventHandler EscapeKeyPressed;
         public event MouseEventHandler MapRightClicked;
+        public event EventHandler<string> MarkerRightClicked; 
 
         public MapForm(GraphService graphService, bool isSelectionMode, bool isReadOnly)
         {
@@ -58,7 +59,6 @@ namespace Proyecto_Grafos
 
             gMapControl1.OnMarkerClick += OnFamilyMarkerClick;
             gMapControl1.MouseDoubleClick += OnGMapControlMouseDoubleClick;
-            gMapControl1.MouseClick += OnGMapControlMouseClick;
             dataGridView1.CellMouseClick += OnSelectUbication;
             this.KeyDown += MapForm_KeyDown; 
 
@@ -155,7 +155,39 @@ namespace Proyecto_Grafos
             }
             RefreshMap();
         }
+        public void DrawLabeledSegments(List<RouteSegment> segments)
+        {
+            _routesOverlay.Routes.Clear();
+            _routesOverlay.Markers.Clear();
 
+            if (segments == null)
+            {
+                RefreshMap();
+                return;
+            }
+
+            foreach (var segment in segments)
+            {
+                var routePoints = new List<PointLatLng> { segment.From, segment.To };
+                if (routePoints.Count < 2) continue;
+
+                var route = new GMapRoute(routePoints, "segment") { Stroke = new Pen(Color.Blue, 3) };
+                _routesOverlay.Routes.Add(route);
+                double midLat = (segment.From.Lat + segment.To.Lat) / 2.0;
+                double midLng = (segment.From.Lng + segment.To.Lng) / 2.0;
+                var midPoint = new PointLatLng(midLat, midLng);
+
+                var labelMarker = new GMarkerGoogle(midPoint, new Bitmap(1, 1))
+                {
+                    ToolTipText = segment.Label,
+                    ToolTipMode = MarkerTooltipMode.Always,
+                    Offset = new Point(-25, -10)
+                };
+                _routesOverlay.Markers.Add(labelMarker);
+            }
+
+            RefreshMap();
+        }
 
         public void SetUIMode(bool isSelectionMode, bool isReadOnly)
         {
@@ -206,9 +238,47 @@ namespace Proyecto_Grafos
 
         private void OnAcceptButtonClick(object sender, EventArgs e) => AcceptButtonClicked?.Invoke(this, EventArgs.Empty);
         private void OnChangeModeButtonClick(object sender, EventArgs e) => ReturnButtonClicked?.Invoke(this, EventArgs.Empty);
-            private void OnFamilyMarkerClick(GMapMarker item, MouseEventArgs e)
+        private void ResetPhotoMarkerBorders()
         {
-            if (item.Tag is string id) MarkerClicked?.Invoke(this, id);
+            foreach (var pm in _markersOverlay.Markers.OfType<Proyecto_Grafos.Markers.PhotoMarker>())
+                pm.SetBorderColor(Color.White);
+        }
+        private void OnFamilyMarkerClick(GMapMarker item, MouseEventArgs e)
+        {
+            if (!(item.Tag is string id)) return;
+
+            if (e.Button == MouseButtons.Right)
+            {
+                if (item is Proyecto_Grafos.Markers.PhotoMarker pm)
+                {
+                    ClearTemporaryMarker();            
+                    ResetPhotoMarkerBorders();        
+                    pm.SetBorderColor(Color.Red);      
+                    RefreshMap();
+                }
+                else
+                {
+                    ResetPhotoMarkerBorders();        
+                    ClearTemporaryMarker();
+                    AddTemporaryMarker(item.Position.Lat, item.Position.Lng, string.Empty);
+                }
+
+                MarkerRightClicked?.Invoke(this, id);
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
+                ResetPhotoMarkerBorders();
+                ClearTemporaryMarker();
+                MarkerClicked?.Invoke(this, id);
+            }
+        }
+        private void MapForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                ResetPhotoMarkerBorders();       
+                EscapeKeyPressed?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void OnGMapControlMouseDoubleClick(object sender, MouseEventArgs e)
@@ -226,7 +296,11 @@ namespace Proyecto_Grafos
         {
             if (e.RowIndex >= 0 && dataGridView1.Rows[e.RowIndex].Cells["Nombre"].Value is string name)
             {
+                ResetPhotoMarkerBorders();
+                ClearTemporaryMarker();
+
                 GridCellClicked?.Invoke(this, name);
+                EscapeKeyPressed?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -234,14 +308,6 @@ namespace Proyecto_Grafos
         {
             base.OnFormClosed(e);
             _presenter?.Dispose();
-        }
-
-        private void MapForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                EscapeKeyPressed?.Invoke(this, EventArgs.Empty);
-            }
         }
 
         private void OnGMapControlMouseClick(object sender, MouseEventArgs e)
@@ -252,8 +318,9 @@ namespace Proyecto_Grafos
             }
         }
 
-        private void gMapControl1_MouseClick(object sender, MouseEventArgs e)
+        private void GMapControl1_MouseClick(object sender, MouseEventArgs e)
         {
+            OnGMapControlMouseClick(sender, e);
         }
     }
 }

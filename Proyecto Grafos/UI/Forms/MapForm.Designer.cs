@@ -151,7 +151,7 @@
             this.gMapControl1.Size = new System.Drawing.Size(750, 691);
             this.gMapControl1.TabIndex = 0;
             this.gMapControl1.Zoom = 5D;
-            this.gMapControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gMapControl1_MouseClick);
+            this.gMapControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GMapControl1_MouseClick);
             this.gMapControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.OnGMapControlMouseDoubleClick);
             // 
             // richTextBox1
