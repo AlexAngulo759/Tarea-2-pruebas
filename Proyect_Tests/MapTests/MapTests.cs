@@ -46,6 +46,7 @@ namespace Proyect_Tests.MapTests
             public event EventHandler<string>? GridCellClicked;
             public event EventHandler? EscapeKeyPressed;
             public event MouseEventHandler? MapRightClicked;
+            public event EventHandler<string>? MarkerRightClicked;
             public void AddPhotoMarker(string name, double lat, double lng, string tooltip, Bitmap photo) => AddPhotoMarkerCalled = true;
             public void AddStandardMarker(string name, double lat, double lng, string tooltip) => AddStandardMarkerCalled = true;
             public void AddTemporaryMarker(double lat, double lng, string tooltip) => TemporaryMarkerAdded = true;
@@ -81,6 +82,10 @@ namespace Proyect_Tests.MapTests
             public void SimulateEscapeKeyPress() => EscapeKeyPressed?.Invoke(this, EventArgs.Empty);
             public void SimulateMapRightClick() => MapRightClicked?.Invoke(this, new MouseEventArgs(MouseButtons.Right, 1, 0, 0, 0));
             public void SimulateMapDoubleClick(PointLatLng point) => MapDoubleClicked?.Invoke(this, point);
+            public void DrawLabeledSegments(List<RouteSegment> segments)
+            {
+
+            }
         }
         private class MockFamilyGraph : IFamilyGraph
         {
