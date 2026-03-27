@@ -1,14 +1,14 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj": {}
+    "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyect_Tests\\Proyect_Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj": {
+    "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyecto Grafos\\Proyecto Grafos.csproj": {
       "restore": {
-        "projectUniqueName": "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj",
+        "projectUniqueName": "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyecto Grafos\\Proyecto Grafos.csproj",
         "projectName": "Proyecto Grafos",
-        "projectPath": "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj",
+        "projectPath": "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyecto Grafos\\Proyecto Grafos.csproj",
         "UsingMicrosoftNETSdk": false,
         "frameworks": {
           "net472": {
@@ -20,20 +20,20 @@
         "net472": {}
       }
     },
-    "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj": {
+    "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyect_Tests\\Proyect_Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
+        "projectUniqueName": "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyect_Tests\\Proyect_Tests.csproj",
         "projectName": "Proyect_Tests",
-        "projectPath": "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyect_Tests\\Proyect_Tests.csproj",
-        "packagesPath": "C:\\Users\\JoseA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyect_Tests\\obj\\",
+        "projectPath": "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyect_Tests\\Proyect_Tests.csproj",
+        "packagesPath": "C:\\Users\\alexa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyect_Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\JoseA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\alexa\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -42,14 +42,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net472": {
             "targetAlias": "net472",
             "projectReferences": {
-              "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj": {
-                "projectPath": "C:\\Users\\JoseA\\Documents\\FamilyGraph\\Proyecto Grafos\\Proyecto Grafos.csproj"
+              "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyecto Grafos\\Proyecto Grafos.csproj": {
+                "projectPath": "C:\\Users\\alexa\\OneDrive\\Documentos\\TEC\\Prueba 2\\Tarea-2-pruebas\\Proyecto Grafos\\Proyecto Grafos.csproj"
               }
             }
           }
@@ -64,7 +65,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net472": {
@@ -87,7 +88,7 @@
               "version": "[18.0.1, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
