@@ -1,0 +1,80 @@
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\e_sqlite3.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\Proyecto Grafos.exe.config
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\Proyecto Grafos.exe
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\Proyecto Grafos.pdb
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\AjaxMin.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\EntityFramework.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\EntityFramework.SqlServer.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\GMap.NET.Core.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\GMap.NET.WindowsForms.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\Newtonsoft.Json.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\SQLitePCLRaw.batteries_v2.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\SQLitePCLRaw.core.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Buffers.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SqlClient.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SQLite.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SQLite.EF6.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SQLite.Linq.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Memory.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Numerics.Vectors.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Security.Principal.Windows.dll
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\EntityFramework.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\EntityFramework.SqlServer.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\Newtonsoft.Json.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Buffers.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SqlClient.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Memory.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Numerics.Vectors.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Security.Principal.Windows.xml
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.csproj.AssemblyReference.cache
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto_Grafos.Properties.Resources.resources
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto_Grafos.MapForm.resources
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.csproj.GenerateResource.cache
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.csproj.CoreCompileInputs.cache
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto.07A288EC.Up2Date
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.exe
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.pdb
+C:\Users\alexa\OneDrive\Documentos\TEC\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.exe.config
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\e_sqlite3.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\Proyecto Grafos.exe.config
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\Proyecto Grafos.exe
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\Proyecto Grafos.pdb
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\AjaxMin.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\EntityFramework.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\EntityFramework.SqlServer.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\GMap.NET.Core.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\GMap.NET.WindowsForms.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\Newtonsoft.Json.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\SQLitePCLRaw.batteries_v2.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\SQLitePCLRaw.core.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\SQLitePCLRaw.provider.dynamic_cdecl.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Buffers.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SqlClient.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SQLite.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SQLite.EF6.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SQLite.Linq.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Memory.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Numerics.Vectors.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Security.Principal.Windows.dll
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\EntityFramework.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\EntityFramework.SqlServer.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\Newtonsoft.Json.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Buffers.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Data.SqlClient.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Memory.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Numerics.Vectors.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\bin\x64\Release\System.Security.Principal.Windows.xml
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.csproj.AssemblyReference.cache
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.exe.config
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto_Grafos.Properties.Resources.resources
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto_Grafos.MapForm.resources
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.csproj.GenerateResource.cache
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.csproj.CoreCompileInputs.cache
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto.07A288EC.Up2Date
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.exe
+C:\Users\JoseA\Documents\FamilyGraph\Proyecto Grafos\obj\x64\Release\Proyecto Grafos.pdb

@@ -1,0 +1,8 @@
+C:\Users\JoseA\FamilyGraph\Proyect_Tests\obj\Debug\net8.0-windows\Proyect_Tests.csproj.AssemblyReference.cache
+C:\Users\JoseA\FamilyGraph\Proyect_Tests\obj\Debug\net8.0-windows\Proyect_Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JoseA\FamilyGraph\Proyect_Tests\obj\Debug\net8.0-windows\Proyect_Tests.AssemblyInfoInputs.cache
+C:\Users\JoseA\FamilyGraph\Proyect_Tests\obj\Debug\net8.0-windows\Proyect_Tests.AssemblyInfo.cs
+C:\Users\JoseA\FamilyGraph\Proyect_Tests\obj\Debug\net8.0-windows\Proyect_Tests.csproj.CoreCompileInputs.cache
+C:\Users\JoseA\FamilyGraph\Proyect_Tests\obj\Debug\net8.0-windows\Proyect_Tests.sourcelink.json
+C:\Users\JoseA\FamilyGraph\Proyect_Tests\obj\Debug\net8.0-windows\Proyect_Tests.gentestingplatformentrypointinputcache.cache
+C:\Users\JoseA\FamilyGraph\Proyect_Tests\obj\Debug\net8.0-windows\Proyect_Tests.genautoregisteredextensionsinputcache.cache
